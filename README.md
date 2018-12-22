@@ -1,37 +1,18 @@
-## Welcome to GitHub Pages
+## STEM Teaching, Learning, and Research 
 
-You can use the [editor on GitHub](https://github.com/NoushinN/STEM_Teaching_Learning_Research/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Hello-out-there,
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+I have participated in a number of teaching and learning classes in the last year and have been inspired by several core ideas I would like to implement in my teaching practices.
 
-### Markdown
+The ultimate mission of this philosophy is to enhance excellence in undergraduate education through the development of a national faculty committed to implementing and advancing effective teaching practices for diverse learners as part of successful and varied professional careers.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+The pillars I practice to implement teaching include concepts and core ideas on teaching and learning as research, importance of learning community, and learning through diversity and inclusion.
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+The improvement of teaching and learning is a dynamic and ongoing process, just as is research in any STEM discipline. At the core of improving teaching and learning is the need to accurately determine what students have learned as a result of teaching practices. 
 
-- Bulleted
-- List
+This is a research problem, to which STEM instructors can effectively apply their research skills and ways of knowing. In so doing, STEM instructors themselves become the agents for change in STEM teaching and learning.
 
-1. Numbered
-2. List
+As an aspired instructor, I am extremely interested about teaching as learning and research such that it involves the deliberate, systematic, and reflective use of research methods to develop and implement teaching practices that advance the learning experiences and outcomes of students and teachers.
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/NoushinN/STEM_Teaching_Learning_Research/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+In applying a research approach to my teaching practices, I strive to apply 7 processes in practice, including: (i) learning foundational knowledge, (ii) creating objectives for student learning, (iii) developing an hypothesis for practices to achieve the learning objectives, (iv) defining measures of success, (v) developing and implementing teaching practices within an experimental design, (vi) collecting and analyzing data, (vii) reflecting, evaluating, and iterating.
