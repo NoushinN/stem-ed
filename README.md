@@ -15,8 +15,8 @@ This is a research problem, to which STEM instructors can effectively apply thei
 
 As an aspired instructor, I am extremely interested about teaching as learning and research such that it involves the deliberate, systematic, and reflective use of research methods to develop and implement teaching practices that advance the learning experiences and outcomes of students and teachers.
 
-In applying a research approach to my teaching practices, I strive to apply 7 processes in practice: 
-(i) learning foundational knowledge,  
+In applying a research approach to my teaching practices, I strive to apply 7 processes in practice:   
+(i) learning foundational knowledge,   
 (ii) creating objectives for student learning,  
 (iii) developing an hypothesis for practices to achieve the learning objectives,  
 (iv) defining measures of success,  
