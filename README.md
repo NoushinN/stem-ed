@@ -1,4 +1,4 @@
-## STEM Teaching, Learning, and Research 
+## STEM Education
 
 Hello-out-there,
 
