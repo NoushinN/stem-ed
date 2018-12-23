@@ -1,7 +1,7 @@
 ###DEMO for NetworkD3###
 # Lessons are adapted and organized by Noushin Nabavi, PhD.
 
-setwd("~/STEM_Education/RStudio Workshops/NETWORKD3")
+setwd("~/STEM_Education/Data Analysis Lessons/4. NETWORKD3")
 getwd()
 
 #Install and load networkD3 package

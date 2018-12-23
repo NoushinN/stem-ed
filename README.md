@@ -19,5 +19,5 @@ In applying a research approach to my teaching practices, I strive to apply **7 
 **(vi)** collecting and analyzing data,  
 **(vii)** reflecting, evaluating, and iterating.  
 
-Some of the lessons I have curated and developed for statistical data analysis can be found [here](https://github.com/NoushinN/STEM_Education/tree/master/Data%20Analysis%20Lessons).   
+Some of the lessons I have curated and organized for statistical data analysis can be found [here](https://github.com/NoushinN/STEM_Education/tree/master/Data%20Analysis%20Lessons).   
 Some of the literature that have inspired this philosophy can be found [here](https://github.com/NoushinN/STEM_Teaching_Learning_Research/tree/master/Teaching%20Literature).

@@ -100,7 +100,7 @@ library(d3heatmap)
 ####Data created from a personal burger blog, in `wide` format necessary to use this library. (https://burgerite.blogspot.co.uk)    
 #### Data available here: https://github.com/RLadiesCodingLondon/MayEvent-Chiin-htmlwidgets
 
-setwd("~/STEM_Education/Data Analysis Lessons/4. JAVA WITH R") # the path to your csv file
+setwd("~/STEM_Education/Data Analysis Lessons/5. JAVA WITH R") # the path to your csv file
 getwd()
 burger <- read.csv("burger.csv", header = TRUE, row.names = 1)
 
