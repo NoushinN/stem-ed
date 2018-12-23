@@ -2,7 +2,7 @@
 
 Hello-out-there,
 
-We live in a supercomplex world and we are not prepared for it. In my learning journey of world, I have been fortunate to benefit from some highly advanced teachers and mentors who taught me to not only learn the lesson materials but learn to know, to do, to live, to be, and to transform myself and the society. To pass this knowledge to the next generation of students, I myself went on a journey to learn teaching. I participated in a number of teaching and learning classes in the last year and have been inspired by several core ideas and philosophies about teaching, learning, and STEM education that I would like to implement in my teaching practices going forward.
+We live in a complex world and we are not prepared for it. In my learning journey, I have been fortunate to benefit from some highly advanced teachers and mentors who taught me to not only learn the lesson materials but learn to know, to do, to live, to be, and to transform myself and the society. To pass this knowledge to the next generation of students, I myself went on a journey to learn teaching. I participated in a number of teaching and learning classes in the last year and have been inspired by several core ideas and philosophies about teaching, learning, and STEM education that I would like to implement in my teaching practices going forward.
 
 The ultimate mission of this philosophy is to enhance excellence in undergraduate STEM education through the development and implementation of effective lessons for diverse learners and be part of their successful launch and transition to professional careers.
 
