@@ -1,5 +1,5 @@
 ###DEMO for Basic R, set-up, and visualizations###
-# Lessons are adapted, created, and organized by Noushin Nabavi, for RLadies Victoria BC
+# Lessons are adapted, created, and organized by Noushin Nabavi, PhD.
 
 # A. RStudio - Basics  
 

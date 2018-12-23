@@ -1,6 +1,5 @@
 ---
 title: "R: FAQs & Beginner Resources by Topic"
-author: "For RLadies Victoria BC"
 date: "22.12.2018"
 output: pdf_document
 ---
