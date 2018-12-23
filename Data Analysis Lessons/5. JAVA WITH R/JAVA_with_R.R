@@ -1,6 +1,6 @@
 ### DEMO for Bringing JavaScript to RStudio for Visualization
 #Demo of 4 htmlwidgets: A. Time-Series Plot, B. Heatmap, C. 3D Scatterplot, D. 3D Globe  
-#Lessons are adapted, created, and organized by Noushin Nabavi, PhD.
+#Lessons are adapted and organized by Noushin Nabavi, PhD.
 
 
 #What are htmlwidgets for R? http://www.htmlwidgets.org  

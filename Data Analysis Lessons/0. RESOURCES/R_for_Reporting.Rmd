@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-> This is a living document, so shall be managed and updated as needed by the community. Curated by Noushin Nabavi, PhD.
+> Curated and organized by Noushin Nabavi, PhD.
 
 ## Motivation for reporting
 

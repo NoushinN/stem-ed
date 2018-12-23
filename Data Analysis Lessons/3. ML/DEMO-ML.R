@@ -1,5 +1,5 @@
 ###DEMO for ML###
-# Lessons are adapted, created, and organized by Noushin Nabavi, PhD.
+# Lessons are adapted and organized by Noushin Nabavi, PhD.
 
 ## Machine Learning technique - Clustering
 

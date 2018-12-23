@@ -1,5 +1,5 @@
 ###DEMO for NetworkD3###
-# Lessons are adapted, created, and organized by Noushin Nabavi, PhD.
+# Lessons are adapted and organized by Noushin Nabavi, PhD.
 
 setwd("~/STEM_Education/RStudio Workshops/NETWORKD3")
 getwd()

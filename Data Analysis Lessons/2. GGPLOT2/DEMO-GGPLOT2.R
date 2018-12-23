@@ -1,5 +1,5 @@
 ###DEMO for Basic R, set-up, and visualizations###
-# Lessons are adapted, created, and organized by Noushin Nabavi, PhD.
+# Lessons are adapted and organized by Noushin Nabavi, PhD.
 
 # A. RStudio - Basics  
 
