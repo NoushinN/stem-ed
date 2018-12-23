@@ -17,8 +17,7 @@ In applying a research approach to my teaching practices, I strive to apply **7 
 **(iv)** defining measures of success,  
 **(v)** developing and implementing teaching practices within an experimental design,  
 **(vi)** collecting and analyzing data,  
-**(vii)** reflecting, evaluating, and iterating.
+**(vii)** reflecting, evaluating, and iterating.  
 
-
-
+Some of the workshops I have developed for using RStudio in data analysis can be found [here](https://github.com/NoushinN/STEM_Education/tree/master/RStudio%20Workshops).   
 Some of the literature that have inspired this philosophy can be found [here](https://github.com/NoushinN/STEM_Teaching_Learning_Research/tree/master/Teaching%20Literature).
