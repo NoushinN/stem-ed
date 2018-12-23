@@ -1,0 +1,29 @@
+---
+title: "ML DEMO"
+author: "Noushin Nabavi"
+date: '2018-12-22'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, echo=TRUE}
+data(mtcars)
+mtcars.clean <- mtcars[, -c(8,9)]
+```
+
+```{r setup, echo=TRUE}
+medians <- apply(mtcars.clean, 2, median)
+mads <- apply(mtcars.clean, 2, mad)
+
+mtcars.standardised <- scale(mtcars.clean, center = medians, scale = mads)
+mtcars.stan.dist <- dist(mtcars.standardised, method = "euclidean")
+mtcars.clust <- hclust(mtcars.stan.dist, method = "ward.D2")
+```
+
+```{r setup, echo=TRUE}
+plot(mtcars.clust, hang = -1)
+rect.hclust(mtcars.clust, 6)
+```
