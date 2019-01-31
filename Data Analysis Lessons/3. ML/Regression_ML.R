@@ -10,7 +10,7 @@
 # References:
 # Venables, W. N. and Ripley, B. D. (1999) Modern Applied Statistics with S-PLUS. Third Edition. Springer.
 
-# (i) Load dependencies & Explore data: 
+# Load dependencies & Explore data: 
 library(ggplot2)
 library(MASS)
 library(reshape2)
@@ -133,7 +133,7 @@ class(mcycle.split[[1]]) # Actually a data.frame.
 mcycle.split[[10]] # Tenth element.
 mcycle.split[[11]] # error (subscript out of bounds)
 
-
+____________________________________________________________________________
 # What if you need more than one element of a list?
 # In cross-validation, we need to pick one fold, and pool the rest.
 # You must use single brackets when selecting more than one element.
@@ -167,7 +167,7 @@ train <- do.call(rbind, train.list)
 # Exactly the same as
 train <- rbind(train.list[[1]], train.list[[2]], train.list[[3]],
                train.list[[4]])
-
+____________________________________________________________________________
 # Using functions as arguments can be a little unsettling, but get used to it,
 # it is the core of many R programming techniques.
 # Now let's try running cross-validation using a for loop.
@@ -198,8 +198,7 @@ model <- lapply(train.folds,
                                   I(times^3),
                                 data = x))
 
-# To unpack that a little... instead of iteratively fitting your
-models in a for
+# To unpack that a little... instead of iteratively fitting your models in a for
 
 # loop, you create a function that returns what you want based on the fold as an argument So you could make a function like:
 
@@ -232,6 +231,7 @@ train.folds <- lapply(seq_along(mcycle.split),
 predicted <- predict(model[[1]], newdata = mcycle.split[[1]])
 actual <- mcycle.split[[1]]$accel
 
+____________________________________________________________________________
 # Notice that subtraction is vector-wise. You don't have to write a for loop predicted - actual
 # This can be very annoying in other languages.
 # Now let's make a prediction across all faolds
