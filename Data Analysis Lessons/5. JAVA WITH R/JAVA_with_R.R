@@ -98,7 +98,6 @@ library(d3heatmap)
 
 #### (ii) Load Data
 ####Data created from a personal burger blog, in `wide` format necessary to use this library. (https://burgerite.blogspot.co.uk)    
-#### Data available here: https://github.com/RLadiesCodingLondon/MayEvent-Chiin-htmlwidgets
 
 setwd("~/STEM_Education/Data Analysis Lessons/5. JAVA WITH R") # the path to your csv file
 getwd()
@@ -146,7 +145,6 @@ ________________________________________________________________________________
 
 #### (i) Load Data
 ### Geo-location data from Google Analytics of burger blog traffic.
-### Data available here: https://github.com/RLadiesCodingLondon/MayEvent-Chiin-htmlwidgets
 
 setwd("~/STEM_Education/Data Analysis Lessons/4. JAVA WITH R") # the path to your csv file
 getwd()

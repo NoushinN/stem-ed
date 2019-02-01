@@ -6,7 +6,7 @@
 # install.packages("glmnet")
 # Prostate is a Data to examine the correlation between the level of prostate-specific antigen and a number of clinical measures in men who were about to receive a radical prostatectomy.
 
-# Load dependencies & Explore data: 
+# Load data and dependencies: 
 library(ElemStatLearn)
 library(dplyr)
 ____________________________________________________________________________
