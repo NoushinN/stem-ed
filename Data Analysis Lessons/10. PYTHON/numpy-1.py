@@ -201,7 +201,7 @@
    "metadata": {},
    "source": [
     "Conditional statement conventions: \n",
-    "- If else do not go into paranthesis, curly brackets or square brackes are not used\n",
+    "- If else do not go into parentheses, curly brackets or square brackets are not used\n",
     "- Note spaces and indentations "
    ]
   },
