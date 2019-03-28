@@ -18,9 +18,9 @@ http://web4.cs.ucl.ac.uk/staff/D.Barber/textbook/091117.pdf
 
 # References:
 
-[1]	T. Hastie, The elements of statistical learning: data mining, inference, and prediction, 2nd ed, Springer, New York, NY, 2009.
-[2]	D.J.C. MacKay, Information theory, inference, and learning algorithms, Cambridge University Press, Cambridge, UK ; New York, 2003.
-[3]	C.M. Bishop, Pattern recognition and machine learning, Springer, New York, 2006.
-[4]	K.P. Murphy, Machine learning: a probabilistic perspective, MIT Press, Cambridge, MA, 2012.
-[5]	D. Barber, Bayesian reasoning and machine learning, Cambridge University Press, Cambridge ; New York, 2012.
+[1]	T. Hastie, The elements of statistical learning: data mining, inference, and prediction, 2nd ed, Springer, New York, NY, 2009.  
+[2]	D.J.C. MacKay, Information theory, inference, and learning algorithms, Cambridge University Press, Cambridge, UK ; New York, 2003.  
+[3]	C.M. Bishop, Pattern recognition and machine learning, Springer, New York, 2006.  
+[4]	K.P. Murphy, Machine learning: a probabilistic perspective, MIT Press, Cambridge, MA, 2012.  
+[5]	D. Barber, Bayesian reasoning and machine learning, Cambridge University Press, Cambridge ; New York, 2012.   
 
