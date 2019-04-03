@@ -1,3 +1,5 @@
+###DEMO for web scraping and reading data into R###
+# lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for importing data into R)
 
 # load dependencies
 
