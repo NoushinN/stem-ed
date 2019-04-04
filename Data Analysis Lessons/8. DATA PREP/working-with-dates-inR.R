@@ -1,4 +1,4 @@
-###DEMO for web scraping and reading data into R###
+###DEMO for working with time and date in R###
 # lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for working with dates)
 
 # load dependencies and libraries

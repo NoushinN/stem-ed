@@ -1,4 +1,4 @@
-###DEMO for web scraping and reading data into R###
+###DEMO for cleaning data in R###
 # lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for cleaning data into R)
 
 # example data for this lesson can be downloaded from devtools/github source
@@ -57,7 +57,6 @@ library(tidyr)
 ## The name of the new column whose values will be the actual BMI measurements (i.e. the value argument)
 ## The columns to gather (or, in this case, the column to exclude from gathering)
 ### e.g. bmi_long <- gather(bmi, year, bmi_val, -Country)
-
 
 
 # Gather the columns
