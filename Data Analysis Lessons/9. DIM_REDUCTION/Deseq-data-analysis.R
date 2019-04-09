@@ -33,7 +33,7 @@ View(rnaseq_metadata)
 #load the expression data (xlsx)
 
 require(gdata)
-exp = read.xls("OU_Txome_Rebecca_AssignedReads_NormalizedRPM.xlsx", sheet = 1, stringsAsFactors = FALSE)
+exp = read.xls("OU_Txome_AssignedReads_NormalizedRPM.xlsx", sheet = 1, stringsAsFactors = FALSE)
 
 
 #explore the expression dataset
