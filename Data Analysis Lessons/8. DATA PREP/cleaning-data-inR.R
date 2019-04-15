@@ -65,3 +65,7 @@ Mumbai_clean <- gather(Mumbai2013, Time, Temperature, na.rm = TRUE)
 # View the head
 head(Mumbai_clean)
 
+# Other useful functions: 
+# min(), max(), is.na(), which(), data[], names(), summary(), glimpse(), str()
+# dim(), class(), plot(), hist(), print()
+
