@@ -1,5 +1,5 @@
-###DEMO for web scraping and reading data into R###
-# lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for importing data into R)
+###DEMO for principle component analysis and k-means analysis in R###
+# lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for R)
 
 # load dependencies
 
@@ -45,11 +45,11 @@ summary(wisc.pr)
 biplot(wisc.pr)
 
 # Scatter plot observations by components 1 and 2
-plot(wisc.pr$x[, c(1, 2)], col = (diagnosis + 1), 
+plot(wisc.pr$x[, c(1, 2)], col = (diagnosis + 1),
      xlab = "PC1", ylab = "PC2")
 
 # Repeat for components 1 and 3
-plot(wisc.pr$x[, c(1, 3)], col = (diagnosis + 1), 
+plot(wisc.pr$x[, c(1, 3)], col = (diagnosis + 1),
      xlab = "PC1", ylab = "PC3")
 
 #-----------------------------------------------------------------
@@ -64,13 +64,13 @@ pr.var <- wisc.pr$sdev^2
 pve <- pr.var / sum(pr.var)
 
 # Plot variance explained for each principal component
-plot(pve, xlab = "Principal Component", 
-     ylab = "Proportion of Variance Explained", 
+plot(pve, xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
      ylim = c(0, 1), type = "b")
 
 # Plot cumulative proportion of variance explained
-plot(cumsum(pve), xlab = "Principal Component", 
-     ylab = "Cumulative Proportion of Variance Explained", 
+plot(cumsum(pve), xlab = "Principal Component",
+     ylab = "Cumulative Proportion of Variance Explained",
      ylim = c(0, 1), type = "b")
 
 # Set up 2 x 3 plotting grid
@@ -82,10 +82,10 @@ set.seed(1)
 for(i in 1:6) {
   # Run kmeans() on x with three clusters and one start
   kmc <- kmeans(wisc.data, centers = 3, nstart = 1)
-  
+
   # Plot clusters
-  plot(wisc.data, col = kmc$cluster, 
-       main = kmc$tot.withinss, 
+  plot(wisc.data, col = kmc$cluster,
+       main = kmc$tot.withinss,
        xlab = "", ylab = "")
 }
 
@@ -120,7 +120,7 @@ table(wisc.hclust.clusters, wisc.km$cluster)
 # Visualizing and interpreting results of kmeans()
 # Scatter plot of wisc.data
 plot(wisc.data, col = wisc.km$cluster,
-     main = "k-means with 2 clusters", 
+     main = "k-means with 2 clusters",
      xlab = "", ylab = "")
 
 
@@ -151,8 +151,8 @@ for (i in 1:15) {
 }
 
 # Plot total within sum of squares vs. number of clusters
-plot(1:15, wss, type = "b", 
-     xlab = "Number of Clusters", 
+plot(1:15, wss, type = "b",
+     xlab = "Number of Clusters",
      ylab = "Within groups sum of squares")
 
 # Set k equal to the number of clusters corresponding to the elbow location
@@ -169,13 +169,13 @@ hclust.out <- hclust(dist(wisc.data))
 # Inspect the result
 summary(hclust.out)
 
-# draw a dendrogram 
+# draw a dendrogram
 plot(hclust.out)
 abline(h=6, col = "red")
 
 
 # Selecting number of clusters
-#  cutree() is the R function that cuts a hierarchical model. 
+#  cutree() is the R function that cuts a hierarchical model.
 # The h and k arguments to cutree() allow you to cut the tree based on a certain height h or a certain number of clusters k.
 
 # Cut by height
@@ -216,7 +216,7 @@ colMeans(wisc.data)
 apply(wisc.data, 2, sd)
 
 # Scale the data
-dat.scaled <- scale(wisc.data) #na.rm = TRUE 
+dat.scaled <- scale(wisc.data) #na.rm = TRUE
 
 
 # Create hierarchical clustering model:
@@ -239,7 +239,7 @@ pr.out <- prcomp(wisc.data, scale = TRUE, na.rm = TRUE, center = TRUE)
 summary(pr.out)
 
 ## the biplot() function plots both the principal components loadings and the mapping of the observations to their first two principal component values
-## The second common plot type for understanding PCA models is a scree plot. 
+## The second common plot type for understanding PCA models is a scree plot.
 # Variability of each principal component: pr.var
 pr.var <- pr.out$sdev^2
 
