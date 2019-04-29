@@ -1,0 +1,11 @@
+Country,Age,Salary,Purchased
+Iran,44,72000,No
+Israel,27,48000,Yes
+Germany,30,54000,No
+Israel,38,61000,No
+USA,40,,Yes
+Iran,35,58000,Yes
+Israel,,52000,No
+Iran,48,79000,Yes
+USA,50,83000,No
+Iran,37,67000,Yes
