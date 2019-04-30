@@ -1,4 +1,4 @@
-###DEMO for web scraping and reading data into R###
+###DEMO for data cleaning in R###
 # lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for importing data into R)
 
 

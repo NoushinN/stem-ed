@@ -1,4 +1,4 @@
-###DEMO for web scraping and reading data into R###
+###DEMO for data import into R###
 # lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for importing data into R)
 
 # The first step to import data from a SQL database is creating a connection to it. 
