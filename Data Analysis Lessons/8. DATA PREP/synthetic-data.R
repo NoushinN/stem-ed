@@ -40,7 +40,7 @@ data$pc <- rep(pc, 1400)
 
 
 # write out the data table
-write_csv(data, here("pccf-data", "synthetic-dip-data.csv"))
+write_csv(data, here("data", "synthetic-data.csv"))
 
 # test the data by reading into R again
-syn_data <- fread(here("pccf-data", "synthetic-dip-data.csv"))
+syn_data <- fread(here("data", "synthetic-data.csv"))
