@@ -4,6 +4,8 @@
 
 - Hastie, Tibshirani, Friedman – The Elements of Statistical Learning.[1] Free. (https://web.stanford.edu/~hastie/Papers/ESLII.pdf). A great classic text. Starting to show its age a little, especially in neural networks. One of the authors has uses a particularly dense statistical language, but those sections can mostly be skipped if that is not of interest.
 
+- Daniel Kaplan's Functions for Teaching Statistical Modeling provides graphics and other functions that evaluate and display models across many different kinds of model architecture. For instance, you can evaluate the effect size of a model input in the same way, regardless of architecture, interaction terms, etc, found [here](https://www.rdocumentation.org/packages/statisticalModeling/versions/0.3.0)  
+ 
 - MacKay – Information Theory, Inference, and Learning Algorithms.[2] Free for on-screen viewing. (https://www.inference.org.uk/itprnn/book.pdf) I love this book, but it really is for somebody who is interested in connecting information theory with statistics. The examples are mostly from physics, but as a non-physics person I found them interesting. The examples are great, and the author gives multiple ways to read the book; which chapters to leave out if you are not interested in certain topics. There is no “code” in the book, just a lot of great exercises.
 
 - Bishop – Pattern Recognition and Machine Learning.[3] Not free. A good, big book, with a very broad coverage. The statistical level of book jumps around a lot, which means it is easy to miss very important new points. 
