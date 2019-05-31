@@ -5,6 +5,7 @@
 library(fst)
 library(fs)
 library(here)
+library(purrr)
 
 # use here
 set_here("xyz")
@@ -13,7 +14,8 @@ set_here("xyz")
 x_fst <- read_fst("xx.fst")
 fwrite(x_fst, here("xx.csv"))
 
-# ---------------------------------------------------------
+#---------------------------------------------------------
+# Using a function to read in fst files and convert to csv
 
 path <- ("xyz")
 paths <- list.files("xyz", pattern = "*.fst")
@@ -31,3 +33,4 @@ fst_to_csv <- function(path) {
 }
 
 x <- fst_to_csv(paths)
+
