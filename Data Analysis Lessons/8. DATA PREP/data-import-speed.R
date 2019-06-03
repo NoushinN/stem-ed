@@ -45,6 +45,6 @@ read_data <- readr::read_fwf(file = fwf_file,
 										  str_to_lower(c("COL1", "COL2", "COL3", "COL4", "COL5"))),
 						    col_types = c("ccccc")) %>%
 						    mutate(COL1 = lubridate::ymd_hms(COL1)) %>%
-						    write_fst("read_data.fst", compress = 10)
+						    fst::write_fst("read_data.fst", compress = 10)
 						    
 #---------------------------------------------------------		

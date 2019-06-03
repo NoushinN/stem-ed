@@ -30,7 +30,7 @@ plot(Cost ~ Age, data = AARP)
 
 #-------------------------------------------------------------------------------
 
-# modeling: 
+# modeling:
 ## exploring linear vs recursive modeling architectures
 
 # Find the variable names in the dataset demog
@@ -61,10 +61,10 @@ fmodel(model_2, ~ exper + age)
 
 #-------------------------------------------------------------------------------
 
-# Build a model for wage using statisticalModeling 
+# Build a model for wage using statisticalModeling
 wage_model <- lm(wage ~ sex + age, data = demog)
 
-# Construct a data frame: 
+# Construct a data frame:
 new_dataframe <- data.frame(age = 60, sex = "F", wage = 4.00)
 
 # Predict how wage model holds for new dataframe using predict()
@@ -79,11 +79,11 @@ evaluate_model(wage_model, data = new_dataframe)
 wage_model <- lm(wage ~ sex + age, data = demog)
 
 # Create a data frame: new_inputs_1
-new_inputs_1 <- data.frame(age = c(30, 50), sex = c("F", "M"), 
+new_inputs_1 <- data.frame(age = c(30, 50), sex = c("F", "M"),
                            wage = c(4.00, 6.00))
 
 # Use expand.grid(): new_inputs_2
-new_inputs_2 <- expand.grid(age = c(30, 50), sex = c("F", "M"), 
+new_inputs_2 <- expand.grid(age = c(30, 50), sex = c("F", "M"),
                             wage = c(4.00, 6.00))
 
 # Use predict() for new_inputs_1 and new_inputs_2
@@ -201,15 +201,17 @@ base_model <- lm(wage ~ age + sex, data = demog)
 
 # An augmented model adding previous as an explanatory variable
 aug_model <- lm(wage ~ age + sex + exper, data = demog)
+aug_model
 
 # Run cross validation trials on the two models
 trials <- cv_pred_error(base_model, aug_model)
+trials
 
 # Compare the two sets of cross-validated errors
 t.test(mse ~ model, data = trials)
 
 # worse predictions = larger prediction error
-# base model makes worse better (lower prediction error) than the aug model. 
+# base model makes worse better (lower prediction error) than the aug model.
 
 #-------------------------------------------------------------------------------
 
@@ -245,8 +247,8 @@ with(data = model_output, mean(sector != model_output, na.rm = TRUE))
 #-------------------------------------------------------------------------------
 
 # Another exploration of building better models?
-# Train the models 
-null_model <- rpart(sector ~ age + sex, 
+# Train the models
+null_model <- rpart(sector ~ age + sex,
                     data = demog, cp = 0.001)
 model_1 <- rpart(sector ~ age,
                  data = demog, cp = 0.001)
