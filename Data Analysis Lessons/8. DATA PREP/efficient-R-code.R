@@ -1,8 +1,8 @@
-###DEMO for writing efficient R code ###
+###DEMO for writing efficient R code: benchmarking and rcpp ###
 # lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons)
 
-# One of the relatively easy optimizations available is to use an up-to-date version of R. 
-# In general, R is very conservative, so upgrading doesn't break existing code. 
+# One of the relatively easy optimizations available is to use an up-to-date version of R.
+# In general, R is very conservative, so upgrading doesn't break existing code.
 # However, a new version will often provide free speed boosts for key functions.
 
 # Print the R version details using version
@@ -21,8 +21,8 @@ minor <- version$minor
 library(microbenchmark)
 
 # Compare the two functions
-compare <- microbenchmark(read.csv("movies.csv"), 
-                          readRDS("movies.rds"), 
+compare <- microbenchmark(read.csv("movies.csv"),
+                          readRDS("movies.rds"),
                           times = 10)
 
 # Print compare
@@ -37,8 +37,8 @@ system.time(readRDS("movies.rds"))
 
 #-------------------------------------------------------------------
 
-# For many problems your time is the expensive part. 
-# If having a faster computer makes you more productive, it can be cost effective to buy one. However, before you splash out on new toys for yourself, your boss/partner may want to see some numbers to justify the expense. 
+# For many problems your time is the expensive part.
+# If having a faster computer makes you more productive, it can be cost effective to buy one. However, before you splash out on new toys for yourself, your boss/partner may want to see some numbers to justify the expense.
 # Measuring the performance of your computer is called benchmarking, and you can do that with the benchmarkme package.
 
 
@@ -51,7 +51,7 @@ ram <- get_ram()
 # Assign the variable cpu to the cpu specs
 cpu <- get_cpu()
 
-# The benchmarkme package allows you to run a set of standardized benchmarks and compare your results to other users. 
+# The benchmarkme package allows you to run a set of standardized benchmarks and compare your results to other users.
 # One set of benchmarks tests is reading and writing speeds.
 
 # Run the benchmark
@@ -86,7 +86,7 @@ n <- 30000
 # Fast code
 pre_allocate <- function(n) {
   x <- numeric(n) # Pre-allocate
-  for(i in 1:n) 
+  for(i in 1:n)
     x[i] <- rnorm(1)
   x
 }
@@ -98,7 +98,7 @@ system.time(res_allocate <- pre_allocate(n))
 #-------------------------------------------------------------------
 
 # Importance of vectorizing your code
-# The following piece of code is written like traditional C or Fortran code. 
+# The following piece of code is written like traditional C or Fortran code.
 # Instead of using the vectorized version of multiplication, it uses a for loop.
 
 x <- rnorm(10)
@@ -111,7 +111,7 @@ x2_imp <- x * x
 
 
 # Vectorized code: calculating a log-sum
-# A common operation in statistics is to calculate the sum of log probabilities. 
+# A common operation in statistics is to calculate the sum of log probabilities.
 # The following code calculates the log-sum (the sum of the logs).
 
 # x is a vector of probabilities
@@ -119,7 +119,7 @@ x2_imp <- x * x
 n <- 100
 total <- 0
 x <- runif(n)
-for(i in 1:n) 
+for(i in 1:n)
   total <- total + log(x[i])
 
 # Rewrite in a single line. Store the result in log_sum
@@ -130,7 +130,7 @@ log_sum <- sum(log(x))
 # Data frames and matrices
 # All values in a matrix must have the same data type, which has efficiency implications when selecting rows and columns.
 
-# Which is faster, mat[, 1] or df[, 1]? 
+# Which is faster, mat[, 1] or df[, 1]?
 microbenchmark(mat[, 1], df[, 1])
 
 #-------------------------------------------------------------------
@@ -147,14 +147,14 @@ dim(movies)
 profvis({
   # Load and select data
   movies <- movies[movies$Comedy == 1, ]
-  
+
   # Plot data of interest
   plot(movies$year, movies$rating)
-  
+
   # Loess regression line
   model <- loess(rating ~ year, data = movies)
   j <- order(movies$year)
-  
+
   # Add fitted line to the plot
   lines(movies$year[j], model$fitted[j], col = "red")
 })
@@ -189,7 +189,7 @@ microbenchmark(
 # Example data
 movies
 
-# Define the previous solution 
+# Define the previous solution
 app <- function(x) {
   apply(x, 1, sum)
 }
@@ -274,9 +274,9 @@ play <- function() {
   total <- no_of_rolls <- 0
   while(total < 10) {
     total <- total + sample(1:6, 1)
-    
+
     # If even. Reset to 0
-    if(total %% 2 == 0) total <- 0 
+    if(total %% 2 == 0) total <- 0
     no_of_rolls <- no_of_rolls + 1
   }
   no_of_rolls
@@ -293,7 +293,7 @@ stopCluster(cl)
 
 
 # Timings parSapply()
-# parSapply() takes three arguments. 
+# parSapply() takes three arguments.
 # The cluster, the vector of numbers, and the play() wrapper function.
 
 # Set the number of games to play
@@ -312,3 +312,138 @@ system.time(par <- parSapply(cl, 1:no_of_games, function(i) play()))
 ## Stop cluster
 stopCluster(cl)
 
+#-------------------------------------------------------------------
+
+# Load microbenchmark
+library(microbenchmark)
+
+# Define the function sum_loop
+sum_loop <- function(x) {
+  result <- 0
+  for(i in x) result <- result + i
+  result
+}
+
+# Check for equality
+all.equal(sum_loop(10), sum(10))
+
+# Compare the performance
+microbenchmark(sum_loop = sum_loop(10), R_sum = sum(10))
+
+## can notice sum() function is way faster than the function containing the for loop
+
+#-------------------------------------------------------------------
+
+# optimizing R code with RCPP
+
+# Load Rcpp
+library(Rcpp)
+
+# Simple C++ Expressions with evalCpp
+# Evaluate 2 + 2 in C++
+x <- evalCpp("2 + 2")
+
+# Evaluate 2 + 2 in R
+y <- 2 + 2
+
+# Storage modes of x and y
+storage.mode(x)
+storage.mode(y)
+
+# Change the C++ expression so that it returns a double
+z <- evalCpp("2.0 + 2.0")
+
+# Evaluate 17 / 2 in C++
+evalCpp("17 / 2")
+
+# Cast 17 to a double and divide by 2
+evalCpp("(double)17 / 2")
+
+# Cast 56.3 to an int
+evalCpp("(int)56.3")
+
+# Defininf functions using cppFunction
+# Define the function the_answer()
+cppFunction('
+            int the_answer() {
+            return 42 ;
+            }
+            ')
+
+# Check the_answer() returns the integer 42
+the_answer() == 42L
+
+
+# Define the function euclidean_distance()
+cppFunction('
+  double euclidean_distance(double x, double y) {
+    return sqrt(x*x + y*y) ;
+  }
+')
+
+# Calculate the euclidean distance
+euclidean_distance(1.5, 2.5)
+
+
+# Define the function add()
+cppFunction('
+            int add(int x, int y) {
+            int res = x + y ;
+            Rprintf("** %d + %d = %d\\n", x, y, res) ;
+            return res ;
+            }
+            ')
+
+# Call add() to print THE answer
+add(40, 2)
+
+
+# Error messages
+cppFunction('
+  // adds x and y, but only if they are positive
+  int add_positive_numbers(int x, int y) {
+      // if x is negative, stop
+      if(x < 0) stop("x is negative") ;
+
+      // if y is negative, stop
+      if(y < 0) stop("y is negative") ;
+
+      return x + y ;
+  }
+')
+
+# Call the function with positive numbers
+add_positive_numbers(2, 3)
+
+# Call the function with a negative number
+add_positive_numbers(-2, 3)
+
+#-------------------------------------------------------------------
+
+# C++ functions belong to C++ files
+#include <Rcpp.h>
+using namespace Rcpp ;
+
+ // Export the function to R
+ // [[Rcpp::export]]
+double twice(double x) {
+  // Fix the syntax error
+  return x + x ;
+}
+
+// Include the Rcpp.h header
+#include <Rcpp.h>
+
+// Use the Rcpp namespace
+using namespace Rcpp ;
+
+// [[Rcpp::export]]
+int the_answer() {
+  // Return 42
+  return 42;
+}
+
+/*** R
+# Call the_answer() to check you get the right result
+the_answer()
+*/
