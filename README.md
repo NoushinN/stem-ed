@@ -6,9 +6,7 @@ We live in a complex world and we are not prepared for it. In my learning journe
 
 It is my passion to enhance excellence in education by implementing modern and effective teaching practices for diverse learners. For example, I myself am a visual learner and do recognize when my mind wanders when the lesson materials miss visuals. Recognizing that learning styles are quite diverse for participants, the onus is on instructors to develop materials that cater to every learning type be it visual, auditory, abstract/mathematical, spatial, or lingual learners. My goal as an instructor is to be a constructive agent for a learning journey towards success. 
 
-Improvement of teaching and learning is a dynamic and ongoing process, just as is research in any STEM discipline.  Thus, I strive for creating a continual revival, improvement, engagement, learning community, and learning through diversification. At the core of improving teaching and learning is the need to accurately determine what we have learned. 
-
-In applying a research approach to teaching, I strive to apply **7 processes**: 
+Improvement of teaching and learning is a dynamic and ongoing process, just as is research in any STEM discipline. At the core of improving teaching and learning is the need to accurately determine what we have learned. In applying a research approach to teaching, I strive to apply these **7 processes**: 
   
 **(i)** learning foundational knowledge,   
 **(ii)** creating objectives for learning,  
