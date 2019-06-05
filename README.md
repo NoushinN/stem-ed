@@ -16,5 +16,6 @@ Improvement of teaching and learning is a dynamic and ongoing process, just as i
 **(vi)** collecting and analyzing data from lessons,  
 **(vii)** reflecting, evaluating, and iterating lessons.  
 
-Some of the lessons I am currently curating and organizing for data science can be found [here](https://github.com/NoushinN/STEM_Education/tree/master/Data%20Analysis%20Lessons).   
+Some of the lessons I have curated (both independently and modified from other sources) for data science can be found [here](https://github.com/NoushinN/STEM_Education/tree/master/Data%20Analysis%20Lessons).  This is all possible thanks to the R community for sharing their knowledge openly. 
+
 Some of the literature that have inspired this philosophy can be found [here](https://github.com/NoushinN/STEM_Teaching_Learning_Research/tree/master/Teaching%20Literature).

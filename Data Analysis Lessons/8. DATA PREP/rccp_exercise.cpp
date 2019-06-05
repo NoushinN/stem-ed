@@ -990,3 +990,4 @@ all.equal(rollmean1(x), rollmean2(x))
       )
         ggplot(d, aes(x, y)) + geom_line()
         */
+
