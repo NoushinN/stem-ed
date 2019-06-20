@@ -322,38 +322,46 @@ Arthritis %>%
   summarize(rmse = sqrt(mean(residuals^2)))
 
 # Cross-validation confirms that a model without interaction will likely give better predictions.
-
+# lower RMSE the better prediction
 # ------------------------------------------------------------------------------
 
 # Relative error
-# fdata is in the workspace
-summary(fdata)
+# Arthritis is in the workspace
+summary(Arthritis)
 
 # Examine the data: generate the summaries for the groups large and small:
-fdata %>% 
-  group_by(label) %>%        # group by small/large purchases
-  summarize(min  = min(y),   # min of y
-            mean = mean(y),  # mean of y
-            max  = max(y))   # max of y
+Arthritis %>% 
+  group_by(Treatment) %>%        # group by small/large purchases
+  summarize(min  = min(Age),   # min of Age
+            mean = mean(Age),  # mean of Age
+            max  = max(Age))   # max of Age
 
 # Fill in the blanks to add error columns
-fdata2 <- fdata %>% 
-  group_by(label) %>%               # group by label
-  mutate(residual = pred - y,     # Residual
-         relerr   = residual/y)   # Relative error
+Arthritis2 <- Arthritis %>% 
+  group_by(Treatment) %>%               # group by label
+  mutate(residual = pred_add - Age,     # Residual
+         relerr   = residual/Age)   # Relative error
 
 # Compare the rmse and rmse.rel of the large and small groups:
-fdata2 %>% 
-  group_by(label) %>% 
+Arthritis2 %>% 
+  group_by(Treatment) %>% 
   summarize(rmse     = sqrt(mean(residual^2)),  # RMSE
             rmse.rel = sqrt(mean(relerr^2)))    # Root mean squared relative error
 
 # Plot the predictions for both groups of purchases
-ggplot(fdata2, aes(x = pred, y = y, color = label)) + 
+ggplot(Arthritis2, aes(x = pred_add, y = Age, color = Treatment)) + 
   geom_point() + 
   geom_abline() + 
-  facet_wrap(~ label, ncol = 1, scales = "free") + 
+  facet_wrap(~ Treatment, ncol = 1, scales = "free") + 
   ggtitle("Outcome vs prediction")
+
+
+## other options: 
+## modeling log-transformed outputs or inputs
+## e.g. (fmla_sqr <- x ~ I(y^2)) - make a square model
+## e.g. (fmla.log <- log(x) ~ y + z + w) - make a linear model
+
+
 
 
 
