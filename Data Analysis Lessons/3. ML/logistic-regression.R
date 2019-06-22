@@ -106,8 +106,29 @@ diabetic %>%
 
 # ------------------------------------------------------------------------------
 
-# generalized additive models (GAM) to learn non-linear transforms
+# generalized additive models (GAM) to learn non-linear transforms (i.e. continuous variables not categorical)
+# can use the s() function inside formulas to designate that you want to use a spline to model the non-linear relationship of a continuous variable to the outcome
 
+# Load the package mgcv
+library(mgcv)
 
+# Create the formula 
+(fmla.gam <- weight ~ s(Time))
 
+# Fit the GAM Model
+model.gam <- gam(fmla.gam, data = soybean_train, family = gaussian)
+
+# From previous step
+library(mgcv)
+fmla.gam <- weight ~ s(Time)
+model.gam <- gam(fmla.gam, data = soybean_train, family = gaussian)
+
+# Call summary() on model.lin and look for R-squared
+summary(model.lin)
+
+# Call summary() on model.gam and look for R-squared
+summary(model.gam)
+
+# Call plot() on model.gam
+plot(model.gam)
 
