@@ -1,4 +1,4 @@
-###DEMO for Logistic Regression###
+###DEMO for supervised learning in R: Logistic Regression###
 # Lessons are adapted and organized by Noushin Nabavi, PhD.
 
 # load packages
@@ -111,24 +111,109 @@ diabetic %>%
 
 # Load the package mgcv
 library(mgcv)
+library(ClusterR)
+
+
+# Load data
+# install.packages('mlbench')
+data(BreastCancer, package="mlbench")
+bc <- BreastCancer[complete.cases(BreastCancer), ]  # keep complete rows
+
+bc$Cell.shape <- as.numeric(bc$Cell.shape)
+bc$Cell.size <-as.numeric(bc$Cell.size)
 
 # Create the formula 
-(fmla.gam <- weight ~ s(Time))
+# note spline (s) is used for continuous variables
+# or you can designate which variable you want to model non-linearly in a formula with the s() function
+
+fmla.gam <- (Cell.size ~ s(Cell.shape))
 
 # Fit the GAM Model
-model.gam <- gam(fmla.gam, data = soybean_train, family = gaussian)
+model.gam <- gam(fmla.gam, data = bc, family = gaussian)s
 
-# From previous step
-library(mgcv)
-fmla.gam <- weight ~ s(Time)
-model.gam <- gam(fmla.gam, data = soybean_train, family = gaussian)
-
-# Call summary() on model.lin and look for R-squared
-summary(model.lin)
+model.lin <- glm(Cell.size ~ Cell.shape, data = bc)
 
 # Call summary() on model.gam and look for R-squared
 summary(model.gam)
 
+# Call summary() on model.lin and look for R-squared
+summary(model.lin)
+
 # Call plot() on model.gam
 plot(model.gam)
 
+# Get predictions from gam model
+bc$pred.gam <- as.numeric(predict(model.gam, newdata = bc))
+
+bc$pred.lin <- as.numeric(predict(model.lin, newdata = bc))
+
+# Gather the predictions into a "long" dataset
+bc_long <- bc %>%
+  gather(key = modeltype, value = pred, pred.lin, pred.gam)
+
+# Calculate the rmse
+bc_long %>%
+  mutate(residual = Cell.size - pred) %>%     # residuals
+  group_by(modeltype) %>%                  # group by modeltype
+  summarize(rmse = sqrt(mean(residual^2))) # calculate the RMSE
+
+# Compare the predictions against actual weights on the test data
+bc_long %>%
+  ggplot(aes(x = Cell.size)) +                          # the column for the x axis
+  geom_point(aes(y = Cell.shape)) +                    # the y-column for the scatterplot
+  geom_point(aes(y = pred, color = modeltype)) +   # the y-column for the point-and-line plot
+  geom_line(aes(y = pred, color = modeltype, linetype = modeltype)) + # the y-column for the point-and-line plot
+  scale_color_brewer(palette = "Dark2")
+
+#------------------------------------------------------------------------------
+
+# Tree-based methods: random forest and gradient boosted trees
+
+# get the data
+tmp <- tempfile()
+download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00275/Bike-Sharing-Dataset.zip", 
+              tmp)
+
+bikes <- unz(tmp, "hour.csv")
+bikedat <- read.table(bikes, header = T, sep = ",")
+
+# bikedat is in the workspace
+str(bikedat)
+
+# Random seed to reproduce results
+seed <- set.seed(423563)
+
+# the outcome column
+(outcome <- "cnt")
+
+# The input variables
+(vars <- c("hr", "holiday", "workingday", "weathersit", "temp", "atemp", "hum", "windspeed"))
+
+# Create the formula string for bikes rented as a function of the inputs
+(fmla <- paste(outcome, "~", paste(vars, collapse = " + ")))
+
+# Load the package ranger
+library(ranger)
+
+# Fit and print the random forest model.
+(bike_model_rf <- ranger(fmla, 
+                         bikedat, 
+                         num.trees = 500, 
+                         respect.unordered.factors = "order", 
+                         seed = seed))
+
+
+# Make predictions on the August data
+bikesAugust$pred <- predict(bike_model_rf, bikesAugust)$predictions
+
+# Calculate the RMSE of the predictions
+bikesAugust %>% 
+  mutate(residual = cnt - pred)  %>%        # calculate the residual
+  summarize(rmse  = sqrt(mean(residual^2))) # calculate rmse
+
+# Plot actual outcome vs predictions (predictions on x-axis)
+ggplot(bikesAugust, aes(x = pred, y = cnt)) + 
+  geom_point() + 
+  geom_abline()
+
+#------------------------------------------------------------------------------

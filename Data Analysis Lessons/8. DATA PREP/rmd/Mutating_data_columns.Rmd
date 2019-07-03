@@ -1,0 +1,95 @@
+---
+title: "xyz"
+output: html_document
+---
+
+Loading libraries and dependencies:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(data.table)
+library(ggplot2)
+library(dplyr)
+library(plyr)
+library(fs)
+library(pander)
+library(fst)
+
+library(desc)
+set.seed(250)
+
+```
+
+
+```{r echo=TRUE, "Construct_CSV_File"}
+
+cross_linked <- 
+  dat1 %>%
+  
+  mutate(
+  EVER2 = case_when(
+    stringr::str_length(EVER)==0 ~ "No Record",
+    TRUE ~ EVER),
+  
+  XYZData = case_when(
+    is.na(FILEID) ~ "No",
+    TRUE ~ "Yes"),
+  
+  YYZ = case_when(
+    is.na(Y) ~ "None",
+    str_detect(Y, "10") ~ "Married",
+    str_detect(Y, "20") ~ "Living Common Law",
+    str_detect(Y, "30") ~ "Widowed",
+    str_detect(Y, "40") ~ "Separated",
+    str_detect(Y, "50") ~ "Divorced",
+    str_detect(Y, "60") ~ "Single",
+    str_detect(Y, "99") ~ "Unknown",
+    str_detect(Y, "98") ~ "Not Mapped"
+),
+
+  YYJ = case_when(
+    is.na(X) ~ "None",
+    str_detect(X, "1") ~ "Employed",
+    str_detect(X, "2") ~ "Unemployed",
+    str_detect(X, "9") ~ "Unknown",
+    str_detect(X, "8") ~ "Not Mapped"
+),
+
+  
+  YYC = case_when(
+    is.na(Z) ~ "None",
+    str_detect(Z, "0") ~ "Single Men",
+    str_detect(Z, "1") ~ "Single Women",
+    str_detect(Z, "2") ~ "Couples",
+    str_detect(Z, "3") ~ "Two Parent Family",
+    str_detect(Z, "4") ~ "Single Parent Family"
+),
+  
+  YYO = case_when(
+    is.na(O) ~ "None",
+    str_detect(O, "E") ~ "Expected to Work",
+    str_detect(O, "F") ~ "Temporarily Excused from Work",
+    str_detect(O, "H") ~ "Persons with Disabilities",
+    str_detect(O, "I") ~ "Persistent Multiple Barriers",
+    str_detect(O, "M") ~ "Expected to Work - Medical Conditions"
+  )
+  
+ ) %>% 
+  mutate(
+    XYZData = !is.na(XYZData)
+  ) %>% 
+  
+  mutate(
+   
+  isna = is.na(EVER),
+  length = stringr::str_length(dat1$EVER),
+  EVER2 = case_when(
+    stringr::str_length(EVER)==0 ~ "No Record",
+    TRUE ~ EVER))
+   
+
+```
+
+

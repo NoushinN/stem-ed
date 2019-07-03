@@ -1,4 +1,4 @@
-###DEMO for Linear Regression###
+###DEMO for supervised learning in R: Linear Regression###
 # Lessons are adapted and organized by Noushin Nabavi, PhD.
 
 # load packages
