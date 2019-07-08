@@ -43,8 +43,8 @@ simpleNetwork(member.net)
 #Customise widget
 simpleNetwork(member.net, 
               fontSize = 12, 
-              nodeColour = "#AA4371",
-              fontFamily = "sans-serif",
+              nodeColour = "#AA4371", height = NULL, width = NULL,
+              fontFamily = "sans-serif", Source = 1, Target = 2,
               zoom = FALSE, opacity = 1, linkDistance = 100,
               linkColour = "#37004D", charge = -30)
 
@@ -52,14 +52,19 @@ simpleNetwork(member.net,
 #-------------------------------------------------------------------------------
 
 links <- separate_rows(network, TO, convert = TRUE) %>%
-  select(FROM, TO, Weight)
+  select(FROM, TO, Weight) %>%
+  rename(source = FROM, target = TO, value = Weight)
 
 
 nodes <- network %>%
   select(FROM, TO) %>%
   rename(name = FROM, group = TO)
 
-nodes$group <- as.numeric(as.factor(nodes$group))
+nodes$group <- as.numeric(as.factor(nodes$group)) -1
+nodes$name <- as.numeric(as.factor(nodes$name)) -1
+links$source <- as.numeric(as.factor(links$source)) -1
+links$target <- as.numeric(as.factor(links$target)) -1
+
 
 #network$ID <- 1:nrow(network)
 #network$FROM <- as.numeric(as.factor(network$FROM))
@@ -72,26 +77,33 @@ View(nodes)
 View(links)
 
 
-ColourScale <- 'd3.scaleOrdinal()
-            .domain(["lions", "tigers"])
-           .range(["#FF6900", "#694489"]);'
-
-
 #Plot basic anatomy network
 forceNetwork(Nodes = nodes, Links = links,
              NodeID = "name", Group = "group",
-             Source = "FROM", Target = "TO", Value = "Weight", 
+             Source = "source", Target = "target", Value = "value", 
              height = 500, width = 1000, fontSize = 20, opacity = 0.7, 
-             colourScale =JS(ColourScale), 
+             colourScale =JS("d3.scaleOrdinal(d3.schemeCategory20);"), 
              zoom = T, legend = T)
 
 
+forceNetwork(Links = links, Nodes = nodes, Source = "source",
+                           Target = "target", Value = "value", NodeID = "name",
+                           Group = "group", opacity = 0.4, zoom = TRUE)
 
+forceNetwork(Nodes = nodes, Links = links,  Source = "source", Target = "target", Value = "value",  NodeID = "name", Group = "group",
+             height = NULL, width = NULL,
+             colourScale = JS("d3.scaleOrdinal(d3.schemeCategory20);"), fontSize = 7,
+             fontFamily = "serif", linkDistance = 50,
+             linkWidth = JS("function(d) { return Math.sqrt(d.value); }"),
+             radiusCalculation = JS(" Math.sqrt(d.nodesize)+6"), charge = -30,
+             linkColour = "#666", opacity = 0.6, zoom = FALSE, legend = FALSE,
+             arrows = FALSE, bounded = FALSE, opacityNoHover = 0,
+             clickAction = NULL)
 
 #Customise widget
 forceNetwork(Nodes = nodes, Links = links,
              NodeID = "name", Group = "group",
-             Source = "FROM", Target = "TO", Value = "Weight",
+             Source = "source", Target = "target", Value = "value",
              legend = TRUE, 
              fontSize = 50,
              opacity = 1, 
