@@ -43,10 +43,10 @@ simpleNetwork(member.net)
 #Customise widget
 simpleNetwork(member.net, 
               fontSize = 12, 
-              nodeColour = "#3182bd",
+              nodeColour = "#AA4371",
               fontFamily = "sans-serif",
-              zoom = FALSE, opacity = 1, linkDistance = 50,
-              linkColour = "#666")
+              zoom = FALSE, opacity = 1, linkDistance = 100,
+              linkColour = "#37004D", charge = -30)
 
 
 #-------------------------------------------------------------------------------
