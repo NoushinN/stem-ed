@@ -1,6 +1,8 @@
 
-# workshop notes with Jenny Bryan at RLadies Vancouver (CodeCore) - July 18, 2019
+# Workshop Notes with Jenny Bryan at RLadies Vancouver (CodeCore) - July 18, 2019
+## developing a package using R
 
+# load dependencies
 library(usethis)
 library(roxygen2)
 library(knitr)
@@ -8,19 +10,20 @@ library(testthat)
 library(covr)
 library(tidyverse)
 
-
+# functions in the usethis package include:
 create_package()
 create_project()
 create_from_github()
-
 use_mit_license()
 use_testthat()
 use_vignette()
 use_cran_badge()
 
-
+# another very useful and necessary library for developing a package is devtools
 library(devtools)
-document()
+documen()
+check()
+install()
 
 
 # to see what is your default package libraries:
@@ -95,13 +98,13 @@ usethis::use_devtools()
 usethis::edit_r_profile()
 usethis::use_partial_warnings()
 
+# other useful tidbits
+git_vaccinate()
+
 #-------------------------------------------------------------------------------
 
 # all packages that hit CRAN need to pass check() test 
 devtools::check() # check for the warnings under build pane
-
-# e.g. license
-use_mit_license("Noushin Nabavi")
 
 #' Add roxygen comments by putting cursor inside function and go to
 #' code -> insert roxygen skeleton
@@ -111,6 +114,9 @@ devtools::document() # under build pane, more
 
 # install the package or under build pane use instal and restart
 devtools::install()
+
+# e.g. license
+use_mit_license("Noushin Nabavi")
 
 # can create a readme
 usethis::use_readme_rmd()
