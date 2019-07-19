@@ -1,0 +1,70 @@
+---
+name: Noushin Nabavi
+position: "Data Science Fellow"
+address: "Victoria, BC"
+phone: +1 22 3333 4444
+www: GITHUB.IO
+email: "nabavinoushin@gmail.com"
+twitter: nabavinoushin
+github: noushinn
+linkedin: LINKEDIN
+date: "`r format(Sys.time(), '%B %Y')`"
+output: vitae::awesomecv
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+library(tidyverse)
+```
+
+# Career Highlights
+
+* POINT ONE
+* POINT TWO
+* POINT THREE
+
+# Education
+```{r}
+tribble(
+  ~ degree, ~ uni, ~ loc, ~ dates, ~ details,
+  "MY DEGREE", "UNIVERSITY", "CITY, COUNTRY", "YEARS", "DETAILS",
+  "SECOND DEGREE", "SECOND UNIVERSITY", "CITY, COUNTRY", "YEARS", "DETAILS"
+) %>% 
+  detailed_entries(degree, dates, uni, loc, details)
+```
+
+# Professional Experience
+```{r}
+tribble(
+  ~ role, ~ company, ~ loc, ~ dates, ~ details,
+  "ROLE", "COMPANY", "CITY, COUNTRY", "YEARS", "DETAILS",
+  "SECOND ROLE", "COMPANY", "CITY, COUNTRY", "YEARS", "DETAILS"
+) %>% 
+  detailed_entries(role, dates, company, loc, details)
+```
+
+# Awards & Achievements
+## Awards
+```{r}
+tribble(
+  ~ award, ~ from, ~ year,
+  "AWARD NAME", "AWARDED BY", "YEAR",
+  "SECOND AWARD NAME", "AWARDED BY", "YEAR"
+) %>%
+  brief_entries(award, year, from)
+```
+
+# Selected talks
+```{r}
+tribble(
+  ~name, ~event, ~location, ~year,
+  "WHAT", "EVENT", "WHERE", 2018, 
+) %>% 
+  detailed_entries(
+    what = name,
+    when = year,
+    with = event,
+    where = location
+  )
+```
