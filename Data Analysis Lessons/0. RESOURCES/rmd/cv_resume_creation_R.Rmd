@@ -2,9 +2,9 @@
 name: Noushin Nabavi
 position: "Data Science Fellow"
 address: "Victoria, BC"
-phone: +1 22 3333 4444
-www: GITHUB.IO
-email: "nabavinoushin@gmail.com"
+phone: +1 778 999 1982
+www: noushinn.GITHUB.IO
+email: "nabavi.noushin@gmail.com"
 twitter: nabavinoushin
 github: noushinn
 linkedin: LINKEDIN
@@ -20,16 +20,21 @@ library(tidyverse)
 
 # Career Highlights
 
-* POINT ONE
-* POINT TWO
-* POINT THREE
+• Results-driven, forward-thinking, and accomplished research scientist with demonstrated leadership and project
+management experience in private and public sectors   
+• Skilled in quantitative data analysis with proficiency in Microsoft Office applications and R Statistical
+software    
+• Demonstrated success in designing, conducting, analyzing, and managing data and science projects    
+• Service-centric and dedicated to delivering quality services and gaining the trust of clients and stakeholders    
+• Skilled in creating evaluation methodologies, defining and analyzing success metrics, and product delivery  
 
 # Education
 ```{r}
 tribble(
   ~ degree, ~ uni, ~ loc, ~ dates, ~ details,
-  "MY DEGREE", "UNIVERSITY", "CITY, COUNTRY", "YEARS", "DETAILS",
-  "SECOND DEGREE", "SECOND UNIVERSITY", "CITY, COUNTRY", "YEARS", "DETAILS"
+  "Bachelor of Science", "University of Toronto", "Toronto, ON, Canada", "2001-2005", "Honors in Cell and Molecular Biology",
+  "Doctor of Philosophy", "University of Toronto", "Toronto, ON, Canada", "2005-2011", "Cell and Systems Biology",
+  "mini-MBA", "University of British Columbia", "Vancouver, BC, Canada", "2018", "Business Administration for Academics"
 ) %>% 
   detailed_entries(degree, dates, uni, loc, details)
 ```
@@ -38,8 +43,12 @@ tribble(
 ```{r}
 tribble(
   ~ role, ~ company, ~ loc, ~ dates, ~ details,
-  "ROLE", "COMPANY", "CITY, COUNTRY", "YEARS", "DETAILS",
-  "SECOND ROLE", "COMPANY", "CITY, COUNTRY", "YEARS", "DETAILS"
+  "Mitacs Science Policy Fellow", "BC Government", "Victoria, BC, Canada", "September 2018 - September 2019", "Analyze and communicate complex administrative integrated data for evidence based policy making; Building and strengthening effective stakeholder relationships with ministry clients and contractors; Managing data projects while developing and implementing timely methodologies and performance metrics ",
+  
+  "Senior Research Fellow", "University of British Columbia", "Vancouver, BC, Canada", "February 2015 - February 2018", "Assemble and lead an international consortium of scientists for a genomics project, published 5 manuscripts,
+presented the results in 3 international conferences and 2 local symposia; Analyze and integrate genomics, transcriptomics, and proteomics datasets using R Statistical Software and proprietary analytics workflows; Wrote and secured a $275K operating grant from BC Cancer Foundation for next generation sequencing tumor profiling of malignant peritoneal mesothelioma, awarded Amazon Web Services for cloud computing and Rare Genomics Institute BeHeard Technology’s CRISPR library for research projects",
+
+
 ) %>% 
   detailed_entries(role, dates, company, loc, details)
 ```
