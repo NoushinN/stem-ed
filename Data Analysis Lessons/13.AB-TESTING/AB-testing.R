@@ -1,4 +1,4 @@
-###DEMO for A/B testing  in R###
+###DEMO for A/B testing and power analyses in R###
 # lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons for A/B testing)
 
 # load dependencies
@@ -11,7 +11,7 @@ click_data <- read.csv(url(fileLocation))
 
 # Find oldest and most recent age
 min(click_data$Age)
-max(click_data$Age)
+max(click_data$Age) 
 
 #-----------------------------------------------------------------
 
