@@ -1,5 +1,5 @@
 ###DEMO for data import into R in batch using functions###
-# lessons curated by Noushin Nabavi, PhD 
+# lessons curated by Noushin Nabavi, PhD
 
 # load library dependencies
 
@@ -77,7 +77,7 @@ rownames(FAM) <- FAM_path
 write.csv(FAM, "families_tables.csv")
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-# finding year range of each csv 
+# finding year range of each csv
 unique(fread(here("ind", "xls", "merged ind csvs", "1_IND.csv"))$year)
 
 # or
@@ -91,7 +91,7 @@ fread(here("ind", "xls", "merged ind csvs", "1_IND.csv")) %>%
 csv_year_range_ind <- function(path) {
   path %>%
   file_years <- map(function(p) list("name" = p, "content"= unique(fread(here("ind", "xls", "merged ind csvs", p))$year))) %>%
-  map(function(q) write.csv(q$content, file = paste(q$name))) 
+  map(function(q) write.csv(q$content, file = paste(q$name)))
 }
 
 k <- csv_year_range_ind(IND_path)
@@ -116,11 +116,11 @@ ind_file_names <- function(path) {
 }
 
 read_files <- function(path) {
-  file <- path %>% 
-  map(function(x) setnames(fread(x), c("table", "year"))) %>% 
+  file <- path %>%
+  map(function(x) setnames(fread(x), c("table", "year"))) %>%
     select(table <- s)
-  
-  merged_table <- do.call(plyr::rbind.fill, file) 
+
+  merged_table <- do.call(plyr::rbind.fill, file)
   write_csv(merged_table, "merged_IND.csv")
 }
 
@@ -137,15 +137,41 @@ ind_file_names <- function(path) {
 }
 
 read_files <- function(path) {
-  file <- path %>% 
-    map(function(x) setnames(fread(x), c("table", "year"))) %>% 
+  file <- path %>%
+    map(function(x) setnames(fread(x), c("table", "year"))) %>%
     select(table <- r)
-  
-  merged_table <- do.call(plyr::rbind.fill, file) 
+
+  merged_table <- do.call(plyr::rbind.fill, file)
   write_csv(merged_table, "merged_FAM.csv")
 }
 
 r <- ind_file_names(FAM_years)
 w <- read_files(FAM_years)
 
-  
+#-------------------------------------------------------------------------------
+
+# selecting one of only unique observations
+library(janitor)
+library(broom)
+
+# example
+
+mtcars %>%
+  group_by(mpg) %>%
+  slice(1) %>%
+  rename_all(function(x)
+    paste0(x, "_datafile1")) %>%
+  clean_names() %>%
+  rename("mpg" = "mpg_datafile1")
+
+#-------------------------------------------------------------------------------
+
+# function to write a path specific to today
+todays_file <- paste0("file_", format(Sys.Date(), "%d%B%Y"), ".csv")
+write_csv(mtcars, file.path(tmp, todays_file), na = "")
+
+#-------------------------------------------------------------------------------
+
+# other filterings
+mtcars %>%
+  distinct(mpg, .keep_all = TRUE)
