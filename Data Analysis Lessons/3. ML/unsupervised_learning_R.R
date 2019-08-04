@@ -151,3 +151,33 @@ pr.without.scaling <- prcomp(cars, scale = FALSE)
 # Create biplots of both for comparison
 biplot(pr.with.scaling)
 biplot(pr.without.scaling)
+
+
+#-------------------------------------------------------------------
+
+# Date and time feature extraction
+library(tidyverse)
+library(dendextend)
+
+# load data
+oes <- readRDS(here::here("STEM_Education", "Data Analysis Lessons", "3. ML", "occupation_wage.rds"))
+
+
+# Calculate Euclidean distance between the occupations
+dist_oes <- dist(oes, method = 'euclidean')
+
+# Generate an average linkage analysis 
+hc_oes <- hclust(dist_oes, method = 'average')
+
+# Create a dendrogram object from the hclust variable
+dend_oes <- as.dendrogram(hc_oes)
+
+# Plot the dendrogram
+plot(dend_oes)
+
+# Color branches by cluster formed from the cut at a height of 100000
+dend_colored <- color_branches(dend_oes, h = 100000)
+
+# Plot the colored dendrogram
+plot(dend_colored)
+
