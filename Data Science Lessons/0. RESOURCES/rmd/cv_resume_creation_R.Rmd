@@ -1,0 +1,106 @@
+---
+name: Noushin Nabavi, PhD
+position: "Data Science Fellow"
+address: "Victoria, BC"
+phone: +1 778-999-1982
+www: noushinn.GITHUB.IO
+email: "nabavi.noushin@gmail.com"
+twitter: nabavinoushin
+github: noushinn
+linkedin: noushin-nabavi-56b27b13
+date: "`r format(Sys.time(), '%B %Y')`"
+output: vitae::awesomecv
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+library(tidyverse)
+```
+
+# Career Highlights
+
+• Results-driven, forward-thinking, and accomplished research scientist with 4+ years of demonstrated leadership and project
+management experience in private and public sectors   
+• Skilled in quantitative data analysis with more than 12+ years experience using Microsoft Office applications and 3+ years using R    
+• Demonstrated success in designing, conducting, analyzing, and managing research and data science projects    
+• Service-centric and dedicated to delivering quality services and gaining the trust of clients and stakeholders    
+• Skilled in creating evaluation methodologies, defining and analyzing success metrics, and product delivery  
+
+# Education
+```{r}
+tribble(
+  ~ degree, ~ uni, ~ loc, ~ dates, ~ details,
+  "Certifications", "Data Camp", "Online", "2018-2019", "Data Analytics using R",
+  "Certifications", "Mitacs Inc.", "University of British Columbia/ BC Government", "2017-2019", "Project Management and Agile Transformation",
+  "mini-MBA", "University of British Columbia", "Vancouver, BC, Canada", "2018", "Business Administration for Academics",
+  "Doctor of Philosophy", "University of Toronto", "Toronto, ON, Canada", "2005-2011", "Cell and Systems Biology",
+  "Bachelor of Science", "University of Toronto", "Toronto, ON, Canada", "2001-2005", "Honors in Cell and Molecular Biology"
+  
+) %>% 
+  detailed_entries(degree, dates, uni, loc, details)
+```
+
+# Professional Experience
+```{r}
+tribble(
+  ~ role, ~ company, ~ loc, ~ dates, ~ details,
+  "Mitacs Science Policy Fellow", "BC Government", "Victoria, BC, Canada", "September 2018 - September 2019", "Analyze and communicate complex administrative integrated data for evidence based policy making; Build and strengthen effective stakeholder relationships with ministry clients and contractors; Manage a data science project while developing and implementing timely methodologies and performance metrics",
+  
+  "Senior Research Fellow", "University of British Columbia", "Vancouver, BC, Canada", "February 2015 - February 2018", "Assemble and lead an international consortium of scientists for a genomics project, published 5 manuscripts and presented the results in 3 international conferences and 2 local symposia; Analyze and integrate genomics, transcriptomics, and proteomics datasets using R and proprietary software; Wrote and secured a $275K operating grant from BC Cancer Foundation for next generation sequencing tumor profiling of malignant peritoneal mesothelioma",
+
+  "Postdoctoral Fellow", "University of California, San Francisco", "San Francisco, CA, USA", "August 2013 - December 2014", "Design research project and conduct experiments related to liver disease with an expert team of scientists; Analyze experimental data and integrate results to generate presentations and publications; Contribute to securing a $427K NIH grant",
+
+    "Postdoctoral Fellow", "University of California, Berkeley", "Berkeley, CA, USA", "January 2012 - July 2013", "Implement a reproducible scientific workflow for a project related to aging: designed and carried out experiments with animal models for aging, analyzed results; Manage a research project with graduate students and undergraduate students towards publication in a peer-review journal",
+
+  "Teaching Assistant and Research Co-Supervisor", "University of Toronto", "Toronto, ON, Canada","September 2005 - December 2011", "Rank the top 10% among departmental teaching assistants for 500+ hours of instruction in introductory biology laboratory, cellular molecular biology, and microbiology; Create and delivere departmental lectures to 500+ students with satisfactory responses from students; Co-supervise 10 undergraduate thesis students on successful thesis projects maintaining 100% retention rate (8 students secured successful science jobs, 2 pursued graduate studie)"
+  
+) %>% 
+  detailed_entries(role, dates, company, loc, details)
+```
+
+# Awards & Achievements
+## Awards
+```{r}
+tribble(
+  ~ award, ~ from, ~ year,
+  
+"Travel award", "Hackseq Genomics Hackathon", "2018",
+"Mentorship award", "Victoria Health Hackathon", "2018",
+"Canadian Science Policy Fellowship", "Mitacs Inc.", "2018",
+"BeHeard CRISPR Technology", "Rare Genomics Institute", "2017",
+"Amazon Web Services for cloud computing", "Amazon", "2016",
+"Mitacs Accelerate Fellowship", "Mitacs Inc.", "2015",
+"Science Teaching Award", "American Society for Microbiology", "2014",
+"Siebel Stem Cell Fellowship", "Siebel Foundation", "2012",
+"Graduate Student Research Award", "University of Toronto", "2010",
+"Graduate Student Research", "Natural Science and Engineering Research Council", "2009",
+"Women in Science and Mathematics", "General Motors of Canada", "2008",
+"Travel award", "American Society for Cell Biology", "2007",
+"Travel award", "Connective Tissue Conference", "2006"
+
+
+) %>%
+  brief_entries(award, year, from)
+```
+
+# Selected talks
+```{r}
+tribble(
+  ~name, ~event, ~location, ~year,
+  
+"Healing old wounds", "Institute of Public Administration of Canada", "Victoria, BC, Canada", "October 2018",
+"Reproducible data cleaning workflow with R", "Data Science Community of Practice", "Victoria, BC, Canada", "May 2019", 
+"BAP1 creates a potential therapeutic vulnerability in malignant peritoneal mesothelioma", "International Mesothelioma Interest Group", "Ottawa, ON, Canada", "May 2018",
+"Comprehensive molecular characterization of peritoneal mesothelioma", "Vancouver Prostate Centre Friday Seminar", "Vancouver, BC, Canada", "February 2017",
+"Cytochrome P450 degradation in hepatocytes and implications in drug metabolism","UCSF Postdoctoral Symposium", "San Francisco, CA, USA",  "June 2014",
+"SIRT2’s role in stem cell biology", "Berkeley Stem Cell Center Retreat, Fred Farr Forum", "Asilomar, CA, USA", "April 2012 and 2013"
+  
+) %>% 
+  detailed_entries(
+    what = name,
+    when = year,
+    with = event,
+    where = location
+  )
+```
