@@ -33,6 +33,7 @@ tribble(
   ~ degree, ~ uni, ~ loc, ~ dates, ~ details,
   "Certifications", "Data Camp", "Online", "2018-2019", "Data Analytics using R",
   "Certifications", "Mitacs Inc.", "University of British Columbia/ BC Government", "2017-2019", "Project Management and Agile Transformation",
+  "Certifications", "Yale Centre for Integration of Teaching and Learning", "Online Summer Institute for Teaching", "2018", "Teaching best practices",
   "mini-MBA", "University of British Columbia", "Vancouver, BC, Canada", "2018", "Business Administration for Academics",
   "Doctor of Philosophy", "University of Toronto", "Toronto, ON, Canada", "2005-2011", "Cell and Systems Biology",
   "Bachelor of Science", "University of Toronto", "Toronto, ON, Canada", "2001-2005", "Honors in Cell and Molecular Biology"
@@ -76,9 +77,7 @@ tribble(
 "Graduate Student Research Award", "University of Toronto", "2010",
 "Graduate Student Research", "Natural Science and Engineering Research Council", "2009",
 "Women in Science and Mathematics", "General Motors of Canada", "2008",
-"Travel award", "American Society for Cell Biology", "2007",
-"Travel award", "Connective Tissue Conference", "2006"
-
+"Travel awards", "American Society for Cell Biology", "2006 - 2007"
 
 ) %>%
   brief_entries(award, year, from)
