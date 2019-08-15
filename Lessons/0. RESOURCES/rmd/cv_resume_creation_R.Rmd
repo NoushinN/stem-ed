@@ -20,19 +20,19 @@ library(tidyverse)
 
 # Career Highlights
 
-• Results-driven, forward-thinking, and accomplished research scientist with 4+ years of demonstrated leadership and project
-management experience in private and public sectors   
-• Skilled in quantitative data analysis with more than 12+ years experience using Microsoft Office applications and 3+ years using R    
-• Demonstrated success in designing, conducting, analyzing, and managing research and data science projects    
-• Service-centric and dedicated to delivering quality services and gaining the trust of clients and stakeholders    
-• Skilled in creating evaluation methodologies, defining and analyzing success metrics, and product delivery  
+•	Results-driven, forward-thinking accomplished Research Scientist
+•	Demonstrated leadership and project management experience in private and public sectors
+•	Skilled quantitative analyst proficient with Python, R and Microsoft Office 
+•	Experienced delivery of products including wrangled data, analytics concepts and documentation: from rigorously defensible definitions through to implementation and evaluation 
+•	Service-oriented team player dedicated to delivering quality services and gaining the trust of clients and stakeholders
+
 
 # Education
 ```{r}
 tribble(
   ~ degree, ~ uni, ~ loc, ~ dates, ~ details,
   "Certifications", "Data Camp", "Online", "2018-2019", "Data Analytics using R",
-  "Certifications", "Mitacs Inc.", "University of British Columbia/ BC Government", "2017-2019", "Project Management and Agile Transformation",
+  "Certifications", "Mitacs Inc.", "University of British Columbia", "2017-2019", "Project Management and Agile Transformation",
   "Certifications", "Yale Centre for Integration of Teaching and Learning", "Online Summer Institute for Teaching", "2018", "Teaching best practices",
   "mini-MBA", "University of British Columbia", "Vancouver, BC, Canada", "2018", "Business Administration for Academics",
   "Doctor of Philosophy", "University of Toronto", "Toronto, ON, Canada", "2005-2011", "Cell and Systems Biology",
@@ -65,10 +65,10 @@ tribble(
 ```{r}
 tribble(
   ~ award, ~ from, ~ year,
-  
-"Travel award", "Hackseq Genomics Hackathon", "2018",
+"Premier’s Award in Evidence-Based Design", "BC Gov, Finalist", "2019",  
+"Travel award", "Hackseq Genomics Hackathon", "2018-2019",
 "Mentorship award", "Victoria Health Hackathon", "2018",
-"Canadian Science Policy Fellowship", "Mitacs Inc.", "2018",
+"Mitacs Canadian Science Policy Fellowship", "Mitacs Inc.", "2018",
 "BeHeard CRISPR Technology", "Rare Genomics Institute", "2017",
 "Amazon Web Services for cloud computing", "Amazon", "2016",
 "Mitacs Accelerate Fellowship", "Mitacs Inc.", "2015",
@@ -77,7 +77,7 @@ tribble(
 "Graduate Student Research Award", "University of Toronto", "2010",
 "Graduate Student Research", "Natural Science and Engineering Research Council", "2009",
 "Women in Science and Mathematics", "General Motors of Canada", "2008",
-"Travel awards", "American Society for Cell Biology", "2006 - 2007"
+"Travel awards", "American Society for Cell Biology", "2006-2007"
 
 ) %>%
   brief_entries(award, year, from)
