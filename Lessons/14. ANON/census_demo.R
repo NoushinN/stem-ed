@@ -1,5 +1,6 @@
 ###DEMO for Census data analysis in R###
 # Lessons are adapted and organized by Noushin Nabavi, PhD. (adapted from Datacamp lessons for census data use)
+## cansensus does a similar analysis for Canadian census data
 
 # Load the tidycensus package into your R session
 library(tidycensus)
