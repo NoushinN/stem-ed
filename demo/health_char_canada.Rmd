@@ -1,0 +1,476 @@
+---
+title: "Health Characteristics across Canada"
+author: "Noushin Nabavi"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load dependencies
+Identify libraries that are used for this project and load them. 
+```{r libraries, eval=TRUE, message = FALSE}
+library(cansim) ## install.packages("cansim") if non-existent
+library(tidyverse)
+library(janitor)
+library(naniar)
+library(skimr)
+library(sf)
+library(rgdal)
+library(leaflet)
+library(mapview)
+library(RColorBrewer)
+library(factoextra)
+library(NbClust)
+library(purrr)
+```
+
+### Retrieve data
+Retrieve annual estimates for health characteristics in Canada from Statistics Canada Website available under  CANSIM ID number 13-10-0096-01. The open data portal for health characteristics is available at (https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1310009601).
+
+```{r get-cansim, eval=TRUE, message = FALSE, echo = TRUE}
+# load the data and clean names
+data_summary_1 <- get_cansim("13-10-0096-01") %>%
+  clean_names() %>%
+  summary()  
+
+head(data_summary_1)
+
+# using skim() as an alternative to summary() to get overview of the data
+data_summary_2 <- get_cansim("13-10-0096-01") %>%
+  clean_names() %>%
+  skim()
+
+data_summary_2
+
+# make a summary of data in a new table 
+get_cansim("13-10-0096-01") %>%
+  clean_names() %>%
+  skim() %>%
+  as.tibble()
+```
+
+### Explore data and missing values
+Check whether there are NA's in the data and quantify missing values
+
+```{r missingness, eval=TRUE, message = FALSE, echo = TRUE}
+# save health_data and explore missingness
+health_data <- get_cansim("13-10-0096-01") %>%
+  clean_names() 
+
+# Explore explore the missingness
+any_na(health_data)
+n_miss(health_data)
+prop_miss(health_data)
+
+# summarizing missingness
+health_data %>%
+  miss_var_summary()
+
+# Visualize and cluster all of the missingness 
+# vis_miss(health_data, cluster = TRUE, warn_large_data = FALSE) ## reaches memory overload
+gg_miss_var(health_data)
+
+# ggplot of the number of missings in all ref_date cases (rows).
+gg_miss_case(health_data, facet = ref_date, order_cases = TRUE, show_pct = FALSE)
+
+```
+
+
+### Pre-process (wrangle) data
+Explore fields and attributes of health data that are related to BC. 
+The issue with taking either the percentage or number of persons per indicator is that there are multiple similar indicators within the same year and province. In order to plot the indicators, we are making the assumption that the same indicators can be added for one year in the same province.
+
+```{r wrangle, eval=TRUE, message = TRUE, echo = TRUE, include = TRUE}
+
+# clean headers and select columns/rows of interest for BC
+bc_ind_no <- health_data %>%
+  clean_names() %>%
+  select(ref_date, geo, indicators, characteristics, value) %>%
+  filter(characteristics == "Number of persons") %>%
+  filter(geo == "British Columbia") %>%
+  select(ref_date, geo, indicators, value) %>%
+  na.omit() 
+  
+# Factorize the data and check the number of indicators
+bc_ind_no$indicators <- factor(bc_ind_no$indicators)
+levels(bc_ind_no$indicators)
+
+# take a look at top 10 rows of data for BC indicators based on number of cases per indicator
+head(bc_ind_no, n =10)
+
+# Aggregate/clean data: add number of persons with same indicator per year 
+bc_ind <- bc_ind_no %>%
+  group_by(ref_date, indicators) %>%
+  mutate(value_b = sum(value)) %>%
+  select(ref_date, indicators, value_b) %>%
+  distinct(indicators, .keep_all = TRUE)
+
+# take a look at top 10 rows of cleaned data for BC
+head(bc_ind, n =10)
+
+# Get Proportion of individuals with certain indicators
+bc_ind_prop <- bc_ind %>% 
+  mutate(Proportion = value_b/sum(bc_ind$value_b)* 100) %>%
+  arrange(desc(Proportion))
+```
+
+
+### Plot proportion table(s) 
+Plot depicts proportion of indicators on a per year basis for BC.
+
+```{r bc-prop-ind-viz, eval=TRUE, fig.width = 30, message = FALSE}
+
+# COLOR PALETTE ---
+jColFun <- colorRampPalette(brewer.pal(n = 27, "Spectral"))
+
+ggplot(bc_ind_prop, aes(x = indicators, y = Proportion)) +
+  geom_bar(aes(fill = indicators), stat = "identity", color = NA, width=0.8, size=0.5) + 
+  facet_wrap( ~ ref_date, ncol=4) +
+  scale_fill_manual(values=jColFun(27)) +
+  theme(axis.text.x = element_blank(),
+          axis.text.y = element_text(size = 10, color="#000000"),
+          axis.title = element_text(size = 10, color="#000000"),
+          plot.title = element_text(size = 10, color="#000000", hjust=0.5),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.ticks = element_line(size=0.4, color="#000000"), 
+          strip.text = element_text(size=10, color="#000000"),
+          strip.background = element_rect(fill="#FFFFFF", color="#FFFFFF"),
+          panel.background = element_rect(fill="#FFFFFF", color="#000000"),
+          legend.text = element_text(size = 10, color="#000000"),
+          legend.title = element_blank(),
+          legend.key.size = unit(0.5, "cm"),
+          legend.position = "right") +
+      ylab("Proportion of indicators") +
+      xlab("") + 
+      ggtitle("") 
+
+```
+
+
+Plot depicts quintile range of proportions for indicators on a per year basis for BC.
+
+```{r bc-quint-viz, eval=TRUE, fig.width = 30, message = FALSE}
+# break down proportion into quintile range 
+bc_ind_quint <- bc_ind_prop %>% 
+  group_by(ref_date) %>%
+  mutate(Quintile =  ntile(Proportion, 5))
+
+
+# COLOR PALETTE ---
+jColFun <- colorRampPalette(brewer.pal(n = 27, "Spectral"))
+
+ggplot(bc_ind_quint, aes(x = Quintile, y = Proportion)) +
+  geom_bar(aes(fill = indicators), stat = "identity", color = NA, width=0.8, size=0.5) + 
+  facet_wrap( ~ ref_date, ncol=4) +
+  scale_fill_manual(values=jColFun(27)) +
+  theme(axis.text.x = element_blank(),
+          axis.text.y = element_text(size = 10, color="#000000"),
+          axis.title = element_text(size = 10, color="#000000"),
+          plot.title = element_text(size = 10, color="#000000", hjust=0.5),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.ticks = element_line(size=0.4, color="#000000"), 
+          strip.text = element_text(size=10, color="#000000"),
+          strip.background = element_rect(fill="#FFFFFF", color="#FFFFFF"),
+          panel.background = element_rect(fill="#FFFFFF", color="#000000"),
+          legend.text = element_text(size = 10, color="#000000"),
+          legend.title = element_blank(),
+          legend.key.size = unit(0.5, "cm"),
+          legend.position = "right") +
+      ylab("Quintile for indicators") +
+      xlab("") + 
+      ggtitle("") 
+
+```
+
+
+
+Plot to show indicator proportions in all provinces across Canada from 2015 - 2018.
+
+```{r canada-prop-viz, eval=TRUE, fig.width = 30, message = FALSE}
+# wrangle health_data to capture indicator proportions for all of Canada
+canada_prop <- health_data %>%
+  select(ref_date, geo, indicators, characteristics, value) %>%
+  filter(characteristics == "Number of persons") %>%
+  select(ref_date, geo, indicators, value) %>%
+  na.omit() %>%
+  group_by(ref_date, indicators, geo) %>%
+  mutate(value_b = sum(value)) %>%
+  mutate(Proportion = value_b/sum(value_b)* 100) %>%
+  select(ref_date, indicators, value_b, Proportion, geo) %>%
+  distinct(indicators, .keep_all = TRUE)
+
+# Factorize the data and check the number of indicators
+canada_prop$indicators <- factor(canada_prop$indicators)
+canada_prop$ref_date <- factor(canada_prop$ref_date)
+canada_prop$geo <- factor(canada_prop$geo)
+levels(canada_prop$indicators)
+
+
+# COLOR PALETTE ---
+jColFun <- colorRampPalette(brewer.pal(n = 27, "Spectral"))
+
+ggplot(canada_prop, aes(x = indicators, y = Proportion)) +
+  geom_bar(aes(fill = indicators), stat = "identity", color = NA, width=0.8, size=0.5) + 
+  facet_wrap( geo ~ ref_date, ncol=4) +
+  scale_fill_manual(values=jColFun(27)) +
+  theme(axis.text.x = element_blank(),
+          axis.text.y = element_text(size = 10, color="#000000"),
+          axis.title = element_text(size = 10, color="#000000"),
+          plot.title = element_text(size = 10, color="#000000", hjust=0.5),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.ticks = element_line(size=0.4, color="#000000"), 
+          strip.text = element_text(size=10, color="#000000"),
+          strip.background = element_rect(fill="#FFFFFF", color="#FFFFFF"),
+          panel.background = element_rect(fill="#FFFFFF", color="#000000"),
+          legend.text = element_text(size = 10, color="#000000"),
+          legend.title = element_blank(),
+          legend.key.size = unit(0.5, "cm"),
+          legend.position = "right") +
+      ylab("Proportion of indicators") +
+      xlab("") + 
+      ggtitle("") 
+
+```
+
+
+### Clustering or grouping the data points
+
+- K-means clustering computes the distances between points and group centers and so has a linear complexity O(n). However, finding number of clusters isn't always trivial and can yield different clustering results on different runs. Heatmaps from K-means clustering was plotted below which orders the rows of the matrix/image so that all of the rows in the same cluster are grouped together. You can see this with the more homogeneous nature of the coloring in the clustered version of the image.
+
+- Bottom-up hierarchical clustering or hierarchical agglomerative clustering is represented as a tree (or dendrogram) below. The root of the tree is the unique cluster that gathers all the samples and the leaves are the clusters with only one sample.
+
+```{r k-means, eval=TRUE, message = FALSE}
+
+# prepare the data for kmeans clustering (i.e. transform to matrix)
+canada_prop$indicators <- as.numeric(canada_prop$indicators)
+canada_prop$ref_date <- as.numeric(canada_prop$ref_date)
+canada_prop$geo <- as.numeric(canada_prop$geo)
+
+can <- canada_prop %>%
+  select(indicators, Proportion, geo, ref_date)
+
+# we don’t want the clustering algorithm to depend to an arbitrary variable unit, we start by scaling/standardizing the data using the R function scale
+scaled_can <- scale(can)
+
+# Using NbClust package to find optimum number of clusters
+set.seed(1234)
+nc <- NbClust(scaled_can, min.nc=2, max.nc=15, method="kmeans")
+table(nc$Best.n[1,])
+
+barplot(table(nc$Best.n[1,]),
+          xlab="Numer of Clusters", ylab="Number of Criteria",
+          main="Number of Clusters Chosen by 26 Criteria")
+
+
+# Elbow method (scree plot)
+wss <- function(k) {
+  kmeans(scaled_can, k, nstart = 10 )$tot.withinss
+}
+
+# Compute and plot wss for k = 1 to k = 15
+k.values <- 1:15
+
+# extract wss for 2-15 clusters
+wss_values <- map_dbl(k.values, wss)
+
+plot(k.values, wss_values,
+       type="b", pch = 19, frame = FALSE, 
+       xlab="Number of clusters K",
+       ylab="Total within-clusters sum of squares")
+
+# Average silhoutte method
+# function to compute average silhouette for k clusters
+require(cluster)
+avg_sil <- function(k) {
+  km.res <- kmeans(scaled_can, centers = k, nstart = 25)
+  ss <- silhouette(km.res$cluster, dist(scaled_can))
+  mean(ss[, 3])
+}
+
+# Compute and plot wss for k = 2 to k = 15
+k.values <- 2:15
+
+# extract avg silhouette for 2-15 clusters
+avg_sil_values <- map_dbl(k.values, avg_sil)
+
+plot(k.values, avg_sil_values,
+       type = "b", pch = 19, frame = FALSE, 
+       xlab = "Number of clusters K",
+       ylab = "Average Silhouettes")
+
+fviz_nbclust(scaled_can, kmeans, method = "silhouette")
+
+ 
+# optimal number of clusters seems to be 2 and a shallow elbow
+
+# compute kmeans with 3 clusters
+kmeansObj <-kmeans(scaled_can, centers = 2, nstart = 25) # The kmeans() function has an nstart option that attempts multiple initial configurations and reports on the best one. For example, adding nstart=25 will generate 25 initial configurations. This approach is often recommended.
+
+kmeansObj$cluster
+kmeansObj$centers # Repeat these steps for a set number of iterations or until the group centers don’t change much between iterations
+
+# estimate the number of clusters with factoextra library
+require(cluster)
+
+fviz_cluster(kmeansObj, scaled_can, geom = "point", 
+             ellipse.type = "norm",
+             palette = "Set2", ggtheme = theme_minimal())
+
+# alternatively: do a comparison between number of clusters 
+k2 <- kmeans(scaled_can, centers = 2, nstart = 25)
+k3 <- kmeans(scaled_can, centers = 3, nstart = 25)
+k4 <- kmeans(scaled_can, centers = 4, nstart = 25)
+k5 <- kmeans(scaled_can, centers = 5, nstart = 25)
+
+# plots to compare
+p1 <- fviz_cluster(k2, geom = "point", data = scaled_can) + ggtitle("k = 2")
+p2 <- fviz_cluster(k3, geom = "point",  data = scaled_can) + ggtitle("k = 3")
+p3 <- fviz_cluster(k4, geom = "point",  data = scaled_can) + ggtitle("k = 4")
+p4 <- fviz_cluster(k5, geom = "point",  data = scaled_can) + ggtitle("k = 5")
+
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, nrow = 2)
+
+# make an image plot using the K-means clusters
+par(mfrow = c(1, 2))
+image(t(can)[, nrow(scaled_can):1], yaxt = "n", main = "Original Data")
+image(t(can)[, order(kmeansObj$cluster)], yaxt = "n", main = "Clustered Data (k=2)")
+
+```
+
+
+
+```{r hierarchical, eval=TRUE, message = FALSE}
+
+# measuring the default Euclidean distance as it has a strong influence on the clustering results
+distance <- get_dist(scaled_can) 
+fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
+
+# Hierarchical clustering: Use hcut() which compute hclust and cut the tree
+hc.cut <- hcut(scaled_can, k = 2, hc_method = "complete")
+# Visualize dendrogram
+fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
+
+```
+
+
+
+### Map data
+
+
+```{r map, eval=TRUE, message = FALSE}
+# We make a function, theme_map() for ggplot
+theme_map <- function(base_size=9, base_family="") {
+    require(grid)
+    theme_bw(base_size=base_size, base_family=base_family) %+replace%
+        theme(axis.line=element_blank(),
+              axis.text=element_blank(),
+              axis.ticks=element_blank(),
+              axis.title=element_blank(),
+              panel.background=element_blank(),
+              panel.border=element_blank(),
+              panel.grid=element_blank(),
+              panel.spacing=unit(0, "lines"),
+              plot.background=element_blank(),
+              legend.justification = c(0,0),
+              legend.position = c(0,0)
+              )
+}
+
+theme_set(theme_map())
+
+# import the shapefile using one of rgdal’s workhorse functions
+# Download .shp files from this link: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm. 
+## choose as your options ArcGIS .shp file, then—for example—Census divisions and cartographic boundaries. 
+ 
+if (!file.exists("./polygons/ne_50m_admin_1_states_provinces_lakes/ne_50m_admin_1_states_provinces_lakes.dbf")){
+  download.file(file.path('http://www.naturalearthdata.com/http/',
+                          'www.naturalearthdata.com/download/50m/cultural',
+                          'ne_50m_admin_1_states_provinces_lakes.zip'),
+                f <- tempfile())
+  unzip(f, exdir = "./polygons/ne_50m_admin_1_states_provinces_lakes")
+  rm(f)
+}
+
+# Read the .shp files
+provinces <- readOGR("./polygons/ne_50m_admin_1_states_provinces_lakes", 'ne_50m_admin_1_states_provinces_lakes', encoding='UTF-8')
+
+
+bc <- read_sf("demo/data/gcd_000b11a_e.shp") %>%
+  filter(PRNAME == "British Columbia / Colombie-Britannique") %>%
+  st_transform(3005)
+pal_bc <- colorRampPalette(brewer.pal(9, "YlOrBr"))
+
+mapview(bc, col.regions = pal_bc(100))
+
+
+canada <- read_sf("demo/data/gcd_000b11a_e.shp") %>%
+  st_transform(3005)
+pal_can <- colorRampPalette(brewer.pal(9, "Pastel1"))
+
+mapview(canada, col.regions = pal_can(100))
+
+
+
+ggplot(data = canada, fill = PRNAME) +
+  geom_sf()
+
+
+
+provinces2  <- sp::merge(
+  provinces,
+  canada_percent,
+  by.x = "name",
+  by.y = "geo",
+  sort = FALSE,
+  incomparables = NULL,
+  duplicateGeoms = TRUE
+)
+
+clear <- "#F2EFE9"
+lineColor <- "#000000"
+hoverColor <- "red"
+lineWeight <- 0.5
+
+pal <- colorNumeric(palette = 'Purples', c(max(canada_percent$value), min(canada_percent$value)), reverse = FALSE)
+
+provinces2 %>%
+  leaflet() %>%
+  leaflet(options = leafletOptions(zoomControl = FALSE,
+                                   minZoom = 3, maxZoom = 3,
+                                   dragging = FALSE)) %>%
+  addTiles() %>%
+  setView(-110.09, 62.7,  zoom = 3) %>%
+  addPolygons(data = subset(provinces2, name %in% c("British Columbia", "Alberta", "Saskatchewan", "Manitoba", "Ontario", "Québec", "New Brunswick", "Prince Edward Island", "Nova Scotia", "Newfoundland and Labrador", "Yukon", "Northwest Territories", "Nunavut")),
+              fillColor = ~ pal(value),
+              fillOpacity = 0.5,
+              stroke = TRUE,
+              weight = lineWeight,
+              color = lineColor,
+              highlightOptions = highlightOptions(fillOpacity = 1, bringToFront = TRUE, sendToBack = TRUE),
+              label=~stringr::str_c(
+                name,' ',
+                formatC(value)),
+              labelOptions= labelOptions(direction = 'auto'),
+              group = "ref_date")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
