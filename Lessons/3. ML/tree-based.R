@@ -1,5 +1,5 @@
 ###DEMO for machine learning with tree-based models in R###
-# lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons machine learning)
+# lessons curated by Noushin Nabavi, PhD (adapted from Datacamp lessons on machine learning)
 # Trees covered: classification - regression - bagged - random forest - boosted 
 # caution: check the advantages and disadvantages of all models prior to using
 
