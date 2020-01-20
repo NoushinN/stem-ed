@@ -6,7 +6,7 @@ We live in a complex world and we are not prepared for it. In my learning life j
 
 It is my passion to enhance teaching and learning excellence by implementing modern and effective teaching practices for diverse learners. For example, I myself am a visual learner and do recognize when my mind wanders when the lesson materials miss visuals. Recognizing that learning styles are quite diverse for participants, the onus is on instructors to develop materials that cater to every learning type be it visual, auditory, abstract/mathematical, spatial, or lingual learners. Improvement of teaching and learning is a dynamic and ongoing process, just as is research in any STEM discipline. At the core of improving teaching and learning is the need to accurately determine what we have learned. My goal is to be a constructive agent for a learning journey towards success. 
 
-In applying a research approach to teaching, I strive to apply these **7 processes**: 
+In applying a research approach to teaching, I strive to apply these **8 processes**: 
   
 **(i)** learning foundational knowledge,   
 **(ii)** creating objectives for learning,  
@@ -14,7 +14,9 @@ In applying a research approach to teaching, I strive to apply these **7 process
 **(iv)** defining measures of success,  
 **(v)** developing and implementing teaching practices within an experimental design,  
 **(vi)** collecting and analyzing data from lessons,  
-**(vii)** reflecting, evaluating, and iterating lessons.  
+**(vii)** reflecting, evaluating, and iterating lessons. 
+**(vii)** incorporating inclusivity, diversity, and equity concepts in lessons and classroom dynamics.     
+
 
 The lessons I have curated for data science can be found [here](https://github.com/NoushinN/stem-ed/tree/master/Data%20Science%20Lessons).  
 The literature that have inspired this teaching philosophy can be found [here](https://github.com/NoushinN/stem-ed/tree/master/Teaching%20Literature).  
