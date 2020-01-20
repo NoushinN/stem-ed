@@ -14,8 +14,8 @@ In applying a research approach to teaching, I strive to apply these **8 process
 **(iv)** defining measures of success,  
 **(v)** developing and implementing teaching practices within an experimental design,  
 **(vi)** collecting and analyzing data from lessons,  
-**(vii)** reflecting, evaluating, and iterating lessons. 
-**(vii)** incorporating inclusivity, diversity, and equity concepts in lessons and classroom dynamics.     
+**(vii)** reflecting, evaluating, and iterating lessons,     
+**(viii)** incorporating inclusivity, diversity, and equity concepts in lessons and classroom dynamics.     
 
 
 The lessons I have curated for data science can be found [here](https://github.com/NoushinN/stem-ed/tree/master/Data%20Science%20Lessons).  
