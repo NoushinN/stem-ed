@@ -1,0 +1,677 @@
+---
+title: "Report assessing the prescription patterns of HQ in BC"
+subtitle: "COVID demo"
+author: "Noushin Nabavi"
+date: "04/05/2020"
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+\fontsize{10}{22}
+\fontseries{b}
+\selectfont
+
+```{r markdown setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<P style="page-break-before: always">
+\newpage
+
+# Overview
+
+Responses include `tables` and `graphs` for descriptive statistical analyses of provided data (i.e. hydroxychloroquine (HQ) time series csv file) as well as the `code` used to generate them.   
+
+This report is chronologically divided into the following tasks:   
+i. data import    
+ii. data cleaning    
+iii. data wrangling    
+iv. descriptive and statistical analyses   
+v. statistical testing  
+
+The computational methods employed include mean, median, standard deviation, standard error, and interquantile range.  
+
+The impact of Covid-19 in March 2020 is described in section 5.3 and 5.4 which provide statistical significance test outputs (MANOVA and multiple pairwise comparisons -TukeyHSD) and interpretations regarding the impact of Covid-19 on HQ prescriptions.  
+
+# Declare script dependencies 
+
+Load the packages/libraries into the RStudio environment.    
+These libraries are needed for data loading, cleaning, descriptive analysis, and reporting.
+
+```{r scripts setup,  evaluate = TRUE, echo= TRUE, message = FALSE, results = "hide", warning = FALSE}
+
+# list of libraries
+libraries <- c("tidyverse", "data.table", "here", "table1", "summarytools",
+               "fpp2", "lubridate", "httr", "shiny", "sf", "viridis",
+               "ggthemes", "rgdal", "zoo", "naniar", "wesanderson",
+               "Hmisc", "knitr", "kableExtra", "skimr", "extrafont")
+
+# load libraries
+lapply(libraries, library, character.only = TRUE)
+
+```
+
+# Load hydroxychloroquine time-series data 
+
+Load the hydroxychloroquine time series data into RStudio workspace and format the columns with correct types. For instance, the `Service Month` field is changed to `date` format. 
+The data fields are renamed for convenient data wrangling. The new names are as follows:   
+- region = `Health Authority Name`   
+- clnt_count = `Distinct Client Count`   
+- disp_count = `Dispense Count`   
+- disp_days = `Dispensed Days Supplied`   
+- disp_tabs = `Dispensed Tablets`  
+- prsc_count = `Distinct Prescriber Count`  
+- srv_date = `Service Month`  
+
+## Read-in and clean data
+Read the data into R environment and rename the fields for easier data wrangling.
+The data is called `hq_data`.
+
+```{r load data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Load the hydroxychloroquine time series data
+## Format the service month column to date (yyyy-mm-dd)
+
+hq_data <- fread("hydroxychloroquine time-series.csv") %>%
+  mutate(`Service Month` = as.Date(as.yearmon(`Service Month`)))  %>%
+  rename(region = `Health Authority Name`, 
+         clnt_count = `Distinct Client Count`,
+         disp_count = `Dispense Count`,
+         disp_days = `Dispensed Days Supplied`,
+         disp_tabs = `Dispensed Tablets`,
+         prsc_count = `Distinct Prescriber Count`,
+         srv_date = `Service Month`) 
+
+```
+
+## Check data structure
+Check the field names and types.
+```{r check data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# checkout the data structure
+glimpse(hq_data)
+```
+
+## Check missingness
+Explore missing variables if any. 
+This step shows that there are no 'NA' or null variables in the data and so we don't need to impute missing variables in this example.
+
+```{r missing data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# explore missing variables if any
+# this shows that 100% of data is present
+
+naniar::vis_miss(hq_data) 
+
+```
+   
+   
+## Overall field distributions
+Generate descriptive / univariate statistics, i.e. central tendency statistics and measures of dispersion. 
+In this step, all the original data is taken into account except that the already built-in 'total' calculations are taken out. This is to only look at regional differences without having the 'total' obscuring the counts.
+
+```{r describe data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Overall field summaries and distributions
+options("scipen" = 10)
+hq_data %>%
+  filter(!region == "Total") %>%
+  descr() %>%
+  kable(caption = "Descriptive statistics for all data columns") %>%
+  kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+
+# Descriptive statistics 
+
+This section is set up to calculate total clients taking HQ as well as average drug dispensations, tablets, and days on a per client basis. We are assuming similar distribution patterns for clients. The computed fields are:   
+- mean  
+- median  
+- sd: standard deviation  
+- se: standard error  
+- IQR: interquartile range  
+
+## Descriptive analysis of regional differences in BC
+### Average client counts per region
+
+Average client counts per region is calculated by taking the mean of client_counts in all BC regions. Mean, median, IQR, sd, and se are computed using client_count field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+```{r average client counts, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average client counts per region
+hq_data %>%
+  group_by(region) %>%
+  summarise(mean = mean(clnt_count), 
+            median = median(clnt_count),
+            IQR = IQR(clnt_count),
+            sd = sd(clnt_count),
+            se = sd(clnt_count)/sqrt(n())) %>%
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics for average client counts taking HQ per region") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+
+### Average prescriber counts per region
+Average prescribers counts per region is calculated by taking the mean of prescriber_counts in all BC regions. Mean, median, IQR, sd, and se are computed using prescriber_counts field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+
+```{r prescribers per region, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average prescribers per region
+hq_data %>%
+  group_by(region) %>%
+  summarise(mean = mean(prsc_count), 
+            median = median(prsc_count),
+            IQR = IQR(prsc_count),
+            sd = sd(prsc_count),
+            se = sd(prsc_count)/sqrt(n())) %>%
+  arrange(desc(mean)) %>%  
+  kable(caption = "Descriptive statistics for average prescriber counts") %>%
+  kable_styling(latex_options= c("striped","condensed", "hold_position"),
+                full_width = F)
+```
+
+### Prescriber to client ratio (average for each region)
+Total prescribers counts and total client counts were calculated and to find the ratio of prescribers to clients, the sum of prescriber count was divided into the sum of client count for all regions. 
+
+The average mean is sorted from highest to lowest.
+
+```{r prescribers per client, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average prescribers per region
+hq_data %>%
+  group_by(region) %>%
+  mutate(sum_prsc_count = sum(prsc_count)) %>%
+  mutate(sum_clnt_count = sum(clnt_count)) %>%
+  mutate(prsc_per_client = sum_prsc_count/sum_clnt_count) %>%
+  summarise(mean = mean(prsc_per_client)) %>% 
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics for average prescriber to client ratio") %>%
+  kable_styling(latex_options= c("striped", "hold_position",
+                                 "condensed", "responsive"),
+                full_width = F)
+```
+
+
+### Average dispensations per region
+Average dispensation counts per region is calculated by taking the mean of dispensation_counts in all BC regions. Mean, median, IQR, sd, and se are computed using dispensation_counts field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+
+```{r dispensation per region, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average dispensations per region
+hq_data %>%
+  group_by(region) %>%
+  summarise(mean = mean(disp_count), 
+            median = median(disp_count),
+            IQR = IQR(disp_count),
+            sd = sd(disp_count),
+            se = sd(disp_count)/sqrt(n())) %>%
+  arrange(desc(mean)) %>% 
+  kable(caption = "Descriptive statistics for average HQ dispensation counts") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+
+### Ratio of drug dispensations per client
+Total dispensations counts and total client counts were calculated and to find the ratio of dispensation counts to clients, the sum of dispensations count was divided into the sum of client count for all regions. 
+
+The average mean is sorted from highest to lowest.
+
+
+```{r dispensation per client, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average dispensations per client per region
+hq_data %>%
+  group_by(region) %>%
+  mutate(sum_disp_count = sum(disp_count)) %>%
+  mutate(sum_clnt_count = sum(clnt_count)) %>%
+  mutate(disp_per_client = sum_disp_count/sum_clnt_count) %>%
+  summarise(mean = mean(disp_per_client)) %>% 
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics for average 
+        ratio of drug dispensations per client") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+
+### Average dispensation days per region
+Average dispensation days per region is calculated by taking the mean of dispensation_days in all BC regions. Mean, median, IQR, sd, and se are computed using dispensation_days field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+```{r dispensation days per region, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average dispensation days per region
+hq_data %>%
+  group_by(region) %>%
+  summarise(mean = mean(disp_days), 
+            median = median(disp_days),
+            IQR = IQR(disp_days),
+            sd = sd(disp_days),
+            se = sd(disp_days)/sqrt(n())) %>%
+  arrange(desc(mean)) %>% 
+  kable(caption = "Descriptive statistics for average dispensation days") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+### Ratio of dispensation days per client
+Total dispensation days and total client counts were calculated and to find the ratio of dispensation days to clients, the sum of dispensations days was divided into the sum of client count for all regions. 
+
+The average mean is sorted from highest to lowest.
+
+```{r dispensation days per client, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for dispensation days per client per region
+hq_data %>%
+  group_by(region) %>%
+  mutate(sum_disp_days = sum(disp_days)) %>%
+  mutate(sum_clnt_count = sum(clnt_count)) %>%
+  mutate(disp_days_per_client = sum_disp_days/sum_clnt_count) %>%
+  summarise(mean = mean(disp_days_per_client)) %>% 
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics for ratio of dispensation days per client") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+## Descriptive analysis of disease indication distributions in BC
+
+### Disease distribution of clients 
+Average Disease distribution is calculated by taking the mean of client_counts for all diseases. 
+Mean, median, IQR, sd, and se are computed using client_counts field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+```{r average client disease counts, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average disease distributions
+hq_data %>%
+  group_by(Disease) %>%
+  summarise(mean = mean(clnt_count), 
+            median = median(clnt_count),
+            IQR = IQR(clnt_count),
+            sd = sd(clnt_count),
+            se = sd(clnt_count)/sqrt(n())) %>%
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics of average disease 
+        distributions") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+
+### Disease distribution of clients per region
+Average Disease distribution per region is calculated by taking the mean of client_counts for all diseases. Mean, median, IQR, sd, and se are computed using client_counts field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+
+```{r average client disease, region counts, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average disease distribution of clients per region
+hq_data %>%
+  group_by(region, Disease) %>%
+  summarise(mean = mean(clnt_count), 
+            median = median(clnt_count),
+            IQR = IQR(clnt_count),
+            sd = sd(clnt_count),
+            se = sd(clnt_count)/sqrt(n())) %>%
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics of average disease 
+        distribution of clients per region") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+
+### Average dispensations per disease indication per region
+Average dispensation counts for each disease is calculated by taking the mean of dispensation counts for all diseases. Mean, median, IQR, sd, and se are computed using client_counts field in the data. 
+
+The average mean is sorted from highest to lowest.
+
+```{r dispensation per disease per region, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average dispensations per disease indication per region
+hq_data %>%
+  group_by(region, Disease) %>%
+  summarise(mean = mean(disp_count), 
+            median = median(disp_count),
+            IQR = IQR(disp_count),
+            sd = sd(disp_count),
+            se = sd(disp_count)/sqrt(n())) %>%
+  arrange(desc(mean)) %>% 
+  kable(caption = "Descriptive statistics for average HQ
+        dispensations per disease indication per region") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+### Ratio of dispensation counts per disease type per client
+Total dispensation counts and total client counts were calculated and to find the ratio of dispensation counts to clients, the sum of dispensations count was divided into the sum of client count for all regions and for all disease indications. 
+The average mean is sorted from highest to lowest.
+
+```{r dispensation per disease per client, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average dispensation counts per disease type per client
+hq_data %>%
+  group_by(region, Disease) %>%
+  mutate(sum_disp_count = sum(disp_count)) %>%
+  mutate(sum_clnt_count = sum(clnt_count)) %>%
+  mutate(disp_per_client = sum_disp_count/sum_clnt_count) %>%
+  summarise(mean = mean(disp_per_client)) %>% 
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics for average HQ dispensations 
+        per disease type per client") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+
+### Ratio of dispensation days per disease type per region
+Total dispensation days and total client counts were calculated and to find the ratio of dispensation days to clients, the sum of dispensations days was divided into the sum of client count for all regions and for all disease indications. 
+The average mean is sorted from highest to lowest.
+
+```{r dispensation days per disease type per region, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for average dispensation days per disease type per region
+hq_data %>%
+  group_by(region, Disease) %>%
+  summarise(mean = mean(disp_days), 
+            median = median(disp_days),
+            IQR = IQR(disp_days),
+            sd = sd(disp_days),
+            se = sd(disp_days)/sqrt(n())) %>%
+  arrange(desc(mean)) %>% 
+  kable(caption = "Descriptive statistics for average dispensation days 
+        per disease type per region") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+### Ratio of dispensation days per disease type per client
+Total dispensation days and total client counts were calculated and to find the ratio of dispensation days to clients, the sum of dispensations days was divided into the sum of client count for all regions and for all disease indications. 
+The average mean is sorted from highest to lowest.
+
+```{r dispensation days per disease per client, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Summary statistics for dispensation days per disease type per client per region
+hq_data %>%
+  group_by(region, Disease) %>%
+  mutate(sum_disp_days = sum(disp_days)) %>%
+  mutate(sum_clnt_count = sum(clnt_count)) %>%
+  mutate(disp_days_per_client = sum_disp_days/sum_clnt_count) %>%
+  summarise(mean = mean(disp_days_per_client)) %>% 
+  arrange(desc(mean)) %>%
+  kable(caption = "Descriptive statistics for average dispensation days 
+        per disease type per client per region") %>%
+  kable_styling(latex_options= c("striped", "condensed", "hold_position"),
+                full_width = F)
+```
+
+## Visualization of distributions 
+
+### Distribution of patient counts 
+Visualizing total patient counts for the two disease indications (RA/lupus and other as well as their sum total) within community pharmacies in different regions in BC. 
+
+```{r figure 1, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 1 code
+
+hq_data %>%
+  group_by(srv_date, region, Disease, clnt_count) %>%
+  ggplot(aes(x =  srv_date, y = clnt_count)) +
+  geom_point(aes(color = Disease, shape= region)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 1. Scatter plot depicting patient count distributions 
+       within regional pharmacies", 
+       subtitle="+ Regions and disease indications", 
+       caption="source: hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+```
+
+## Distribution of dispense counts
+Visualizing dispensed drug counts for two disease indications (RA/lupus and other as well as their sum total) within community pharmacies in different regions in BC. 
+
+```{r figure 2, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 2 code
+
+hq_data %>%
+  group_by(srv_date, region, Disease, disp_count) %>%
+  ggplot(aes(x =  srv_date, y = disp_count)) +
+  geom_point(aes(color = Disease, shape=region)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 2. Scatter plot depicting dispensed drug count
+          distributions within regional pharmacies",
+       subtitle="+ Regions and disease indications", 
+       caption="source: hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+
+```
+
+### Distribution of dispensed Tablets
+Visualizing total dispensed tablets for the two disease indications (as well as sum total), within regional pharmacies in time.
+
+```{r figure 3, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 3 code
+
+options("scipen" = 10)
+hq_data %>%
+  group_by(srv_date, region, Disease, disp_tabs) %>%
+  ggplot(aes(x = srv_date, y = disp_tabs)) +
+  geom_point(aes(col=Disease, shape=region)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 3. Scatter plot depicting total dispensed tablet 
+       distributions within regional pharmacies", 
+       subtitle="+ Regions and disease indications", 
+       caption="source: hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+```
+
+# Statistical analysis
+
+## MANOVA tests
+
+Here, we test multiple response variables simultaneously using a multivariate analysis of variance (MANOVA). In this test, we conduct an experiment where we give two treatments (region and disease type) to multiple variables of drug dispensation predictors (days, dispensation counts, client counts, and prescribers counts).  
+The hypothesis is that regions and diseases impact drug dispensation trends. 
+A multivariate analysis of variance (MANOVA) is used to test this hypothesis.  
+
+Assumptions: homogeneity and linearity of variances across the range of predictors 
+(i.e. homoscedascity of variables).  
+
+The only clean-up step for the significance tests is to remove the pre-defined 'total' calculations from the region and disease fields in the data table as done below.
+
+```{r format data for stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Format the data for statistical testing
+## Rename variables for easier access to anova models
+hq_data_stats <- hq_data %>%
+  filter(!region == "Total") %>%
+  filter(!Disease == "Total")
+
+```
+
+### Test of regional significance
+We are now ready to run the first MANOVA test. We want to know if there is any significant difference, in client counts, dispensation counts, days, tablets and prescribers, between the different regions.
+Run the MANOVA test for regions and disease indications as below.
+
+It can be seen from the output, that all region comparisons are significant with an adjusted p-value < 0.05. This means that all variables are significantly different among regions.
+
+
+```{r MANOVA stats for region, message = FALSE, warning=FALSE, echo=TRUE}
+
+##  check heteroscedascity
+#plot.mlm(res.manova1, 1) # 1. Homogeneity of variances
+#plot(res.manova1, 2) # 2. Normality
+
+# compute MANOVA 
+# check variance among HA's
+res.manova1 <- manova(cbind(clnt_count,
+                            disp_count,
+                            disp_days,
+                            disp_tabs,
+                            prsc_count) 
+                     ~ region, data = hq_data_stats)
+
+# Check result of MANOVA test
+summary(res.manova1)
+
+# Check which predictors differ among HA's
+summary.aov(res.manova1)
+
+```
+
+
+### Test of disease significance
+
+In the second MANOVA test, we want to know if there is any significant difference, in client counts, dispensation counts, days, tablets and prescribers, between the different diseases (i.e. RA/Lupus compared to other)
+
+It can be seen from the output, that all disease comparisons are significant with an adjusted p-value < 0.05. The summary of test shows taht all variables are significantly different among disease types.
+
+
+```{r MANOVA stats for disease, message = FALSE, warning=FALSE, echo=TRUE}
+
+# check variance among disease indications
+res.manova2 <- manova(cbind(clnt_count,
+                            disp_count,
+                            disp_days,
+                            disp_tabs,
+                            prsc_count) 
+                      ~ Disease, data = hq_data_stats)
+
+# Check result of MANOVA test
+summary(res.manova2)
+
+# Check which predictors differ among disease indications
+summary.aov(res.manova2)
+
+```
+
+
+## Post-hoc TukeyHSD test
+
+As the MANOVA test is significant, we can compute Tukey Honest Significant Differences. 
+R function: TukeyHSD()) performs multiple pairwise-comparison between the means of groups. 
+The function TukeyHD() takes the fitted ANOVA as an argument as shown below.  
+
+Tukey field descriptions are:  
+- diff: difference between means of the two groups  
+- lwr, upr: the lower and the upper end point of the confidence interval at 95% (default)  
+- p adj: p-value after adjustment for the multiple comparisons   
+
+We don’t need to perform the test for the 'disease' variable because it has only two levels, which have been already proven to be significantly different by ANOVA test. 
+The Tukey HSD test will be done only for the factor variable disposition count because that showed to be significantly different in various BC regions.
+
+It can be seen from the output, that all pairwise comparisons are significant with an adjusted p-value < 0.05. The results show the regions with significantly different dispensation counts.
+
+
+```{r tukey stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+res.aov3 <- aov(disp_count ~ region + Disease + 
+                  region:Disease, 
+                  data = hq_data_stats)
+
+##  check heteroscedascity
+#plot(res.aov3, 1) # 1. Homogeneity of variances
+#plot(res.aov3, 2) # 2. Normality
+
+# Check result of MANOVA test
+summary(res.aov3)
+summary.aov(res.aov3)
+
+
+# check predictor dependence on disease 
+TukeyHSD(res.aov3, which = "Disease")
+
+# check predictor dependence on region 
+TukeyHSD(res.aov3, which = "region")
+```
+
+
+## Significance tests for Covid-19
+
+Here, we first rearrange the data to before and after March-2020 to investigate the effect of Covid-19 on the HQ drug prescription trends as shown below:
+
+```{r rearrange data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Rearrange data for statistical testing
+hq_data_covid <- hq_data_stats %>%
+  mutate(covid = case_when(srv_date < '2020-03-01' ~ "before",
+                           srv_date == '2020-03-01' ~ "after",
+                           TRUE ~ "other"))
+  
+```
+
+Run the MANOVA test for all regions and disease indications before and after Covid-19. 
+First, we will build the model and run the summary to find the variable that is producing the significance. 
+The output shows that client counts has a p-value less than 0.05 and therefore is significantly contributing to covid-19 differences (before/after March).
+
+
+```{r covid stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+# compute manova test
+res.manova.c <- manova(cbind(clnt_count,
+                            disp_count,
+                            disp_days,
+                            disp_tabs,
+                            prsc_count) 
+                     ~ covid, data = hq_data_covid)
+
+# Check result of MANOVA test
+summary(res.manova.c)
+
+# Check which predictors differ among HA's
+## P-value of 0.08
+summary.aov(res.manova.c)
+
+```
+
+## Post-hoc TukeyHSD tests for Covid-19
+
+Perform TukeyHSD test on Covid-19 dataset to find which predictors are most impactful.
+It can be seen from the output, that all pairwise comparisons are significant with an adjusted p-value < 0.05. That is, client counts is significantly different among disease indications and regions when comparing before and after Covid-19's March 2020 timepoint.
+
+```{r tukey covid, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Check effect of Covid-19 on client count
+res.aov4 <- aov(clnt_count ~ region + Disease + covid + 
+                  region:covid, 
+                  data = hq_data_covid)
+
+##  check heteroscedascity
+#plot(res.aov3, 1) # 1. Homogeneity of variances
+#plot(res.aov3, 2) # 2. Normality
+
+# Check result of MANOVA test
+summary(res.aov4)
+summary.aov(res.aov4)
+
+
+# check predictor dependence on covid 
+TukeyHSD(res.aov4, which = "covid")
+```

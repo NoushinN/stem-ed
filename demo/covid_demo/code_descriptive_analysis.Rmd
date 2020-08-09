@@ -1,0 +1,549 @@
+---
+title: "Code for data cleaning, wrangling, analysis, and reporting"
+author: "Noushin Nabavi"
+date: "04/05/2020"
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+\fontsize{11}{22}
+\fontseries{b}
+\selectfont
+
+```{r markdown setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<P style="page-break-before: always">
+\newpage
+
+# Overview
+
+This document contains the responses to question 1 and 2 of Econ 27 Written Test – REQ 68731. Responses include tables and graphs for descriptive and statistical analysis of data as well as the code used to generate them. The impact of Covid-19 in March 2020 is described in section 6 providing statistical test outputs and their interpretations.
+
+# Declare script dependencies 
+
+Load the packages/libraries into the RStudio environment. These libraries are needed for data loading, cleaning, descriptive analysis, and reporting.
+
+```{r scripts setup,  evaluate = TRUE, echo= TRUE, message = FALSE, results = "hide", warning = FALSE}
+
+# list of libraries
+libraries <- c("tidyverse", "data.table", "here", "table1", "summarytools",
+               "fpp2", "lubridate", "httr", "shiny", "sf", "viridis",
+               "ggthemes", "rgdal", "zoo", "naniar", "wesanderson",
+               "Hmisc", "knitr", "kableExtra", "skimr")
+
+# load libraries
+lapply(libraries, library, character.only = TRUE)
+
+```
+
+
+
+# Load hydroxychloroquine time-series data 
+
+Load the hydroxychloroquine time series data into RStudio workspace and format the columns with correct types. For instance, the `Service Month` field type is changed to `date` format. 
+
+## Read-in and clean data
+
+```{r load data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Load the hydroxychloroquine time series data
+## Format the service month column to date (yyyy-mm-dd)
+
+hc_data <- fread("data/Econ 27 ( REQ 68731) hydroxychloroquine time-series.csv") %>%
+  mutate(`Service Month` = as.Date(as.yearmon(`Service Month`)))
+
+```
+
+
+#  Explore missingness and distribution of data elements
+
+## Missingness
+Explore missing variables if any
+
+```{r missing data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# explore missing variables if any
+# this shows that 100% of data is present
+
+naniar::vis_miss(hc_data) 
+
+```
+
+## Distribution
+Generate descriptive / univariate statistics, i.e. common central tendency statistics and measures of dispersion. 
+
+```{r describe data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Overall field summaries and distributions
+
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  descr() %>%
+  kable(caption = "Descriptive statistics for all data columns") %>%
+  kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+
+<P style="page-break-before: always">
+\newpage
+
+# Descriptive analysis 
+
+This section is set up to visualize data field distributions separately and in combination with other data elements as well as provide summary statistics for the fields. The computed fields are:   
+- mean  
+- median  
+- sd: standard deviation  
+- se: standard error  
+- IQR: interquartile range  
+
+
+## HQ Dispense counts
+Visualizing dispensed drug counts for three disease indications,
+per health authority in time. 
+
+```{r figure 1, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 1 code
+
+hc_data %>%
+  group_by(`Service Month`, `Health Authority Name`, Disease, `Dispense Count`) %>%
+  ggplot(aes(x =  `Service Month`, y = `Dispense Count`)) +
+  geom_point(aes(color = Disease, shape=`Health Authority Name`)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 1. Scatter plot depicting dispensed drug counts 
+       within pharmacy service months", 
+       subtitle="by Health Authorities and Disease indications", 
+       caption="source: Econ27-hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+
+# Summary statistics for Dispense Count
+hc_data %>%
+  group_by(`Health Authority Name`) %>%
+  summarise(mean_disp_count = mean(`Dispense Count`), 
+            median_disp_count = median(`Dispense Count`),
+            IQR_disp_count = IQR(`Dispense Count`),
+            sd_disp_count = sd(`Dispense Count`),
+            se_disp_count = sd(`Dispense Count`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_count)) %>%
+  kable(caption = "A. Statistics for Dispense Count (HAs)") %>%
+  kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  group_by(Disease) %>%
+  summarise(mean_disp_count = mean(`Dispense Count`), 
+            median_disp_count = median(`Dispense Count`),
+            IQR_disp_count = IQR(`Dispense Count`),
+            sd_disp_count = sd(`Dispense Count`),
+            se_disp_count = sd(`Dispense Count`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_count)) %>%
+  kable(caption = "B. Statistics for Dispense Count (Diseases)") %>%
+  kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+
+## Distinct Client Counts
+Visualizing total client counts for the three disease indications, per health authority in time
+
+```{r figure 2, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 2 code
+
+hc_data %>%
+  group_by(`Service Month`, `Health Authority Name`, Disease, 
+           `Distinct Client Count`) %>%
+  ggplot(aes(x =  `Service Month`, y = `Distinct Client Count`)) +
+  geom_point(aes(col=Disease, shape=`Health Authority Name`)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 2. Scatter plot depicting distinct client counts 
+       within pharmacy service months", 
+       subtitle="by Health Authorities and Disease indications", 
+       caption="source: Econ27-hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+
+# Summary statistics for Distinct Client Count
+hc_data %>%
+  group_by(`Health Authority Name`) %>%
+  summarise(mean_clnt_count = mean(`Distinct Client Count`), 
+            median_clnt_count = median(`Distinct Client Count`),
+            IQR_clnt_count = IQR(`Distinct Client Count`),
+            sd_clnt_count = sd(`Distinct Client Count`),
+            se_clnt_count = sd(`Distinct Client Count`)/sqrt(n())) %>%
+  arrange(desc(mean_clnt_count)) %>%
+    kable(caption = "A. Statistics for Distinct Client Count (HAs)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  group_by(Disease) %>%
+  summarise(mean_clnt_count = mean(`Distinct Client Count`), 
+            median_clnt_count = median(`Distinct Client Count`),
+            IQR_clnt_count = IQR(`Distinct Client Count`),
+            sd_clnt_count = sd(`Distinct Client Count`),
+            se_clnt_count = sd(`Distinct Client Count`)/sqrt(n())) %>%
+  arrange(desc(mean_clnt_count)) %>%
+    kable(caption = "B. Statistics for Distinct Client Count (Diseases)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+<P style="page-break-before: always">
+\newpage
+
+## Dispensed Days Supplied
+Visualizing total dispensed days for the three disease indications, per health authority in time
+
+```{r figure 3, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 3 code
+
+options("scipen" = 10)
+hc_data %>%
+  group_by(`Service Month`, `Health Authority Name`, Disease, 
+           `Dispensed Days Supplied`) %>%
+  ggplot(aes(x =  `Service Month`, y = `Dispensed Days Supplied`)) +
+  geom_point(aes(col=Disease, shape=`Health Authority Name`)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 3. Scatter plot depicting total drug dispensed days 
+       within pharmacy service months", 
+       subtitle="by Health Authorities and Disease indications", 
+       caption="source: Econ27-hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+
+# Summary statistics for Dispensed Days Supplied
+hc_data %>%
+  group_by(`Health Authority Name`) %>%
+  summarise(mean_disp_days = mean(`Dispensed Days Supplied`), 
+            median_disp_days = median(`Dispensed Days Supplied`),
+            IQR_disp_days = IQR(`Dispensed Days Supplied`),
+            sd_disp_days = sd(`Dispensed Days Supplied`),
+            se_disp_days = sd(`Dispensed Days Supplied`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_days)) %>%
+    kable(caption = "A. Statistics for Dispensed Days Supplied (HAs)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  group_by(Disease) %>%
+  summarise(mean_disp_days = mean(`Dispensed Days Supplied`), 
+            median_disp_days = median(`Dispensed Days Supplied`),
+            IQR_disp_days = IQR(`Dispensed Days Supplied`),
+            sd_disp_days = sd(`Dispensed Days Supplied`),
+            se_disp_days = sd(`Dispensed Days Supplied`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_days)) %>%
+    kable(caption = "B. Statistics for Dispensed Days Supplied (Diseases)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+<P style="page-break-before: always">
+\newpage
+
+## Dispensed Tablets
+Visualizing total dispensed tablets for the three disease indications, per health authority in time
+
+```{r figure 4, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 4 code
+
+options("scipen" = 10)
+hc_data %>%
+  group_by(`Service Month`, `Health Authority Name`, Disease, 
+           `Dispensed Tablets`) %>%
+  ggplot(aes(x =  `Service Month`, y = `Dispensed Tablets`)) +
+  geom_point(aes(col=Disease, shape=`Health Authority Name`)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+  scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 4. Scatter plot depicting total dispensed tablets 
+       within pharmacy service months", 
+       subtitle="by Health Authorities and Disease indications", 
+       caption="source: Econ27-hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+
+# Summary statistics for Dispensed Tablets
+hc_data %>%
+  group_by(`Health Authority Name`) %>%
+  summarise(mean_disp_tabs = mean(`Dispensed Tablets`), 
+            median_disp_tabs = median(`Dispensed Tablets`),
+            IQR_disp_tabs = IQR(`Dispensed Tablets`),
+            sd_disp_tabs = sd(`Dispensed Tablets`),
+            se_disp_tabs = sd(`Dispensed Tablets`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_tabs)) %>%
+    kable(caption = "A. Statistics for Dispensed Tablets (HAs)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  group_by(Disease) %>%
+  summarise(mean_disp_tabs = mean(`Dispensed Tablets`), 
+            median_disp_tabs = median(`Dispensed Tablets`),
+            IQR_disp_tabs = IQR(`Dispensed Tablets`),
+            sd_disp_tabs = sd(`Dispensed Tablets`),
+            se_disp_tabs = sd(`Dispensed Tablets`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_tabs)) %>%
+    kable(caption = "B. Statistics for Dispensed Tablets (Diseases)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+<P style="page-break-before: always">
+\newpage
+
+## Distinct Prescriber Counts
+Visualizing total prescriber counts for the three disease indications,  per health authority in time
+
+```{r figure 5, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Figure 5 code
+
+options("scipen" = 10)
+hc_data %>%
+  group_by(`Service Month`, `Health Authority Name`, Disease, 
+           `Distinct Prescriber Count`) %>%
+  ggplot(aes(x =  `Service Month`, y = `Distinct Prescriber Count`)) +
+  geom_point(aes(col=Disease, shape=`Health Authority Name`)) + 
+  scale_shape_manual(values = c(4,8,15,16,17,18,21,22,3,42)) +
+    scale_color_brewer(palette="Set1") +
+  geom_smooth(aes(color = Disease, fill = Disease), method="lm", se=F) +
+  labs(title="Figure 5. Scatter plot depicting total prescribers 
+       within pharmacy service months", 
+       subtitle="by Health Authorities and Disease indications", 
+       caption="source: Econ27-hydroxychloroquine-time-series") +
+  theme(plot.title = element_text(color = "blue", size = 8, face = "bold"),
+        plot.subtitle = element_text(color = "blue", size = 7))
+
+# Summary statistics for Distinct Prescriber Count
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  group_by(`Health Authority Name`) %>%
+  summarise(mean_pres_count = mean(`Distinct Prescriber Count`), 
+            median_pres_count = median(`Distinct Prescriber Count`),
+            IQR_pres_count = IQR(`Distinct Prescriber Count`),
+            sd_pres_count = sd(`Distinct Prescriber Count`),
+            se_pres_count = sd(`Distinct Prescriber Count`)/sqrt(n())) %>%
+  arrange(desc(mean_pres_count)) %>%
+    kable(caption = "A. Statistics for Distinct Prescriber Counts (HAs)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+
+hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  group_by(Disease) %>%
+  summarise(mean_disp_tabs = mean(`Dispensed Tablets`), 
+            median_disp_tabs = median(`Dispensed Tablets`),
+            IQR_disp_tabs = IQR(`Dispensed Tablets`),
+            sd_disp_tabs = sd(`Dispensed Tablets`),
+            se_disp_tabs = sd(`Dispensed Tablets`)/sqrt(n())) %>%
+  arrange(desc(mean_disp_tabs)) %>%
+    kable(caption = "B. Statistics for Dispensed Tablets (Diseases)") %>%
+    kable_styling(latex_options= c("scale_down", "striped", "hold_position"),
+                full_width = F)
+```
+
+<P style="page-break-before: always">
+\newpage
+
+# Statistical analysis
+
+## MANOVA tests
+
+Here, we test multiple response variables simultaneously using a multivariate analysis of variance (MANOVA). In this test, we conduct an experiment where we give two treatments (Health Authority (HA) and Disease type) to multiple variables of drug dispensation predictors (days, counts, clients, prescribers). The hypothesis is that HA and Disease affect the differences in drug dispensation trends. A multivariate analysis of variance is used to test this hypothesis.  
+
+Assumptions: homogeneity and linearity of variances across the range of predictors (i.e. homoscedascity of variables).  
+
+```{r format data for stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Format the data for statistical testing
+## Rename variables for easier access to anova models
+hc_data_stats <- hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  rename(HA = `Health Authority Name`, 
+         clnt_count = `Distinct Client Count`,
+         disp_count = `Dispense Count`,
+         disp_days = `Dispensed Days Supplied`,
+         disp_tabs = `Dispensed Tablets`,
+         prsc_count = `Distinct Prescriber Count`)
+
+```
+
+Run the manova test for HA's and disease indications: 
+
+```{r manova stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+# compute manova (# MANOVA test)
+# check variance among HA's
+res.manova1 <- manova(cbind(clnt_count,
+                            disp_count,
+                            disp_days,
+                            disp_tabs,
+                            prsc_count) 
+                     ~ HA, data = hc_data_stats)
+
+# Check result of MANOVA test
+summary(res.manova1)
+
+# Check which predictors differ among HA's
+# All variables are significantly different among HA's
+summary.aov(res.manova1)
+
+##  check heteroscedascity
+#plot.mlm(res.manova1, 1) # 1. Homogeneity of variances
+#plot(res.manova1, 2) # 2. Normality
+
+# check variance among disease indications
+res.manova2 <- manova(cbind(clnt_count,
+                            disp_count,
+                            disp_days,
+                            disp_tabs,
+                            prsc_count) 
+                      ~ Disease, data = hc_data_stats)
+
+# Check result of MANOVA test
+summary(res.manova2)
+
+# Check which predictors differ among disease indications
+# All variables are significantly different among diseases
+summary.aov(res.manova2)
+
+```
+
+
+## Post-hoc TukeyHSD test
+
+As the MANOVA test is significant, we can compute Tukey Honest Significant Differences. 
+R function: TukeyHSD()) performs multiple pairwise-comparison between the means of groups. The function TukeyHD() takes the fitted ANOVA as an argument.  
+
+Tukey field descriptions:  
+- diff: difference between means of the two groups  
+- lwr, upr: the lower and the upper end point of the confidence interval at 95% (default)  
+- p adj: p-value after adjustment for the multiple comparisons   
+
+```{r tukey stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+res.aov3 <- aov(disp_count ~ HA + Disease + 
+                  HA:Disease, 
+                  data = hc_data_stats)
+
+##  check heteroscedascity
+#plot(res.aov3, 1) # 1. Homogeneity of variances
+#plot(res.aov3, 2) # 2. Normality
+
+# Check result of MANOVA test
+summary(res.aov3)
+summary.aov(res.aov3)
+
+
+# check predictor dependence on disease 
+TukeyHSD(res.aov3, which = "Disease")
+
+# check predictor dependence on HA 
+TukeyHSD(res.aov3, which = "HA")
+```
+
+
+## MANOVA tests for Covid-19
+
+Rearrange the data to before and after March-2020 to investigate the effect of Covid-19 on the drug prescription trends.
+
+```{r rearrange data, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Rearrange data for statistical testing
+hc_data_covid <- hc_data %>%
+  filter(!`Health Authority Name` == "Total") %>%
+  rename(HA = `Health Authority Name`, 
+         clnt_count = `Distinct Client Count`,
+         disp_count = `Dispense Count`,
+         disp_days = `Dispensed Days Supplied`,
+         disp_tabs = `Dispensed Tablets`,
+         prsc_count = `Distinct Prescriber Count`,
+         srv_date = `Service Month`) %>%
+  mutate(covid = case_when(srv_date < '2020-03-01' ~ "before",
+                           srv_date == '2020-03-01' ~ "after",
+                           TRUE ~ "other"))
+  
+```
+
+Run the manova test for HA's and disease indications before and after Covid-19: 
+
+```{r covid stats, message = FALSE, warning=FALSE, echo=TRUE}
+
+# compute manova test
+res.manova.c <- manova(cbind(clnt_count,
+                            disp_count,
+                            disp_days,
+                            disp_tabs,
+                            prsc_count) 
+                     ~ covid, data = hc_data_covid)
+
+# Check result of MANOVA test
+summary(res.manova.c)
+
+# Check which predictors differ among HA's
+## Client counts and Prescription counts are more significant than other fields 
+## P-value of 0.08
+summary.aov(res.manova.c)
+
+```
+
+## Post-hoc TukeyHSD tests for Covid-19
+
+Perform TukeyHSD test on Covid-19 dataset to find which predictors are most impactful.
+Client counts and Prescription counts are more significant than other fields (p-value of 0.08).
+
+```{r tukey covid, message = FALSE, warning=FALSE, echo=TRUE}
+
+# Check effect of Covid-19 on prescription count
+res.aov4 <- aov(prsc_count ~ HA + Disease + covid + 
+                  HA:covid, 
+                  data = hc_data_covid)
+
+##  check heteroscedascity
+#plot(res.aov3, 1) # 1. Homogeneity of variances
+#plot(res.aov3, 2) # 2. Normality
+
+# Check result of MANOVA test
+summary(res.aov4)
+summary.aov(res.aov4)
+
+
+# check predictor dependence on covid 
+TukeyHSD(res.aov4, which = "covid")
+
+# Check effect of Covid-19 on client count
+res.aov5 <- aov(clnt_count ~ HA + Disease + covid + 
+                  HA:covid, 
+                  data = hc_data_covid)
+
+##  check heteroscedascity
+#plot(res.aov3, 1) # 1. Homogeneity of variances
+#plot(res.aov3, 2) # 2. Normality
+
+# Check result of MANOVA test
+summary(res.aov5)
+summary.aov(res.aov5)
+
+
+# check predictor dependence on covid 
+TukeyHSD(res.aov5, which = "covid")
+```
