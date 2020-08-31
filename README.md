@@ -19,6 +19,6 @@ In applying a research approach to teaching, I strive to apply these **8 process
 
 
 The lessons I have curated for data science can be found [here](https://github.com/NoushinN/stem-ed/tree/master/Data%20Science%20Lessons).  
-The literature that have inspired this teaching philosophy can be found [here](https://github.com/NoushinN/stem-ed/tree/master/Teaching%20Literature).  
+The literature that have inspired this teaching philosophy can be found [here](https://github.com/NoushinN/stem-ed/tree/v1.0/Literature).  
 
 And finally, ending with my favorite quote about learning: "The illiterate of the 21st century will not be those who cannot read and write but those who cannot learn, unlearn and relearn." _Alvin Toffler_
