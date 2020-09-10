@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day | tools for stem</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day | tools for stem" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day | tools for stem" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="what-is-in-a-database.html"/>
+<link rel="next" href="final-words.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="getting-set-up-with-r-rstudio.html"><a href="getting-set-up-with-r-rstudio.html"><i class="fa fa-check"></i><b>2</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="3" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>3</b> Introduction</a></li>
+<li class="chapter" data-level="4" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html"><i class="fa fa-check"></i><b>4</b> What is in a database?</a><ul>
+<li class="chapter" data-level="4.1" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#explore-data-tables"><i class="fa fa-check"></i><b>4.1</b> explore data tables:</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#select-the-count-of-the-number-of-rows"><i class="fa fa-check"></i><b>4.1.1</b> Select the count of the number of rows</a></li>
+<li class="chapter" data-level="4.1.2" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#counting-missing-data"><i class="fa fa-check"></i><b>4.1.2</b> counting missing data:</a></li>
+<li class="chapter" data-level="4.1.3" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#joining-tables"><i class="fa fa-check"></i><b>4.1.3</b> joining tables:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#the-keys-to-the-database-e.g.foreign-vs.primary-keys"><i class="fa fa-check"></i><b>4.2</b> The keys to the database (e.g. foreign vs. primary keys)</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#column-types-and-constraints"><i class="fa fa-check"></i><b>4.2.1</b> Column types and constraints</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#numeric-data-types-and-summary-functions"><i class="fa fa-check"></i><b>4.3</b> Numeric data types and summary functions</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="what-is-in-a-database.html"><a href="what-is-in-a-database.html#division"><i class="fa fa-check"></i><b>4.3.1</b> Division</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><i class="fa fa-check"></i><b>5</b> Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day</a><ul>
+<li class="chapter" data-level="5.1" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html#seconds-or-no"><i class="fa fa-check"></i><b>5.1</b> seconds or no?</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html#variables-for-datetime-data-storing-data-in-variables"><i class="fa fa-check"></i><b>5.1.1</b> Variables for datetime data: storing data in variables</a></li>
+<li class="chapter" data-level="5.1.2" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html#declare-cast"><i class="fa fa-check"></i><b>5.1.2</b> DECLARE &amp; CAST</a></li>
+<li class="chapter" data-level="5.1.3" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html#date-manipulation"><i class="fa fa-check"></i><b>5.1.3</b> Date manipulation</a></li>
+<li class="chapter" data-level="5.1.4" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html#user-defined-functions-inline-faster-and-multi-statement-value-functions-slower"><i class="fa fa-check"></i><b>5.1.4</b> User defined functions: inline (faster) and multi-statement value functions (slower)</a></li>
+<li class="chapter" data-level="5.1.5" data-path="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html"><a href="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day.html#user-defined-functions-in-action-i.e.execute-functions"><i class="fa fa-check"></i><b>5.1.5</b> User defined functions in action: i.e. execute functions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">tools for stem</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="following-sql-functions-datediff-datename-datepart-cast-convert-getdate-and-dateadd-explore-transactions-per-day" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day</h1>
+<pre><code>
+SELECT
+  -- Select the date portion of StartDate
+  CONVERT(DATE, StartDate) as StartDate,
+  -- Measure how many records exist for each StartDate
+  COUNT(ID) as CountOfRows 
+FROM CapitalBikeShare 
+-- Group by the date portion of StartDate
+GROUP BY CONVERT(DATE, StartDate)
+-- Sort the results by the date portion of StartDate
+ORDER BY CONVERT(DATE, StartDate);
+</code></pre>
+<div id="seconds-or-no" class="section level2">
+<h2><span class="header-section-number">5.1</span> seconds or no?</h2>
+<ul>
+<li>DATEDIFF() can be used to calculate the trip time by finding the difference between Start and End time</li>
+<li>Here, we will use DATEPART() to see how many transactions have seconds greater than zero and how many have them equal to zero</li>
+</ul>
+<pre><code>SELECT
+	-- Count the number of IDs
+	COUNT(ID) AS Count,
+    -- Use DATEPART() to evaluate the SECOND part of StartDate
+    &quot;StartDate&quot; = CASE WHEN DATEPART(SECOND, StartDate) = 0 THEN &#39;SECONDS = 0&#39;
+					   WHEN DATEPART(SECOND, StartDate) &gt; 0 THEN &#39;SECONDS &gt; 0&#39; END
+FROM CapitalBikeShare
+GROUP BY
+    -- Complete the CASE statement
+	CASE WHEN DATEPART(SECOND, StartDate) = 0 THEN &#39;SECONDS = 0&#39;
+		 WHEN DATEPART(SECOND, StartDate) &gt; 0 THEN &#39;SECONDS &gt; 0&#39; END</code></pre>
+<ul>
+<li>Which day of week is busiest?</li>
+</ul>
+<pre><code>
+SELECT
+    -- Select the day of week value for StartDate
+	DATENAME(weekday, StartDate) as DayOfWeek,
+    -- Calculate TotalTripHours
+	SUM(DATEDIFF(second, StartDate, EndDate))/ 3600 as TotalTripHours 
+FROM CapitalBikeShare 
+-- Group by the day of week
+GROUP BY DATENAME(weekday, StartDate)
+-- Order TotalTripHours in descending order
+ORDER BY TotalTripHours DESC</code></pre>
+<ul>
+<li>finding the outliers:</li>
+</ul>
+<pre><code>
+SELECT
+	-- Calculate TotalRideHours using SUM() and DATEDIFF()
+  	SUM(DATEDIFF(SECOND, StartDate, EndDate))/ 3600 AS TotalRideHours,
+    -- Select the DATE portion of StartDate
+  	CONVERT(DATE, StartDate) AS DateOnly,
+    -- Select the WEEKDAY
+  	DATENAME(WEEKDAY, CONVERT(DATE, StartDate)) AS DayOfWeek 
+FROM CapitalBikeShare
+-- Only include Saturday
+WHERE DATENAME(WEEKDAY, StartDate) = &#39;Saturday&#39; 
+GROUP BY CONVERT(DATE, StartDate);</code></pre>
+<div id="variables-for-datetime-data-storing-data-in-variables" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Variables for datetime data: storing data in variables</h3>
+</div>
+<div id="declare-cast" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> DECLARE &amp; CAST</h3>
+<ul>
+<li>use CapitalBikeShare table as starting point</li>
+</ul>
+<pre><code>-- Create @ShiftStartTime
+DECLARE @ShiftStartTime AS time = &#39;08:00 AM&#39;
+
+-- Create @StartDate
+DECLARE @StartDate AS date
+
+-- Set StartDate to the first StartDate from CapitalBikeShare
+SET 
+	@StartDate = (
+    	SELECT TOP 1 StartDate 
+    	FROM CapitalBikeShare 
+    	ORDER BY StartDate ASC
+		)
+
+-- Create ShiftStartDateTime
+DECLARE @ShiftStartDateTime AS datetime
+
+-- Cast StartDate and ShiftStartTime to datetime data types
+SET @ShiftStartDateTime = CAST(@StartDate AS datetime) + CAST(@ShiftStartTime AS datetime) 
+
+SELECT @ShiftStartDateTime</code></pre>
+<ul>
+<li>DECLARE a TABLE:</li>
+</ul>
+<pre><code>-- Create @Shifts
+DECLARE @Shifts TABLE(
+    -- Create StartDateTime column
+	StartDateTime datetime,
+    -- Create EndDateTime column
+	EndDateTime datetime)
+-- Populate @Shifts
+INSERT INTO @Shifts (StartDateTime, EndDateTime)
+	SELECT &#39;3/1/2018 8:00 AM&#39;, &#39;3/1/2018 4:00 PM&#39; 
+SELECT * 
+FROM @Shifts</code></pre>
+<ul>
+<li>INSERT INTO <span class="citation">@TABLE</span> based on CapitalBikeShare table:</li>
+</ul>
+<pre><code>-- Create @RideDates
+DECLARE @RideDates TABLE(
+    -- Create RideStart
+	RideStart date,
+    -- Create RideEnd
+	RideEnd date)
+-- Populate @RideDates
+INSERT INTO @RideDates(RideStart, RideEnd)
+-- Select the unique date values of StartDate and EndDate
+SELECT DISTINCT
+    -- Cast StartDate as date
+	CAST(StartDate as date),
+    -- Cast EndDate as date
+	CAST(EndDate as date) 
+FROM CapitalBikeShare 
+SELECT * 
+FROM @RideDates;</code></pre>
+</div>
+<div id="date-manipulation" class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Date manipulation</h3>
+<ul>
+<li>First day of month:</li>
+</ul>
+<pre><code>-- Find the first day of the current month
+SELECT DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0)
+-- Or
+SELECT DATEDIFF(month, 0, GETDATE()), 0)
+-- Or
+SELECT DATEDIFF(year, &#39;12/31/2017&#39;, &#39;1/1/2019&#39;)
+-- Or for yesterday use -1
+WHERE CAST(year as date) = DATEADD (d, -1, GETDATE())</code></pre>
+<ul>
+<li>What was yesterday? Creating a function that returns yesterday’s date</li>
+</ul>
+<pre><code>
+-- Create GetYesterday()
+CREATE FUNCTION GetYesterday()
+-- Specify return data type
+RETURNS date
+AS
+BEGIN
+-- Calculate yesterday&#39;s date value
+RETURN(SELECT DATEADD(day, -1, GETDATE()))
+END </code></pre>
+<ul>
+<li>1 input/output</li>
+<li>Create a function named SumRideHrsSingleDay() which returns the total ride time in hours for the <span class="citation">@DateParm</span> parameter passed.</li>
+</ul>
+<pre><code>-- Create SumRideHrsSingleDay
+CREATE FUNCTION SumRideHrsSingleDay (@DateParm date)
+-- Specify return data type
+RETURNS numeric
+AS
+-- Begin
+BEGIN
+RETURN
+-- Add the difference between StartDate and EndDate
+(SELECT SUM(DATEDIFF(second, StartDate, EndDate))/3600
+FROM CapitalBikeShare
+ -- Only include transactions where StartDate = @DateParm
+WHERE CAST(StartDate AS date) = @DateParm)
+-- End
+END</code></pre>
+<ul>
+<li>Multiple inputs/outputs</li>
+<li>Create a function that accepts both StartDate and EndDate then returns the total ride hours for all transactions that occur within the parameter values.</li>
+</ul>
+<pre><code>-- Create the function
+CREATE FUNCTION SumRideHrsDateRange (@StartDateParm datetime, @EndDateParm datetime)
+-- Specify return data type
+RETURNS numeric
+AS
+BEGIN
+RETURN
+-- Sum the difference between StartDate and EndDate
+(SELECT SUM(DATEDIFF(second, StartDate, EndDate))/3600
+FROM CapitalBikeShare
+-- Include only the relevant transactions
+WHERE StartDate &gt; @StartDateParm and StartDate &lt;@EndDateParm)
+END</code></pre>
+</div>
+<div id="user-defined-functions-inline-faster-and-multi-statement-value-functions-slower" class="section level3">
+<h3><span class="header-section-number">5.1.4</span> User defined functions: inline (faster) and multi-statement value functions (slower)</h3>
+<ul>
+<li>Inline value function:</li>
+</ul>
+<pre><code>
+-- Create the function
+CREATE FUNCTION SumStationStats(@StartDate AS datetime)
+-- Specify return data type
+RETURNS TABLE
+AS
+RETURN
+SELECT
+	StartStation,
+    -- Use COUNT() to select RideCount
+	COUNT(ID) as RideCount,
+    -- Use SUM() to calculate TotalDuration
+    SUM(DURATION) as TotalDuration
+FROM CapitalBikeShare
+WHERE CAST(StartDate as Date) = @StartDate
+-- Group by StartStation
+GROUP BY StartStation;
+</code></pre>
+<ul>
+<li>Multi statement value function</li>
+</ul>
+<pre><code>
+-- Create the function
+CREATE FUNCTION CountTripAvgDuration (@Month CHAR(2), @Year CHAR(4))
+-- Specify return variable
+RETURNS @DailyTripStats TABLE(
+	TripDate	date,
+	TripCount	int,
+	AvgDuration	numeric)
+AS
+BEGIN
+-- Insert query results into @DailyTripStats
+INSERT @DailyTripStats
+SELECT
+    -- Cast StartDate as a date
+	CAST(StartDate AS date),
+    COUNT(ID),
+    AVG(Duration)
+FROM CapitalBikeShare
+WHERE
+	DATEPART(month, StartDate) = @Month AND
+    DATEPART(year, StartDate) = @Year
+-- Group by StartDate as a date
+GROUP BY CAST(StartDate AS date)
+-- Return
+RETURN
+END
+</code></pre>
+</div>
+<div id="user-defined-functions-in-action-i.e.execute-functions" class="section level3">
+<h3><span class="header-section-number">5.1.5</span> User defined functions in action: i.e. execute functions</h3>
+<ul>
+<li>can use SELECT to execute scalar functions</li>
+</ul>
+<pre><code>
+-- Create @BeginDate
+DECLARE @BeginDate AS date = &#39;3/1/2018&#39;
+-- Create @EndDate
+DECLARE @EndDate AS date = &#39;3/10/2018&#39; 
+SELECT
+  -- Select @BeginDate
+  @BeginDate AS BeginDate,
+  -- Select @EndDate
+  @EndDate AS EndDate,
+  -- Execute SumRideHrsDateRange()
+  dbo.SumRideHrsDateRange(@BeginDate, @EndDate) AS TotalRideHrs
+</code></pre>
+<ul>
+<li>anotehr example:</li>
+</ul>
+<pre><code>-- Create @RideHrs
+DECLARE @RideHrs AS numeric
+-- Execute SumRideHrsSingleDay()
+EXEC @RideHrs = dbo.SumRideHrsSingleDay @DateParm = &#39;3/5/2018&#39; 
+SELECT 
+  &#39;Total Ride Hours for 3/5/2018:&#39;, 
+  @RideHrs</code></pre>
+<ul>
+<li>Execute TVF into variable:</li>
+</ul>
+<pre><code>
+-- Create @StationStats
+DECLARE @StationStats TABLE(
+	StartStation nvarchar(100), 
+	RideCount int, 
+	TotalDuration numeric)
+-- Populate @StationStats with the results of the function
+INSERT INTO @StationStats
+SELECT TOP 10 *
+-- Execute SumStationStats with 3/15/2018
+FROM dbo.SumStationStats (&#39;3/15/2018&#39;) 
+ORDER BY RideCount DESC
+-- Select all the records from @StationStats
+SELECT * 
+FROM @StationStats</code></pre>
+
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="what-is-in-a-database.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-words.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["tools4stem.pdf", "tools4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

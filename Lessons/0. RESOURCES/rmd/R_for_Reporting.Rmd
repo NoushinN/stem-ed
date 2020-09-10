@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 > Curated and organized by Noushin Nabavi, PhD.
 
+
 ## Motivation for reporting
 
 Possible ways to report your findings include e-mailing figures and tables around with some explanatory text or creating reports in Word, LaTeX or HTML.

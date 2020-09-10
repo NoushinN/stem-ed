@@ -1,6 +1,5 @@
-## Teaching, Learning, and Research
+# Teaching, Learning, and Research
 
-Hello-out-there,
 
 We live in a fast changing and complex world and we were not prepared for it. In my learning life journey, I have been fortunate to benefit from some highly advanced teachers and mentors who taught me to not only learn the lesson materials but learn to know, to do, to live, to be, and to transform myself and the society. To pass this knowledge to the next generation of learners, I myself went on a journey to learn teaching. I have participated in a number of teaching and learning classes in the recent past and have been inspired by several core ideas and philosophies about teaching, learning, and STEM education that I like to implement in my own teaching practices.
 

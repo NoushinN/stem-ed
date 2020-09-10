@@ -3,6 +3,7 @@ title: "Xaringan Presentation "
 author: "Noushin Nabavi"
 date: "2019/07/19"
 output:
+  pdf_document: default
   xaringan::moon_reader:
     css:
     - default
@@ -13,7 +14,6 @@ output:
       countIncrementalSlides: no
       highlightLines: yes
       highlightStyle: github
-  pdf_document: default
 subtitle: ⚔<br/>with xaringan and a twist of hygge
 ---
 
