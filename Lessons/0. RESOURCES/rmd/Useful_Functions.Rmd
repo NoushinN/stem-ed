@@ -1,24 +1,12 @@
----
-title: "Useful R Functions + Examples"
-date: "22.12.2018"
-output: html_document
----
 
-```{r setup, include=FALSE, eval=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-***
-> Curated and organized by Noushin Nabavi, PhD.
-
-***
+# Useful R Functions + Examples
 
 > This is *NOT* intended to be fully comprehensive list of every useful R function that exists, but is a practical demonstration of selected relevant examples presented in user-friendly format, all available in base R. For a wider collection to work through, this Reference Card is recommended: https://cran.r-project.org/doc/contrib/Baggott-refcard-v2.pdf
 
 > Additional CRAN reference cards and R guides (including non-English documentation) found here: https://cran.r-project.org/other-docs.html
 
----
 
-#### Contents
+## Contents
 
 A. Essentials    
 * 1. `getwd()`, `setwd()`  
@@ -51,18 +39,17 @@ D. Common
 * 22. `function()...` 
 
 
-### *REMEMBER: KEY R LANGUAGE SYNTAX*
+## *REMEMBER: KEY R LANGUAGE SYNTAX*
 * **Case Sensitivity**: as per most UNIX-based packages, R is case sensitive, hence `X` and `x` are different symbols and would refer to different variables.    
 * **Expressions vs Assignments**: an expression, like `3 + 5` can be given as a command which will be evaluated and the value immediately printed, but not stored. An assignment however, like `sum <- 3 + 5` using the assignment operator `<-` also evaluates the expression `3 + 5`, but instead of printing and not storing, it stores the value in the object `sum` but doesn't print the result. The object `sum` would need to be called to print the result.    
 * **Reserved Words**: choice for naming objects is almost entirely free, except for these reserved words: https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html    
 * **Spacing**: outside of the function structure, spaces don't matter, e.g. `3+5` is the same as `3+     5` is the same as `3 + 5`. For more best-practices for R code Hadley Wickham's Style Guide is a useful reference: http://adv-r.had.co.nz/Style.html
 * **Comments**: add comments within your code using a hastag, `#`. R will ignore everything to the right of the hashtag within that line
 
----    
 
-### A. SOME ESSENTIAL FUNCTIONS
+## A. SOME ESSENTIAL FUNCTIONS
 
-#### 1. Working Directory management - `getwd()`, `setwd()`
+### 1. Working Directory management - `getwd()`, `setwd()`
 R/RStudio is always pointed at a specific directory on your computer, so it's important to be able to check what's the current directory using `getwd()`, and to be able to change and specify a different directory to work in using `setwd()`.
 ```{r 1, eval=FALSE}
 #check the directory R is currently pointed at
@@ -79,7 +66,7 @@ setwd("~/FOLDER") #or from R's default working directory where "~/" refers to "C
 
 ---
 
-#### 2. Bring up help documentation & examples - `?foo`, `help(foo)`, `example(foo)`
+### 2. Bring up help documentation & examples - `?foo`, `help(foo)`, `example(foo)`
 
 ```{r 2, eval=FALSE}
 ?boxplot
@@ -89,7 +76,7 @@ example(boxplot)
 
 ---
 
-#### 3. Load & Call CRAN Packages - `install.packages("foo")`, `library("foo")`
+### 3. Load & Call CRAN Packages - `install.packages("foo")`, `library("foo")`
 Packages are add-on functionality built for R but not pre-installed (base R), hence you need to install/load the packages you want yourself. The majority of packages you'd want have been submitted to and are available via CRAN. At time of writing, the CRAN package repository featured 8,592 available packages.
 
 ```{r 3, eval=FALSE}
@@ -100,9 +87,9 @@ library("wordcloud") #best-practice loading
 require("wordcloud") #alternative function to 'library', but don't use it (http://yihui.name/en/2014/07/library-vs-require/)
 ```
 
----
 
-#### 4. Load & Call Packages from GitHub - `devtools::install_github("username/packagename")`
+
+### 4. Load & Call Packages from GitHub - `devtools::install_github("username/packagename")`
 Not all packages you'll want will be available via CRAN, and you'll likely need to get certain packages from GitHub accounts. This example shows how to install the `shinyapps` package from RStudio's GitHub account.
 ```{r 4, eval=FALSE}
 #AIM: load & call the "shinyapps" package from RStudio's GitHub
@@ -113,10 +100,8 @@ devtools::install_github("rstudio/shinyapps") #install specific package from spe
 library("shinyapps") #Call package
 ```
 
----
 
-
-#### 5. Load datasets from base R & Loaded Packages  - `data("foo")`
+### 5. Load datasets from base R & Loaded Packages  - `data("foo")`
 
 ```{r 5, eval=FALSE}
 #AIM: show available datasets
@@ -128,7 +113,7 @@ data("iris")
 
 ---
 
-#### 6. I/O Loading Existing Local Data - `read.csv`, `read.table`
+### 6. I/O Loading Existing Local Data - `read.csv`, `read.table`
 
 ##### (a) I/O When already in the working directory where the data is
 
@@ -175,7 +160,7 @@ You can use the file.choose() command which will interactively open up the file 
 object <- read.csv(file.choose())
 ```
 
----
+
 
 ##### (c) I/O Copying & Pasting Data
 
@@ -188,7 +173,7 @@ object <- read.table(pipe("pbpaste"))
 object <- read.table(file = "clipboard")
 ```
 
----
+
 
 ##### (d) I/O Loading Non-Numerical Data - character strings
 
@@ -198,7 +183,6 @@ Be careful when loading text data! R may assume character strings are statistica
 object <- read.table("xxx.txt", stringsAsFactors = FALSE)
 ```
 
----
 
 ##### (e) I/O Downloading Remote Data
 
@@ -207,7 +191,6 @@ For accessing files from the web you can use the same `read.csv/read.table` comm
 object <- read.csv("http://sumsar.net/files/posts/2014-02-04-bayesian-first-aid-one-sample-t-test/roubik_2002_coffe_yield.csv")
 ```
 
----
 
 #### 7. I/O Exporting Data Frame - `write.table()`
 
@@ -216,7 +199,6 @@ Navigate to the working directory you want to save the data table into, then run
 write.table(object, "xxx.txt", sep = "\t")
 ```
 
----
 
 #### 8. I/O Saving Down & Loading Objects - `save()`, `load()`
 
@@ -229,7 +211,6 @@ save(object, file = "xxx.rda")
 load("xxx.rda")
 ```
 
----
 
 ### B. SOME BASIC FUNCTIONS
 
@@ -249,7 +230,6 @@ roof <- rbind(foo, oof) #bind vectors in row concatenation to make a matrix
 moof <- matrix(data = 1:12, nrow=3, ncol=4) #creates matrix by specifying set of values, no. of rows & no. of columns
 ```
 
----
 
 #### 10. Vector & Matrix Explore - `length()`, `dim()`
 
@@ -259,7 +239,6 @@ length(foo) #length of vector
 dim(coof) #returns dimensions (no. of rows & columns) of vector/matrix/dataframe
 ```
 
----
 
 #### 11. Vector & Matrix Sort & Select - `sort()`, `'vector'[]`, `'matrix'[]`
 
@@ -287,7 +266,6 @@ coof[1:3,] #selects columns 1 to 3 inclusive
 coof[c(1,2,3),] #selects the 1st, 2nd & 3rd rows (same as previous)
 ```
 
----
 
 #### 12. Create & Explore Data Frames - `data.frame()`, `class()`, `names()`, `str()`, `summary()`, `View()`, `head()`, `tail()`, `as.data.frame()`
 A data frame is a matrix-like data structure made up of lists of variables with the same number of rows, which can be of differing data types (numeric, character, factor etc.) - matrices must have columns all of the same data type.
@@ -306,7 +284,6 @@ tail(doof, n=2) #shows last parts of object, here requesting the last 2 rows
 convert <- as.data.frame(coof) #convert a non-data frame object into a data frame
 ```
 
----
 
 ### C. SOME CORE FUNCTIONS
 
@@ -337,7 +314,6 @@ painters[order(-painters$Composition),] #append a minus sign in front of the var
 painters[order(-painters$Composition), c(1:3)]
 ```
 
----
 
 #### 14. Data Frame Select & Deselect - `df[,c()]`, `df[which(),]`
 
@@ -367,8 +343,6 @@ painters[which(painters$School == "A"),] #returns the subsetted df where equalit
 painters[which(painters$School != "A" & painters$Colour > 10),] #returns the subsetted df where equality holds true, i.e. row value in School variable column is 'not A', AND the Colour score filter is also true.
 ```
 
----
-
 
 #### 15. Data Frame Frequency Calculations - `table()`
 
@@ -388,7 +362,6 @@ table(icecream$flavour)
 table(icecream$flavour, icecream$gender)
 ```
 
----
 
 #### 16. Descriptive/Summary Stats Functions - `mean()`, `median()`, `sd()`, `var()`, `sum()`, `min()`, `max()`, `range()`
 
@@ -406,7 +379,6 @@ max(jumble)
 range(jumble)
 ```
 
----
 
 #### 17. Apply Functions - `apply()`
 `apply()` returns a vector, array or list of values where a specified function has been applied to the 'margins' (rows/cols combo) of the original vector/array/list.
@@ -424,7 +396,6 @@ apply(moof, 1, sum)
 apply(moof, 2, sum) 
 ```
 
----
 
 #### 18. Apply Functions - `lapply()` using `list()`
 A list, a common data structure, is a generic vector containing objects of any types.
@@ -440,7 +411,6 @@ lapply(X, FUN,...) #function arguments: X=a list, FUN=function to apply
 lapply(bundle, mean)
 ```
 
----
 
 #### 19. Apply Functions - `tapply()`
 `tapply()` applies a specified function to specified groups/subsets of a factor variable.
@@ -452,7 +422,6 @@ tapply(X, INDEX, FUN,...) #function arguments: X=an atomic object, INDEX=list of
 tapply(painters$Drawing, painters$School, mean) #grouping the data by the 8 different Schools, apply the mean function to the Drawing Score variable to return the 8 mean scores
 ```
 
----
 
 ### D. SOME COMMON FUNCTIONS
 
@@ -490,7 +459,6 @@ if (condition_to_test > 5)
 result_after_test 
 ```
 
----
 
 #### 21. Programming Tools - `for` loop
 A `for` loop is an automation method for repeating (looping) a specific set of instructions for each element in a vector.
@@ -519,7 +487,6 @@ for (i in 1:10)
 container #check results: the loop is instructed to square every element of the looping vector, 1:10. The ith element returned is therefore the value of i^2, e.g. the 3rd element is 3^2.
 ```
 
----
 
 #### 22. Programming Tools - `function()...`
 User-programmed functions allow you to specify customised arguments and returned values.
@@ -534,7 +501,6 @@ takehome_pay <- function(tax_rate, income)
 takehome_pay(tax_rate = 0.2, income = 25000) #call our function to calculate 'takehome_pay' on a 'tax_rate' of 20% and an 'income' of 25k
 ```
 
----
 
 ### E. FURTHER FUNCTIONS
 

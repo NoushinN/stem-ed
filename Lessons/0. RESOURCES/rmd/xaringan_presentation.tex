@@ -1,0 +1,228 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Xaringan Presentation},
+            pdfauthor={Noushin Nabavi},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+
+\title{Xaringan Presentation}
+\providecommand{\subtitle}[1]{}
+\subtitle{⚔with xaringan and a twist of hygge}
+\author{Noushin Nabavi}
+\date{2019/07/19}
+
+\begin{document}
+\maketitle
+
+class: center, middle
+
+\hypertarget{hello}{%
+\section{hello}\label{hello}}
+
+\hypertarget{heres-a-presentaion}{%
+\subsubsection{here's a presentaion}\label{heres-a-presentaion}}
+
+type or insert images, ec. \emph{`where do we go from here'}
+
+\hypertarget{coloured-content-boxes}{%
+\subsection{Coloured content boxes}\label{coloured-content-boxes}}
+
+Use \texttt{.content-box-blue} (or gray/grey, army, green, purple, red,
+or yellow) to produce a box with coloured background. Size depends on
+content.
+
+\texttt{.content-box-blue{[}I\ feel\ blue{]}} yields
+
+.content-box-blue{[}I feel blue{]}
+
+Wrap in \texttt{.full-width} to expand the width
+
+.full-width{[}.content-box-red{[}I feel even more blue{]}{]}
+
+If you have content in columns then you get
+
+.pull-left{[}.full-width{[}.content-box-yellow{[}\textbf{WARNING} Look
+out for minons or bananas{]}{]}{]}
+.pull-right{[}.full-width{[}.content-box-yellow{[}The box to the left
+was created using
+\texttt{.pull-left{[}.full-width{[}.content-box-yellow{[}{]}{]}{]}}{]}{]}{]}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{fancy-picture-includes}{%
+\subsection{Fancy picture includes}\label{fancy-picture-includes}}
+
+.pull-left{[} Original:
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+
+Add \texttt{.polaroid}
+
+.polaroid{[}
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+{]} {]} .pull-right{[}
+
+Rotated slightly:
+
+.rotate-right{[}
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+{]}
+
+Add \texttt{.blur}
+
+.blur{[}
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+{]} {]}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{modifying-text}{%
+\section{Modifying text}\label{modifying-text}}
+
+.pull-left{[}
+
+\hypertarget{font-sizes}{%
+\subsection{Font sizes}\label{font-sizes}}
+
+This is normal size ( \(\LaTeX\)-friendly terms)
+
+.Large{[}Large{]}
+
+.large{[}large{]}
+
+.small{[}small{]}
+
+.footnotesize{[}footnotesize{]}
+
+.scriptsize{[}scriptsize{]}
+
+.tiny{[}tiny{]}
+
+{]}
+
+.pull-right{[}
+
+\hypertarget{text-color}{%
+\subsection{Text color}\label{text-color}}
+
+.black{[}black{]}
+
+.red{[}red{]}
+
+.blue{[}blue{]}
+
+.green{[}green{]}, .yellow{[}yellow{]}, .orange{[}orange{]},
+.purple{[}purple{]}, .gray{[}gray or grey{]}
+
+You can also use \texttt{.bold{[}{]}} or \texttt{.bolder{[}{]}} to
+emphasize text
+
+This is .bold{[}bold{]}, this is .bolder{[}bolder{]} and this is regular
+markdown \textbf{double-star bold} (visible differences depend on the
+font)
+
+{]}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{stacking-fancy-picture-options}{%
+\subsection{Stacking fancy picture
+options}\label{stacking-fancy-picture-options}}
+
+.pull-left{[} Add \texttt{.opacity}
+
+.opacity{[}
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+{]}
+
+Stack \texttt{.blur} and \texttt{.opacity}
+
+.blur{[}.opacity{[}
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+{]}{]} {]} .pull-right{[}
+
+Convert to \texttt{.grayscale} (oh \ldots{} and rotate just for s'n'g):
+
+.rotate-left{[} .grayscale{[}
+
+\includegraphics[width=0.8\linewidth]{https://www.worldtravelguide.net/wp-content/uploads/2017/04/Think-Denmark-Copenhagen-587892190-SeanPavonePhoto-copy}
+{]}{]}
+
+Add \texttt{.shadow}
+
+.shadow{[}
+
+\includegraphics[width=1\linewidth]{https://beautifulenvironments.files.wordpress.com/2017/12/twinkly-lights}
+{]} {]}
+
+\end{document}
