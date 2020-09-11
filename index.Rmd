@@ -4,6 +4,7 @@ author: "Noushin Nabavi"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
+always_allow_html: yes
 description: "This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting"
 ---
 

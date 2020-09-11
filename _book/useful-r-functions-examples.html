@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Useful R Functions + Examples | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Useful R Functions + Examples | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Useful R Functions + Examples | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="r-for-reporting.html"/>
+<link rel="next" href="exploratory-data-analysis-using-sql.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>3</b> R for Reporting</a><ul>
+<li class="chapter" data-level="3.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>3.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>3.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="3.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>3.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>3.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>4</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="4.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>4.1</b> Contents</a></li>
+<li class="chapter" data-level="4.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>4.2</b> R Syntax</a></li>
+<li class="chapter" data-level="4.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>4.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis-using-sql.html"><a href="exploratory-data-analysis-using-sql.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis using SQL</a></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="6.1" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>6.1</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>6.1.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="6.1.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>6.1.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="6.1.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>6.1.3</b> Operational Basics</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="resources.html"><a href="resources.html#getting-your-data-into-r"><i class="fa fa-check"></i><b>6.2</b> Getting Your Data into R</a></li>
+<li class="chapter" data-level="6.3" data-path="resources.html"><a href="resources.html#getting-your-data-out-of-r"><i class="fa fa-check"></i><b>6.3</b> Getting Your Data out of R</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="useful-r-functions-examples" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Useful R Functions + Examples</h1>
+<blockquote>
+<p>This is <em>NOT</em> intended to be fully comprehensive list of every useful R function that exists, but is a practical demonstration of selected relevant examples presented in user-friendly format, all available in base R. For a wider collection to work through, this Reference Card is recommended: <a href="https://cran.r-project.org/doc/contrib/Baggott-refcard-v2.pdf" class="uri">https://cran.r-project.org/doc/contrib/Baggott-refcard-v2.pdf</a></p>
+</blockquote>
+<blockquote>
+<p>Additional CRAN reference cards and R guides (including non-English documentation) found here: <a href="https://cran.r-project.org/other-docs.html" class="uri">https://cran.r-project.org/other-docs.html</a></p>
+</blockquote>
+<div id="contents" class="section level2">
+<h2><span class="header-section-number">4.1</span> Contents</h2>
+<p>A. Essentials<br />
+* 1. <code>getwd()</code>, <code>setwd()</code><br />
+* 2. <code>?foo</code>, <code>help(foo)</code>, <code>example(foo)</code><br />
+* 3. <code>install.packages(&quot;foo&quot;)</code>, <code>library(&quot;foo&quot;)</code><br />
+* 4. <code>devtools::install_github(&quot;username/packagename&quot;)</code><br />
+* 5. <code>data(&quot;foo&quot;)</code><br />
+* 6. <code>read.csv</code>, <code>read.table</code><br />
+* 7. <code>write.table()</code><br />
+* 8. <code>save()</code>, <code>load()</code></p>
+<p>B. Basics<br />
+* 9. <code>c()</code>, <code>cbind()</code>, <code>rbind()</code>, <code>matrix()</code><br />
+* 10. <code>length()</code>, <code>dim()</code><br />
+* 11. <code>sort()</code>, <code>'vector'[]</code>, <code>'matrix'[]</code><br />
+* 12. <code>data.frame()</code>, <code>class()</code>, <code>names()</code>, <code>str()</code>, <code>summary()</code>, <code>View()</code>, <code>head()</code>, <code>tail()</code>, <code>as.data.frame()</code></p>
+<p>C. Core<br />
+* 13. <code>df[order(),]</code><br />
+* 14. <code>df[,c()]</code>, <code>df[which(),]</code><br />
+* 15. <code>table()</code><br />
+* 16. <code>mean()</code>, <code>median()</code>, <code>sd()</code>, <code>var()</code>, <code>sum()</code>, <code>min()</code>, <code>max()</code>, <code>range()</code><br />
+* 17. <code>apply()</code><br />
+* 18. <code>lapply()</code> using <code>list()</code><br />
+* 19. <code>tapply()</code></p>
+<p>D. Common<br />
+* 20. <code>if</code> statement, <code>if...else</code> statement<br />
+* 21. <code>for</code> loop<br />
+* 22. <code>function()...</code></p>
+</div>
+<div id="r-syntax" class="section level2">
+<h2><span class="header-section-number">4.2</span> R Syntax</h2>
+<p><em>REMEMBER: KEY R LANGUAGE SYNTAX</em></p>
+<ul>
+<li><strong>Case Sensitivity</strong>: as per most UNIX-based packages, R is case sensitive, hence <code>X</code> and <code>x</code> are different symbols and would refer to different variables.<br />
+</li>
+<li><strong>Expressions vs Assignments</strong>: an expression, like <code>3 + 5</code> can be given as a command which will be evaluated and the value immediately printed, but not stored. An assignment however, like <code>sum &lt;- 3 + 5</code> using the assignment operator <code>&lt;-</code> also evaluates the expression <code>3 + 5</code>, but instead of printing and not storing, it stores the value in the object <code>sum</code> but doesn’t print the result. The object <code>sum</code> would need to be called to print the result.<br />
+</li>
+<li><strong>Reserved Words</strong>: choice for naming objects is almost entirely free, except for these reserved words: <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html" class="uri">https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html</a><br />
+</li>
+<li><strong>Spacing</strong>: outside of the function structure, spaces don’t matter, e.g. <code>3+5</code> is the same as <code>3+     5</code> is the same as <code>3 + 5</code>. For more best-practices for R code Hadley Wickham’s Style Guide is a useful reference: <a href="http://adv-r.had.co.nz/Style.html" class="uri">http://adv-r.had.co.nz/Style.html</a></li>
+<li><strong>Comments</strong>: add comments within your code using a hastag, <code>#</code>. R will ignore everything to the right of the hashtag within that line</li>
+</ul>
+</div>
+<div id="functional-examples" class="section level2">
+<h2><span class="header-section-number">4.3</span> Functional examples</h2>
+<ol style="list-style-type: decimal">
+<li>Working Directory management</li>
+</ol>
+<ul>
+<li><code>getwd()</code>, <code>setwd()</code>
+R/RStudio is always pointed at a specific directory on your computer, so it’s important to be able to check what’s the current directory using <code>getwd()</code>, and to be able to change and specify a different directory to work in using <code>setwd()</code>.</li>
+</ul>
+<p>#check the directory R is currently pointed at
+getwd()</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Bring up help documentation &amp; examples</li>
+</ol>
+<ul>
+<li><code>?foo</code>, <code>help(foo)</code>, <code>example(foo)</code></li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">?boxplot</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">help</span>(boxplot)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">example</span>(boxplot)</a></code></pre></div>
+<hr />
+<ol start="3" style="list-style-type: decimal">
+<li>Load &amp; Call CRAN Packages</li>
+</ol>
+<ul>
+<li><code>install.packages(&quot;foo&quot;)</code>, <code>library(&quot;foo&quot;)</code>
+Packages are add-on functionality built for R but not pre-installed (base R), hence you need to install/load the packages you want yourself. The majority of packages you’d want have been submitted to and are available via CRAN. At time of writing, the CRAN package repository featured 8,592 available packages.</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Load &amp; Call Packages from GitHub</li>
+</ol>
+<ul>
+<li><code>devtools::install_github(&quot;username/packagename&quot;)</code>
+Not all packages you’ll want will be available via CRAN, and you’ll likely need to get certain packages from GitHub accounts. This example shows how to install the <code>shinyapps</code> package from RStudio’s GitHub account.</li>
+<li>install.packages(“devtools”) #pre-requisite for <code>devtools...</code> function</li>
+<li>devtools::install_github(“rstudio/shinyapps”) #install specific package from specific GitHub account</li>
+<li>library(“shinyapps”) #Call package</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Load datasets from base R &amp; Loaded Packages</li>
+</ol>
+<ul>
+<li><code>data(&quot;foo&quot;)</code></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">#AIM: show available datasets</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">data</span>() </a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#AIM: load an available dataset</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>) </a></code></pre></div>
+<hr />
+<ol start="6" style="list-style-type: decimal">
+<li>I/O Loading Existing Local Data</li>
+</ol>
+<ul>
+<li><code>read.csv</code>, <code>read.table</code></li>
+</ul>
+<ol style="list-style-type: lower-alpha">
+<li>I/O When already in the working directory where the data is</li>
+</ol>
+<p>Import a local <strong>csv</strong> file (i.e. where data is separated by <strong>commas</strong>), saving it as an object:
+- object &lt;- read.csv(“xxx.csv”)</p>
+<p>Import a local tab delimited file (i.e. where data is separated by <strong>tabs</strong>), saving it as an object:
+- object &lt;- read.csv(“xxx.csv”, header = FALSE)
+—</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>I/O When NOT in the working directory where the data is</li>
+</ol>
+<p>For example to import and save a local <strong>csv</strong> file from a different working directory you either need to specify the file path (operating system specific), e.g.:</p>
+<p>on a mac:
+- object &lt;- read.csv(“~/Desktop/R/data.csv”)</p>
+<p>on windows:
+= object &lt;- read.csv(“C:/Desktop/R/data.csv”)</p>
+<p>OR</p>
+<p>You can use the file.choose() command which will interactively open up the file dialog box for you to browse and select the local file, e.g.:
+- object &lt;- read.csv(file.choose())</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>I/O Copying &amp; Pasting Data</li>
+</ol>
+<p>For relatively small amounts of data you can do an equivalent copy paste (operating system specific):</p>
+<p>on a mac:
+- object &lt;- read.table(pipe(“pbpaste”))</p>
+<p>on windows:
+- object &lt;- read.table(file = “clipboard”)</p>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>I/O Loading Non-Numerical Data - character strings</li>
+</ol>
+<p>Be careful when loading text data! R may assume character strings are statistical factor variables, e.g. “low”, “medium”, “high”, when are just individual labels like names. To specify text data NOT to be converted into factor variables, add <code>stringsAsFactor = FALSE</code> to your <code>read.csv/read.table</code> command:
+- object &lt;- read.table(“xxx.txt”, stringsAsFactors = FALSE)</p>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>I/O Downloading Remote Data</li>
+</ol>
+<p>For accessing files from the web you can use the same <code>read.csv/read.table</code> commands. However, the file being downloaded does need to be in an R-friendly format (maximum of 1 header row, subsequent rows are the equivalent of one data record per row, no extraneous footnotes etc.). Here is an example downloading an online csv file of coffee harvest data used in a Nature study:
+- object &lt;- read.csv(“<a href="http://sumsar.net/files/posts/2014-02-04-bayesian-first-aid-one-sample-t-test/roubik_2002_coffe_yield.csv" class="uri">http://sumsar.net/files/posts/2014-02-04-bayesian-first-aid-one-sample-t-test/roubik_2002_coffe_yield.csv</a>”)</p>
+<ol start="7" style="list-style-type: decimal">
+<li>I/O Exporting Data Frame</li>
+</ol>
+<ul>
+<li><code>write.table()</code></li>
+</ul>
+<p>Navigate to the working directory you want to save the data table into, then run the command (in this case creating a tab delimited file):
+- write.table(object, “xxx.txt”, sep = &quot;)</p>
+<ol start="8" style="list-style-type: decimal">
+<li>I/O Saving Down &amp; Loading Objects</li>
+</ol>
+<ul>
+<li><code>save()</code>, <code>load()</code></li>
+</ul>
+<p>These two commands allow you to save a named R object to a file and restore that object again.<br />
+Navigate to the working directory you want to save the object in then run the command:
+- save(object, file = “xxx.rda”)</p>
+<p>reload the object:
+- load(“xxx.rda”)</p>
+<ol start="9" style="list-style-type: decimal">
+<li>Vector &amp; Matrix Construction</li>
+</ol>
+<ul>
+<li><code>c()</code>, <code>cbind()</code>, <code>rbind()</code>, <code>matrix()</code>
+Vectors (lists) &amp; Matrices (two-dimensional arrays) are very common R data structures.</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">#use c() to construct a vector by concatenating data</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">foo &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>) <span class="co">#example of a numeric vector</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">oof &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>) <span class="co">#example of a character vector</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">ofo &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>) <span class="co">#example of a logical vector</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#use cbind() &amp; rbind() to construct matrices</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">coof &lt;-<span class="st"> </span><span class="kw">cbind</span>(foo, oof) <span class="co">#bind vectors in column concatenation to make a matrix</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">roof &lt;-<span class="st"> </span><span class="kw">rbind</span>(foo, oof) <span class="co">#bind vectors in row concatenation to make a matrix</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#use matrix() to construct matrices</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">moof &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">data =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">nrow=</span><span class="dv">3</span>, <span class="dt">ncol=</span><span class="dv">4</span>) <span class="co">#creates matrix by specifying set of values, no. of rows &amp; no. of columns</span></a></code></pre></div>
+<ol start="10" style="list-style-type: decimal">
+<li>Vector &amp; Matrix Explore</li>
+</ol>
+<ul>
+<li><code>length()</code>, <code>dim()</code></li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">length</span>(foo) <span class="co">#length of vector</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">dim</span>(coof) <span class="co">#returns dimensions (no. of rows &amp; columns) of vector/matrix/dataframe</span></a></code></pre></div>
+<ol start="11" style="list-style-type: decimal">
+<li>Vector &amp; Matrix Sort &amp; Select</li>
+</ol>
+<ul>
+<li><code>sort()</code>, <code>'vector'[]</code>, <code>'matrix'[]</code></li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">#create another numeric vector</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">jumble &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw">sort</span>(jumble) <span class="co">#sorts a numeric vector in ascending order (default)</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw">sort</span>(jumble, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) <span class="co">#specify the decreasing arg to reverse default order</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#create another character vector</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">mumble &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="st">&quot;D&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;A&quot;</span>)</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="kw">sort</span>(mumble) <span class="co">#sorts a character vector in alphabetical order (default)</span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="kw">sort</span>(mumble, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>) <span class="co">#specify the decreasing arg to reverse default order</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11">jumble[<span class="dv">1</span>] <span class="co">#selects first value in our jumble vector</span></a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="kw">tail</span>(jumble, <span class="dt">n=</span><span class="dv">1</span>) <span class="co">#selects last value</span></a>
+<a class="sourceLine" id="cb11-13" data-line-number="13">jumble[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)] <span class="co">#selects the 1st &amp; 3rd values</span></a>
+<a class="sourceLine" id="cb11-14" data-line-number="14">jumble[<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)] <span class="co">#selects everything except the 1st &amp; 3rd values</span></a>
+<a class="sourceLine" id="cb11-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb11-16" data-line-number="16">coof[<span class="dv">1</span>,] <span class="co">#selects the 1st row of our coof matrix</span></a>
+<a class="sourceLine" id="cb11-17" data-line-number="17">coof[,<span class="dv">1</span>] <span class="co">#selects the 1st column</span></a>
+<a class="sourceLine" id="cb11-18" data-line-number="18">coof[<span class="dv">2</span>,<span class="dv">1</span>] <span class="co">#selects the value in the 2nd row, 1st column</span></a>
+<a class="sourceLine" id="cb11-19" data-line-number="19">coof[,<span class="st">&quot;oof&quot;</span>] <span class="co">#selects the column named &quot;oof&quot;</span></a>
+<a class="sourceLine" id="cb11-20" data-line-number="20">coof[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,] <span class="co">#selects columns 1 to 3 inclusive</span></a>
+<a class="sourceLine" id="cb11-21" data-line-number="21">coof[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),] <span class="co">#selects the 1st, 2nd &amp; 3rd rows (same as previous)</span></a></code></pre></div>
+<ol start="12" style="list-style-type: decimal">
+<li>Create &amp; Explore Data Frames</li>
+</ol>
+<ul>
+<li><code>data.frame()</code>, <code>class()</code>, <code>names()</code>, <code>str()</code>, <code>summary()</code>, <code>View()</code>, <code>head()</code>, <code>tail()</code>, <code>as.data.frame()</code>
+A data frame is a matrix-like data structure made up of lists of variables with the same number of rows, which can be of differing data types (numeric, character, factor etc.) - matrices must have columns all of the same data type.</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">#create a data frame with 3 columns with 4 rows each</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">doof &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;V1&quot;</span>=<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="st">&quot;V2&quot;</span>=<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;D&quot;</span>), <span class="st">&quot;V3&quot;</span>=<span class="dv">5</span><span class="op">:</span><span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw">class</span>(doof) <span class="co">#check data frame object class</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw">names</span>(doof) <span class="co"># returns column names</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="kw">str</span>(doof) <span class="co">#see structure of data frame</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw">summary</span>(doof) <span class="co">#returns basic summary stats</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="kw">View</span>(doof) <span class="co">#invokes spreadsheet-style viewer</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw">head</span>(doof, <span class="dt">n=</span><span class="dv">2</span>) <span class="co">#shows first parts of object, here requesting the first 2 rows</span></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="kw">tail</span>(doof, <span class="dt">n=</span><span class="dv">2</span>) <span class="co">#shows last parts of object, here requesting the last 2 rows</span></a>
+<a class="sourceLine" id="cb12-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">convert &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(coof) <span class="co">#convert a non-data frame object into a data frame</span></a></code></pre></div>
+<ol start="13" style="list-style-type: decimal">
+<li>Data Frame Sort</li>
+</ol>
+<ul>
+<li><code>df[order(),]</code></li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">#use &#39;painters&#39; data frame</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">library</span>(<span class="st">&quot;MASS&quot;</span>) <span class="co">#call package with the required data</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;painters&quot;</span>) <span class="co">#load required data</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="kw">View</span>(painters) <span class="co">#scan dataset</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#syntax for using a specific variable: df=data frame, &#39;$&#39;, V1=variable name</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">df<span class="op">$</span>V1 </a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="co">#AIM: print the &#39;School&#39; variable column</span></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">painters<span class="op">$</span>School</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12"><span class="co">#syntax for df[order(),]</span></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">df[<span class="kw">order</span>(df<span class="op">$</span>V1, df<span class="op">$</span>V2...),] <span class="co">#function arguments: df=data frame, in square brackets specify within the order() the columns with which to sort the ROWS by, where default ordering is Ascending, the tailing comma specifies returning all the columns in the df. If only certain columns are wanted this can be specified after the comma.</span></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="co">#AIM: order the dataset rows based on the painters&#39; Composition Score column, in Ascending order</span></a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">painters[<span class="kw">order</span>(painters<span class="op">$</span>Composition),] <span class="co">#Composition is the sorting variable</span></a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"><span class="co">#AIM: order the dataset rows based on the painters&#39; Composition Score column, in Descending order</span></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19">painters[<span class="kw">order</span>(<span class="op">-</span>painters<span class="op">$</span>Composition),] <span class="co">#append a minus sign in front of the variable you want to sort by in Descending order</span></a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb13-21" data-line-number="21"><span class="co">#AIM: order the dataset rows based on the painters&#39; Composition Score column, in Descending order but return just the first 3 columns</span></a>
+<a class="sourceLine" id="cb13-22" data-line-number="22">painters[<span class="kw">order</span>(<span class="op">-</span>painters<span class="op">$</span>Composition), <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)]</a></code></pre></div>
+<ol start="14" style="list-style-type: decimal">
+<li>Data Frame Select &amp; Deselect</li>
+</ol>
+<ul>
+<li><code>df[,c()]</code>, <code>df[which(),]</code></li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co">#use &#39;painters&#39; data frame</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co">#syntax for select &amp; deselect based on column variables</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">df[, <span class="kw">c</span>(<span class="st">&quot;V1&quot;</span>, <span class="st">&quot;V2&quot;</span>...)] <span class="co">#function arguments: df=data frame, in square brackets specify columns to select or deselect. The comma specifies returning all the rows. If certain rows are wanted this can be specified before the comma.</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="co">#AIM: select the Composition &amp; Drawing variables based on their column name</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">painters[, <span class="kw">c</span>(<span class="st">&quot;Composition&quot;</span>, <span class="st">&quot;Drawing&quot;</span>)] <span class="co">#subset the df, selecting just the named columns (and all the rows)</span></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="co">#AIM: select the Composition &amp; Drawing variables based on their column positions in the painters data frame</span></a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">painters[, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)] <span class="co">#subset the df, selecting just the 1st &amp; 2nd columns (and all the rows)</span></a>
+<a class="sourceLine" id="cb14-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb14-12" data-line-number="12"><span class="co">#AIM: drop the Expression variable based on it&#39;s column position in the painters data frame and return just the first 5 rows</span></a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">painters[<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>), <span class="dv">-4</span>] <span class="co">#returns the subsetted df having deselected the 4th column, Expression and the first 5 rows</span></a>
+<a class="sourceLine" id="cb14-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb14-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb14-16" data-line-number="16"><span class="co">#syntax for select &amp; deselect based on row variable values</span></a>
+<a class="sourceLine" id="cb14-17" data-line-number="17">df[<span class="kw">which</span>(),] <span class="co">#df=data frame, specify the variable value within the `which()` to subset the df on. Again, the tailing comma specifies returning all the columns. If certain columns are wanted this can be specified after the comma.</span></a>
+<a class="sourceLine" id="cb14-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb14-19" data-line-number="19"><span class="co">#AIM: select all rows where the painters&#39; School is the &#39;A&#39; category</span></a>
+<a class="sourceLine" id="cb14-20" data-line-number="20">painters[<span class="kw">which</span>(painters<span class="op">$</span>School <span class="op">==</span><span class="st"> &quot;A&quot;</span>),] <span class="co">#returns the subsetted df where equality holds true, i.e. row value in School variable column is &#39;A&#39;</span></a>
+<a class="sourceLine" id="cb14-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb14-22" data-line-number="22"><span class="co">#AIM: deselect all rows where the painters&#39; School is the &#39;A&#39; category, i.e. return df subset without &#39;A&#39; values, AND also only select rows where Colour score &gt; 10</span></a>
+<a class="sourceLine" id="cb14-23" data-line-number="23">painters[<span class="kw">which</span>(painters<span class="op">$</span>School <span class="op">!=</span><span class="st"> &quot;A&quot;</span> <span class="op">&amp;</span><span class="st"> </span>painters<span class="op">$</span>Colour <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>),] <span class="co">#returns the subsetted df where equality holds true, i.e. row value in School variable column is &#39;not A&#39;, AND the Colour score filter is also true.</span></a></code></pre></div>
+<ol start="15" style="list-style-type: decimal">
+<li>Data Frame Frequency Calculations</li>
+</ol>
+<ul>
+<li><code>table()</code></li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">#create new data frame</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">flavour &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;choc&quot;</span>, <span class="st">&quot;strawberry&quot;</span>, <span class="st">&quot;vanilla&quot;</span>, <span class="st">&quot;choc&quot;</span>, <span class="st">&quot;strawberry&quot;</span>, <span class="st">&quot;strawberry&quot;</span>) </a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">gender &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>)</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">icecream &lt;-<span class="st"> </span><span class="kw">data.frame</span>(flavour, gender) <span class="co">#icecream df made up of 2 factor variables, flavour &amp; gender, with 3 &amp; 2 levels respectively (choc/strawberry/vanilla &amp; F/M)</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="co">#AIM: create a frequency distribution table which shows the count of each gender in the df</span></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw">table</span>(icecream<span class="op">$</span>gender) </a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb15-9" data-line-number="9"><span class="co">#AIM: create a frequency distribution table which shows the count of each flavour in the df</span></a>
+<a class="sourceLine" id="cb15-10" data-line-number="10"><span class="kw">table</span>(icecream<span class="op">$</span>flavour)</a>
+<a class="sourceLine" id="cb15-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb15-12" data-line-number="12"><span class="co">#AIM: create Contingency/2-Way Table showing the counts for each combination of flavour &amp; gender level </span></a>
+<a class="sourceLine" id="cb15-13" data-line-number="13"><span class="kw">table</span>(icecream<span class="op">$</span>flavour, icecream<span class="op">$</span>gender)</a></code></pre></div>
+<ol start="16" style="list-style-type: decimal">
+<li>Descriptive/Summary Stats Functions</li>
+</ol>
+<ul>
+<li><code>mean()</code>, <code>median()</code>, <code>sd()</code>, <code>var()</code>, <code>sum()</code>, <code>min()</code>, <code>max()</code>, <code>range()</code></li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">#re-using the jumble vector from before</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">jumble &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>) </a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="kw">mean</span>(jumble)</a>
+<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="kw">median</span>(jumble)</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6"><span class="kw">sd</span>(jumble)</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="kw">var</span>(jumble)</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8"><span class="kw">sum</span>(jumble)</a>
+<a class="sourceLine" id="cb16-9" data-line-number="9"><span class="kw">min</span>(jumble)</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="kw">max</span>(jumble)</a>
+<a class="sourceLine" id="cb16-11" data-line-number="11"><span class="kw">range</span>(jumble)</a></code></pre></div>
+<ol start="17" style="list-style-type: decimal">
+<li>Apply Functions</li>
+</ol>
+<ul>
+<li><code>apply()</code>
+<code>apply()</code> returns a vector, array or list of values where a specified function has been applied to the ‘margins’ (rows/cols combo) of the original vector/array/list.</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co">#re-using the moof matrix from before</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">moof &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">data =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">nrow=</span><span class="dv">3</span>, <span class="dt">ncol=</span><span class="dv">4</span>) </a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">#apply syntax</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="kw">apply</span>(X, MARGIN, FUN,...) <span class="co">#function arguments: X=an array, MARGIN=1 to apply to rows/2 to apply to cols, FUN=function to apply</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="co">#AIM: using the moof matrix, apply the sum function to the rows</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="kw">apply</span>(moof, <span class="dv">1</span>, sum) </a>
+<a class="sourceLine" id="cb17-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb17-10" data-line-number="10"><span class="co">#AIM: using the moof matrix, apply the sum function to the columns</span></a>
+<a class="sourceLine" id="cb17-11" data-line-number="11"><span class="kw">apply</span>(moof, <span class="dv">2</span>, sum) </a></code></pre></div>
+<ol start="18" style="list-style-type: decimal">
+<li>Apply Functions</li>
+</ol>
+<ul>
+<li><code>lapply()</code> using <code>list()</code>
+A list, a common data structure, is a generic vector containing objects of any types.
+<code>lapply()</code> returns a list where each element returned is the result of applying a specified function to the objects in the list.</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co">#create list of various vectors and matrices</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">bundle &lt;-<span class="st"> </span><span class="kw">list</span>(moof, jumble, foo) </a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="co">#lapply syntax</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="kw">lapply</span>(X, FUN,...) <span class="co">#function arguments: X=a list, FUN=function to apply</span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="co">#AIM: using the bundle list, apply the mean function to each object in the list</span></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="kw">lapply</span>(bundle, mean)</a></code></pre></div>
+<ol start="19" style="list-style-type: decimal">
+<li>Apply Functions</li>
+</ol>
+<ul>
+<li><code>tapply()</code>
+<code>tapply()</code> applies a specified function to specified groups/subsets of a factor variable.</li>
+</ul>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co">#tapply syntax</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw">tapply</span>(X, INDEX, FUN,...) <span class="co">#function arguments: X=an atomic object, INDEX=list of 1+ factors of X length, FUN=function to apply</span></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="co">#AIM: calculate the mean Drawing Score of the painters, but grouped by School category</span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"><span class="kw">tapply</span>(painters<span class="op">$</span>Drawing, painters<span class="op">$</span>School, mean) <span class="co">#grouping the data by the 8 different Schools, apply the mean function to the Drawing Score variable to return the 8 mean scores</span></a></code></pre></div>
+<ol start="20" style="list-style-type: decimal">
+<li>Programming Tools</li>
+</ol>
+<ul>
+<li><code>if</code> statement, <code>if...else</code> statement
+An <code>if</code> statement is used when certain computations are conditional and only execute when a specific condition is met - if the condition is not met, nothing executes. The <code>if...else</code> statement extends the <code>if</code> statement by adding on a computation to execute when the condition is not met, i.e. the ‘else’ part of the statement.</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co">#if-statement syntax</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="cf">if</span> (<span class="st">&#39;test expression&#39;</span>)</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">    {</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">    <span class="st">&#39;statement&#39;</span></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">    }</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="co">#if...else statement</span></a>
+<a class="sourceLine" id="cb20-8" data-line-number="8"><span class="cf">if</span> (<span class="st">&#39;test expression&#39;</span>)</a>
+<a class="sourceLine" id="cb20-9" data-line-number="9">    {</a>
+<a class="sourceLine" id="cb20-10" data-line-number="10">    <span class="st">&#39;statement&#39;</span></a>
+<a class="sourceLine" id="cb20-11" data-line-number="11">    }<span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb20-12" data-line-number="12">    <span class="st">&#39;another statement&#39;</span></a>
+<a class="sourceLine" id="cb20-13" data-line-number="13">    }</a>
+<a class="sourceLine" id="cb20-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb20-15" data-line-number="15"><span class="co">#AIM: here we want to test if the object, &#39;condition_to_test&#39; is smaller than 10. If it is smaller, another object, &#39;result_after_test&#39; is assigned the value &#39;smaller&#39;. Otherwise, the &#39;result_after_test&#39; object is assigned the value &#39;bigger&#39;</span></a>
+<a class="sourceLine" id="cb20-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb20-17" data-line-number="17"><span class="co">#specify the &#39;test expression&#39;</span></a>
+<a class="sourceLine" id="cb20-18" data-line-number="18">condition_to_test &lt;-<span class="st"> </span><span class="dv">7</span> </a>
+<a class="sourceLine" id="cb20-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb20-20" data-line-number="20"><span class="co">#write your &#39;if...else&#39; function based on a &#39;statement&#39; or &#39;another statement&#39; dependent on the &#39;condition_to_test&#39;. </span></a>
+<a class="sourceLine" id="cb20-21" data-line-number="21"><span class="cf">if</span> (condition_to_test <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb20-22" data-line-number="22">    {</a>
+<a class="sourceLine" id="cb20-23" data-line-number="23">    result_after_test =<span class="st"> &#39;Above Average&#39;</span></a>
+<a class="sourceLine" id="cb20-24" data-line-number="24">    }<span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb20-25" data-line-number="25">    result_after_test =<span class="st"> &#39;Below Average&#39;</span></a>
+<a class="sourceLine" id="cb20-26" data-line-number="26">    }</a>
+<a class="sourceLine" id="cb20-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb20-28" data-line-number="28"><span class="co">#call the resulting &#39;statement&#39; as per the instruction of the &#39;if...else&#39; statement</span></a>
+<a class="sourceLine" id="cb20-29" data-line-number="29">result_after_test </a></code></pre></div>
+<ol start="21" style="list-style-type: decimal">
+<li>Programming Tools</li>
+</ol>
+<ul>
+<li><code>for</code> loop
+A <code>for</code> loop is an automation method for repeating (looping) a specific set of instructions for each element in a vector.</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co">#for loop syntax requires a counter, often called &#39;i&#39; to denote an index</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="cf">for</span> (<span class="st">&#39;counter&#39;</span> <span class="cf">in</span> <span class="st">&#39;looping vector&#39;</span>)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">    {</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">    <span class="st">&#39;instructions&#39;</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">    }</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="co">#AIM: here we want to print the phrase &quot;In the Year yyyy&quot; 6x, once for each year between 2010 to 2015.</span></a>
+<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="co">#this for loop executes the code chunk &#39;print(past(&quot;In the Year&quot;, i)) for each of the &#39;i&#39; index values</span></a>
+<a class="sourceLine" id="cb21-9" data-line-number="9"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2010</span><span class="op">:</span><span class="dv">2015</span>)</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10">    {</a>
+<a class="sourceLine" id="cb21-11" data-line-number="11">    <span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;In the Year&quot;</span>, i))</a>
+<a class="sourceLine" id="cb21-12" data-line-number="12">    }</a>
+<a class="sourceLine" id="cb21-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb21-14" data-line-number="14"><span class="co">#AIM: create an object which contains 10 items, namely each number between 1 and 10 squared</span></a>
+<a class="sourceLine" id="cb21-15" data-line-number="15"><span class="co">#to store rather than just print results, an empty storage container needs to be created prior to running the loop, here called container</span></a>
+<a class="sourceLine" id="cb21-16" data-line-number="16">container &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb21-17" data-line-number="17"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb21-18" data-line-number="18">    {</a>
+<a class="sourceLine" id="cb21-19" data-line-number="19">    container[i] =<span class="st"> </span>i<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb21-20" data-line-number="20">    }</a>
+<a class="sourceLine" id="cb21-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb21-22" data-line-number="22">container <span class="co">#check results: the loop is instructed to square every element of the looping vector, 1:10. The ith element returned is therefore the value of i^2, e.g. the 3rd element is 3^2.</span></a></code></pre></div>
+<ol start="22" style="list-style-type: decimal">
+<li>Programming Tools</li>
+</ol>
+<ul>
+<li><code>function()...</code>
+User-programmed functions allow you to specify customised arguments and returned values.</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co">#AIM: to create a simplified take-home pay calculator (single-band), called &#39;takehome_pay&#39;. Our function therefore uses two arguments, a &#39;tax_rate&#39;, and an &#39;income&#39; level. The code in the curly braces {} instructs what the &#39;takehome_pay&#39; function should do when it is called, namely, calculate the tax owed in an object &#39;tax&#39;, and then return the result of the &#39;income&#39; object minus the &#39;tax&#39; object</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">takehome_pay &lt;-<span class="st"> </span><span class="cf">function</span>(tax_rate, income)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">    {</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">    tax =<span class="st"> </span>tax_rate <span class="op">*</span><span class="st"> </span>income</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">    <span class="kw">return</span>(income <span class="op">-</span><span class="st"> </span>tax)</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">    }</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="kw">takehome_pay</span>(<span class="dt">tax_rate =</span> <span class="fl">0.2</span>, <span class="dt">income =</span> <span class="dv">25000</span>) <span class="co">#call our function to calculate &#39;takehome_pay&#39; on a &#39;tax_rate&#39; of 20% and an &#39;income&#39; of 25k</span></a></code></pre></div>
+<ol start="23" style="list-style-type: decimal">
+<li>Strings<br />
+</li>
+</ol>
+<ul>
+<li><code>grep()</code>, <code>tolower()</code>, <code>nchar()</code></li>
+</ul>
+<ol start="24" style="list-style-type: decimal">
+<li>Further Data Selection<br />
+</li>
+</ol>
+<ul>
+<li><code>quantile()</code>, <code>cut()</code>, <code>which()</code>, <code>na.omit()</code>, <code>complete.cases()</code>, <code>sample()</code></li>
+</ul>
+<ol start="25" style="list-style-type: decimal">
+<li>Further Data Creation<br />
+</li>
+</ol>
+<ul>
+<li><code>seq()</code>, <code>rep()</code></li>
+</ul>
+<ol start="26" style="list-style-type: decimal">
+<li>Other Apply-related functions<br />
+</li>
+</ol>
+<ul>
+<li><code>split()</code>, <code>sapply()</code>, <code>aggregate()</code></li>
+</ul>
+<ol start="27" style="list-style-type: decimal">
+<li>More Loops<br />
+</li>
+</ol>
+<ul>
+<li><code>while</code> loop, <code>repeat</code> loop</li>
+</ul>
+<p>…..Ad Infinitum!!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="r-for-reporting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exploratory-data-analysis-using-sql.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

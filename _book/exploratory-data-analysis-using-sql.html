@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Exploratory data analysis using SQL | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Exploratory data analysis using SQL | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Exploratory data analysis using SQL | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="useful-r-functions-examples.html"/>
+<link rel="next" href="final-words.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>3</b> R for Reporting</a><ul>
+<li class="chapter" data-level="3.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>3.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>3.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="3.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>3.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>3.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>4</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="4.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>4.1</b> Contents</a></li>
+<li class="chapter" data-level="4.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>4.2</b> R Syntax</a></li>
+<li class="chapter" data-level="4.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>4.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis-using-sql.html"><a href="exploratory-data-analysis-using-sql.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis using SQL</a></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="6.1" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>6.1</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>6.1.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="6.1.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>6.1.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="6.1.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>6.1.3</b> Operational Basics</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="resources.html"><a href="resources.html#getting-your-data-into-r"><i class="fa fa-check"></i><b>6.2</b> Getting Your Data into R</a></li>
+<li class="chapter" data-level="6.3" data-path="resources.html"><a href="resources.html#getting-your-data-out-of-r"><i class="fa fa-check"></i><b>6.3</b> Getting Your Data out of R</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="exploratory-data-analysis-using-sql" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Exploratory data analysis using SQL</h1>
+<p>What is in a database?<br />
+- This set of exercises explores writing functions and stored procedures in SQL servers.</p>
+<p>Eexplore data tables:
+- Select the count of the number of rows</p>
+<pre><code>SELECT count(*) 
+  FROM tablename;</code></pre>
+<p>Counting missing data:
+- Select the count of ticker,
+- subtract from the total number of rows,
+- and alias as missing</p>
+<pre><code>SELECT count(*) - count(ticker) AS missing
+  FROM fortune500;</code></pre>
+<ul>
+<li>Select the count of profits_change,</li>
+<li>subtract from total number of rows, and alias as missing</li>
+</ul>
+<pre><code>SELECT count(*) - count(profits_change) AS missing
+  FROM fortune500;</code></pre>
+<ul>
+<li>Select the count of industry,</li>
+<li>subtract from total number of rows, and alias as missing</li>
+</ul>
+<pre><code>SELECT count(*) - count(industry) AS missing
+  FROM fortune500;</code></pre>
+<p>Joining tables:</p>
+<pre><code>SELECT company.name 
+-- Table(s) to select from
+  FROM company 
+       INNER JOIN fortune500 
+       ON company.ticker=fortune500.ticker;</code></pre>
+<p>The keys to the database (e.g. foreign vs. primary keys)
+- Read an entity relationship diagram</p>
+<pre><code>-- Count the number of tags with each type
+SELECT type, count(*) AS count
+  FROM tag_type
+ -- To get the count for each type, what do you need to do?
+ GROUP BY type
+ -- Order the results with the most common
+ -- tag types listed first
+ ORDER BY count DESC;</code></pre>
+<ul>
+<li>or:</li>
+</ul>
+<pre><code>-- Select the 3 columns desired
+SELECT name, tag_type.tag, tag_type.type
+  FROM company
+  	   -- Join the tag_company and company tables
+       INNER JOIN tag_company 
+       ON company.id = tag_company.company_id
+       -- Join the tag_type and company tables
+       INNER JOIN tag_type
+       ON tag_company.tag = tag_type.tag
+  -- Filter to most common type
+  WHERE type=&#39;cloud&#39;;</code></pre>
+<ul>
+<li>coalesce function (to combine columns)</li>
+</ul>
+<pre><code>-- Use coalesce
+SELECT coalesce(industry, sector, &#39;Unknown&#39;) AS industry2,
+       -- Don&#39;t forget to count!
+       count(*) 
+  FROM fortune500 
+-- Group by what? (What are you counting by?)
+ GROUP BY industry2
+-- Order results to see most common first
+ ORDER BY count DESC
+-- Limit results to get just the one value you want
+ LIMIT 1;</code></pre>
+<ul>
+<li>Coalesce with a self-join:</li>
+</ul>
+<pre><code>SELECT company_original.name, title, rank
+  -- Start with original company information
+  FROM company AS company_original
+       -- Join to another copy of company with parent
+       -- company information
+	   LEFT JOIN company AS company_parent
+       ON company_original.parent_id = company_parent.id 
+       -- Join to fortune500, only keep rows that match
+       INNER JOIN fortune500 
+       -- Use parent ticker if there is one, 
+       -- otherwise original ticker
+       ON coalesce(company_parent.ticker, 
+                   company_original.ticker) = 
+             fortune500.ticker
+ -- For clarity, order by rank
+ ORDER BY rank; </code></pre>
+<p>Column types and constraints
+- Effects of casting
+- SELECT CAST(value AS new_type);</p>
+<pre><code>-- Select the original value
+SELECT profits_change, 
+	   -- Cast profits_change
+       CAST(profits_change AS integer) AS profits_change_int
+  FROM fortune500;</code></pre>
+<ul>
+<li>SELECT and divide</li>
+</ul>
+<pre><code>-- Divide 10 by 3
+SELECT 10/3,
+       -- Divide 10 cast as numeric by 3
+       10::numeric/3;</code></pre>
+<ul>
+<li>SELECT value::new_type</li>
+</ul>
+<pre><code>SELECT &#39;3.2&#39;::numeric,
+       &#39;-123&#39;::numeric,
+       &#39;1e3&#39;::numeric,
+       &#39;1e-3&#39;::numeric,
+       &#39;02314&#39;::numeric,
+       &#39;0002&#39;::numeric;</code></pre>
+<ul>
+<li>Summarize the distribution of numeric values</li>
+</ul>
+<pre><code>-- Select the count of each value of revenues_change
+SELECT revenues_change, count(*) 
+  FROM fortune500
+ GROUP BY revenues_change 
+ -- order by the values of revenues_change
+ ORDER BY revenues_change;</code></pre>
+<ul>
+<li>Additional exploration syntax:</li>
+</ul>
+<pre><code>-- Count rows 
+SELECT count(*)
+  FROM fortune500
+ -- Where...
+ WHERE revenues_change &gt; 0;</code></pre>
+<p>Numeric data types and summary functions</p>
+<p>Division</p>
+<pre><code>-- Select average revenue per employee by sector
+SELECT sector, 
+       avg(revenues/employees::numeric) AS avg_rev_employee
+  FROM fortune500
+ GROUP BY sector
+ -- Use the alias to order the results
+ ORDER BY avg_rev_employee;</code></pre>
+<ul>
+<li>explore by division:</li>
+</ul>
+<pre><code>-- Divide unanswered_count by question_count
+SELECT unanswered_count/question_count::numeric AS computed_pct, 
+       -- What are you comparing the above quantity to?
+       unanswered_pct
+  FROM stackoverflow
+ -- eliminate rows where question_count is not 0
+ WHERE question_count != 0
+ LIMIT 10;
+ </code></pre>
+<p>Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day</p>
+<pre><code>
+SELECT
+  -- Select the date portion of StartDate
+  CONVERT(DATE, StartDate) as StartDate,
+  -- Measure how many records exist for each StartDate
+  COUNT(ID) as CountOfRows 
+FROM CapitalBikeShare 
+-- Group by the date portion of StartDate
+GROUP BY CONVERT(DATE, StartDate)
+-- Sort the results by the date portion of StartDate
+ORDER BY CONVERT(DATE, StartDate);
+</code></pre>
+<p>seconds or no?
+- DATEDIFF() can be used to calculate the trip time by finding the difference between Start and End time
+- Here, we will use DATEPART() to see how many transactions have seconds greater than zero and how many have them equal to zero</p>
+<pre><code>SELECT
+	-- Count the number of IDs
+	COUNT(ID) AS Count,
+    -- Use DATEPART() to evaluate the SECOND part of StartDate
+    &quot;StartDate&quot; = CASE WHEN DATEPART(SECOND, StartDate) = 0 THEN &#39;SECONDS = 0&#39;
+					   WHEN DATEPART(SECOND, StartDate) &gt; 0 THEN &#39;SECONDS &gt; 0&#39; END
+FROM CapitalBikeShare
+GROUP BY
+    -- Complete the CASE statement
+	CASE WHEN DATEPART(SECOND, StartDate) = 0 THEN &#39;SECONDS = 0&#39;
+		 WHEN DATEPART(SECOND, StartDate) &gt; 0 THEN &#39;SECONDS &gt; 0&#39; END</code></pre>
+<ul>
+<li>Which day of week is busiest?</li>
+</ul>
+<pre><code>
+SELECT
+    -- Select the day of week value for StartDate
+	DATENAME(weekday, StartDate) as DayOfWeek,
+    -- Calculate TotalTripHours
+	SUM(DATEDIFF(second, StartDate, EndDate))/ 3600 as TotalTripHours 
+FROM CapitalBikeShare 
+-- Group by the day of week
+GROUP BY DATENAME(weekday, StartDate)
+-- Order TotalTripHours in descending order
+ORDER BY TotalTripHours DESC</code></pre>
+<ul>
+<li>finding the outliers:</li>
+</ul>
+<pre><code>
+SELECT
+	-- Calculate TotalRideHours using SUM() and DATEDIFF()
+  	SUM(DATEDIFF(SECOND, StartDate, EndDate))/ 3600 AS TotalRideHours,
+    -- Select the DATE portion of StartDate
+  	CONVERT(DATE, StartDate) AS DateOnly,
+    -- Select the WEEKDAY
+  	DATENAME(WEEKDAY, CONVERT(DATE, StartDate)) AS DayOfWeek 
+FROM CapitalBikeShare
+-- Only include Saturday
+WHERE DATENAME(WEEKDAY, StartDate) = &#39;Saturday&#39; 
+GROUP BY CONVERT(DATE, StartDate);</code></pre>
+<p>Variables for datetime data: storing data in variables
+DECLARE &amp; CAST
+- use CapitalBikeShare table as starting point</p>
+<pre><code>-- Create @ShiftStartTime
+DECLARE @ShiftStartTime AS time = &#39;08:00 AM&#39;
+
+-- Create @StartDate
+DECLARE @StartDate AS date
+
+-- Set StartDate to the first StartDate from CapitalBikeShare
+SET 
+	@StartDate = (
+    	SELECT TOP 1 StartDate 
+    	FROM CapitalBikeShare 
+    	ORDER BY StartDate ASC
+		)
+
+-- Create ShiftStartDateTime
+DECLARE @ShiftStartDateTime AS datetime
+
+-- Cast StartDate and ShiftStartTime to datetime data types
+SET @ShiftStartDateTime = CAST(@StartDate AS datetime) + CAST(@ShiftStartTime AS datetime) 
+
+SELECT @ShiftStartDateTime</code></pre>
+<ul>
+<li>DECLARE a TABLE:</li>
+</ul>
+<pre><code>-- Create @Shifts
+DECLARE @Shifts TABLE(
+    -- Create StartDateTime column
+	StartDateTime datetime,
+    -- Create EndDateTime column
+	EndDateTime datetime)
+-- Populate @Shifts
+INSERT INTO @Shifts (StartDateTime, EndDateTime)
+	SELECT &#39;3/1/2018 8:00 AM&#39;, &#39;3/1/2018 4:00 PM&#39; 
+SELECT * 
+FROM @Shifts</code></pre>
+<ul>
+<li>INSERT INTO <span class="citation">@TABLE</span> based on CapitalBikeShare table:</li>
+</ul>
+<pre><code>-- Create @RideDates
+DECLARE @RideDates TABLE(
+    -- Create RideStart
+	RideStart date,
+    -- Create RideEnd
+	RideEnd date)
+-- Populate @RideDates
+INSERT INTO @RideDates(RideStart, RideEnd)
+-- Select the unique date values of StartDate and EndDate
+SELECT DISTINCT
+    -- Cast StartDate as date
+	CAST(StartDate as date),
+    -- Cast EndDate as date
+	CAST(EndDate as date) 
+FROM CapitalBikeShare 
+SELECT * 
+FROM @RideDates;</code></pre>
+<p>Date manipulation
+- First day of month:</p>
+<pre><code>-- Find the first day of the current month
+SELECT DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0)
+-- Or
+SELECT DATEDIFF(month, 0, GETDATE()), 0)
+-- Or
+SELECT DATEDIFF(year, &#39;12/31/2017&#39;, &#39;1/1/2019&#39;)
+-- Or for yesterday use -1
+WHERE CAST(year as date) = DATEADD (d, -1, GETDATE())</code></pre>
+<ul>
+<li>What was yesterday? Creating a function that returns yesterday’s date</li>
+</ul>
+<pre><code>
+-- Create GetYesterday()
+CREATE FUNCTION GetYesterday()
+-- Specify return data type
+RETURNS date
+AS
+BEGIN
+-- Calculate yesterday&#39;s date value
+RETURN(SELECT DATEADD(day, -1, GETDATE()))
+END </code></pre>
+<ul>
+<li>1 input/output</li>
+<li>Create a function named SumRideHrsSingleDay() which returns the total ride time in hours for the <span class="citation">@DateParm</span> parameter passed.</li>
+</ul>
+<pre><code>-- Create SumRideHrsSingleDay
+CREATE FUNCTION SumRideHrsSingleDay (@DateParm date)
+-- Specify return data type
+RETURNS numeric
+AS
+-- Begin
+BEGIN
+RETURN
+-- Add the difference between StartDate and EndDate
+(SELECT SUM(DATEDIFF(second, StartDate, EndDate))/3600
+FROM CapitalBikeShare
+ -- Only include transactions where StartDate = @DateParm
+WHERE CAST(StartDate AS date) = @DateParm)
+-- End
+END</code></pre>
+<ul>
+<li>Multiple inputs/outputs</li>
+<li>Create a function that accepts both StartDate and EndDate then returns the total ride hours for all transactions that occur within the parameter values.</li>
+</ul>
+<pre><code>-- Create the function
+CREATE FUNCTION SumRideHrsDateRange (@StartDateParm datetime, @EndDateParm datetime)
+-- Specify return data type
+RETURNS numeric
+AS
+BEGIN
+RETURN
+-- Sum the difference between StartDate and EndDate
+(SELECT SUM(DATEDIFF(second, StartDate, EndDate))/3600
+FROM CapitalBikeShare
+-- Include only the relevant transactions
+WHERE StartDate &gt; @StartDateParm and StartDate &lt;@EndDateParm)
+END</code></pre>
+<p>User defined functions: inline (faster) and multi-statement value functions (slower)
+- Inline value function:</p>
+<pre><code>
+-- Create the function
+CREATE FUNCTION SumStationStats(@StartDate AS datetime)
+-- Specify return data type
+RETURNS TABLE
+AS
+RETURN
+SELECT
+	StartStation,
+    -- Use COUNT() to select RideCount
+	COUNT(ID) as RideCount,
+    -- Use SUM() to calculate TotalDuration
+    SUM(DURATION) as TotalDuration
+FROM CapitalBikeShare
+WHERE CAST(StartDate as Date) = @StartDate
+-- Group by StartStation
+GROUP BY StartStation;
+</code></pre>
+<ul>
+<li>Multi statement value function</li>
+</ul>
+<pre><code>
+-- Create the function
+CREATE FUNCTION CountTripAvgDuration (@Month CHAR(2), @Year CHAR(4))
+-- Specify return variable
+RETURNS @DailyTripStats TABLE(
+	TripDate	date,
+	TripCount	int,
+	AvgDuration	numeric)
+AS
+BEGIN
+-- Insert query results into @DailyTripStats
+INSERT @DailyTripStats
+SELECT
+    -- Cast StartDate as a date
+	CAST(StartDate AS date),
+    COUNT(ID),
+    AVG(Duration)
+FROM CapitalBikeShare
+WHERE
+	DATEPART(month, StartDate) = @Month AND
+    DATEPART(year, StartDate) = @Year
+-- Group by StartDate as a date
+GROUP BY CAST(StartDate AS date)
+-- Return
+RETURN
+END
+</code></pre>
+<p>User defined functions in action: i.e. execute functions
+- can use SELECT to execute scalar functions</p>
+<pre><code>
+-- Create @BeginDate
+DECLARE @BeginDate AS date = &#39;3/1/2018&#39;
+-- Create @EndDate
+DECLARE @EndDate AS date = &#39;3/10/2018&#39; 
+SELECT
+  -- Select @BeginDate
+  @BeginDate AS BeginDate,
+  -- Select @EndDate
+  @EndDate AS EndDate,
+  -- Execute SumRideHrsDateRange()
+  dbo.SumRideHrsDateRange(@BeginDate, @EndDate) AS TotalRideHrs
+</code></pre>
+<ul>
+<li>anotehr example:</li>
+</ul>
+<pre><code>-- Create @RideHrs
+DECLARE @RideHrs AS numeric
+-- Execute SumRideHrsSingleDay()
+EXEC @RideHrs = dbo.SumRideHrsSingleDay @DateParm = &#39;3/5/2018&#39; 
+SELECT 
+  &#39;Total Ride Hours for 3/5/2018:&#39;, 
+  @RideHrs</code></pre>
+<ul>
+<li>Execute TVF into variable:</li>
+</ul>
+<pre><code>
+-- Create @StationStats
+DECLARE @StationStats TABLE(
+	StartStation nvarchar(100), 
+	RideCount int, 
+	TotalDuration numeric)
+-- Populate @StationStats with the results of the function
+INSERT INTO @StationStats
+SELECT TOP 10 *
+-- Execute SumStationStats with 3/15/2018
+FROM dbo.SumStationStats (&#39;3/15/2018&#39;) 
+ORDER BY RideCount DESC
+-- Select all the records from @StationStats
+SELECT * 
+FROM @StationStats</code></pre>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="useful-r-functions-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-words.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

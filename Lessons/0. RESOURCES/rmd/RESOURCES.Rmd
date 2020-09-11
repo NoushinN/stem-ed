@@ -106,7 +106,7 @@ Example on windows = `setwd("C:/Desktop/R")`
 ##### (a) When already in the working directory where the data is  
 
 Import a local **csv** file (i.e. where data is separated by **commas**), saving it as an object:
-```{r load csv file, eval = FALSE}
+```{r load csv file, eval = FALSE, message = FALSE, warning = FALSE}
 #this will create a data frame called "object"
 #the header argument is defaulted to TRUE, i.e. read.csv assumes your file has a header row and will take the first row of your csv to be the column names
 object <- read.csv("xxx.csv")
@@ -118,9 +118,11 @@ object <- read.csv("xxx.csv", header = FALSE)
 
 Import a local tab delimited file (i.e. where data is separated by **tabs**), saving is as an object:
 
-```{r load tab file, eval = FALSE}
+```{r load tab file, eval = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
 #this will create a data frame called "object"
-#the header argument is defaulted to TRUE, i.e. read.csv assumes your file has a header row and will take the first row of your csv to be the column names
+#the header argument is defaulted to TRUE
+# i.e. read.csv assumes your file has a header row and will take the first 
+# row of your csv to be the column names
 object <- read.table("xxx.txt", sep = "\t")
 
 #if your csv does not have a header row, add header = FALSE to the command

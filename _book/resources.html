@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Resources | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Resources | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Resources | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="final-words.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>3</b> R for Reporting</a><ul>
+<li class="chapter" data-level="3.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>3.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>3.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="3.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>3.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>3.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>4</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="4.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>4.1</b> Contents</a></li>
+<li class="chapter" data-level="4.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>4.2</b> R Syntax</a></li>
+<li class="chapter" data-level="4.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>4.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis-using-sql.html"><a href="exploratory-data-analysis-using-sql.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis using SQL</a></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="6.1" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>6.1</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>6.1.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="6.1.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>6.1.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="6.1.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>6.1.3</b> Operational Basics</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="resources.html"><a href="resources.html#getting-your-data-into-r"><i class="fa fa-check"></i><b>6.2</b> Getting Your Data into R</a></li>
+<li class="chapter" data-level="6.3" data-path="resources.html"><a href="resources.html#getting-your-data-out-of-r"><i class="fa fa-check"></i><b>6.3</b> Getting Your Data out of R</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="resources" class="section level1 unnumbered">
+<h1>Resources</h1>
+<hr />
+<div id="beginner-resources-by-topic" class="section level2">
+<h2><span class="header-section-number">6.1</span> Beginner Resources by Topic</h2>
+<hr />
+<div id="getting-set-up-with-r-rstudio" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> Getting Set-Up with R &amp; RStudio</h3>
+<ul>
+<li><strong>Download &amp; Install R:</strong>
+<ul>
+<li><a href="https://cran.r-project.org" class="uri">https://cran.r-project.org</a></li>
+<li>For Mac: click on <strong>Download R for (Mac) OS X</strong>, look at the top link under <strong>Files</strong>, which at time of writing is <strong>R-3.2.4.pkg</strong>, and download this if compatible with your current version mac OS (Mavericks 10.9 or higher). Otherwise download the version beneath it which is compatible for older mac OS versions. Then install the downloaded software.</li>
+<li>For Windows: click on <strong>Download R for Windows</strong>, then click on the link <strong>install R for the first time</strong>, and download from the large link at the top of the page which at time of writing is <strong>Download R 3.2.4 for Windows</strong>. Then install the downloaded software.</li>
+</ul></li>
+<li><strong>Download &amp; Install RStudio:</strong>
+<ul>
+<li><a href="https://www.rstudio.com/products/rstudio/download/" class="uri">https://www.rstudio.com/products/rstudio/download/</a></li>
+<li>For Mac: under the <strong>Installers for Supported Platforms</strong> heading click the link with <strong>Mac OS X</strong> in it. Install the downloaded software.</li>
+<li>For Windows: under the <strong>Installers for Supported Platforms</strong> heading click the link with <strong>Windows Vista</strong> in it. Install the downloaded software.</li>
+</ul></li>
+<li><strong>Exercises in R: swirl (HIGHLY RECOMMENDED):</strong>
+<ul>
+<li><a href="http://swirlstats.com/students.html" class="uri">http://swirlstats.com/students.html</a></li>
+</ul></li>
+<li><strong>Data Prep</strong>:
+<ul>
+<li>Intro to dplyr: <a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html" class="uri">https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html</a></li>
+<li>Data Manipulation (detailed): <a href="http://www.sr.bham.ac.uk/~ajrs/R/index.html" class="uri">http://www.sr.bham.ac.uk/~ajrs/R/index.html</a></li>
+<li>Aggregation and Restructing Data (base &amp; reshape): <a href="http://www.r-statistics.com/2012/01/aggregation-and-restructuring-data-from-r-in-action/" class="uri">http://www.r-statistics.com/2012/01/aggregation-and-restructuring-data-from-r-in-action/</a></li>
+</ul></li>
+<li><strong>Data Types intro</strong>: Vectors, Matrices, Arrays, Data Frames, Lists, Factors: <a href="http://www.statmethods.net/input/datatypes.html" class="uri">http://www.statmethods.net/input/datatypes.html</a></li>
+<li><strong>Using Dates and Times</strong>: <a href="http://www.cyclismo.org/tutorial/R/time.html" class="uri">http://www.cyclismo.org/tutorial/R/time.html</a></li>
+<li><strong>Text Data and Character Strings</strong>: <a href="http://gastonsanchez.com/Handling_and_Processing_Strings_in_R.pdf" class="uri">http://gastonsanchez.com/Handling_and_Processing_Strings_in_R.pdf</a></li>
+<li><strong>Data Mining</strong>: <a href="http://www.rdatamining.com" class="uri">http://www.rdatamining.com</a></li>
+</ul>
+<hr />
+<ul>
+<li><strong>Data Viz</strong>:
+<ul>
+<li>ggplot2 Cheat Sheet (RECOMMENDED): <a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/" class="uri">http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/</a></li>
+<li>ggplot2 theoretical tutorial (detailed but RECOMMENDED): <a href="http://www.ling.upenn.edu/~joseff/avml2012/" class="uri">http://www.ling.upenn.edu/~joseff/avml2012/</a></li>
+<li>Examples of base R, ggplot2, and rCharts: <a href="http://patilv.com/Replication-of-few-graphs-charts-in-base-R-ggplot2-and-rCharts-part-1-base-R/" class="uri">http://patilv.com/Replication-of-few-graphs-charts-in-base-R-ggplot2-and-rCharts-part-1-base-R/</a></li>
+<li>Intro to ggplot2: <a href="http://heather.cs.ucdavis.edu/~matloff/GGPlot2/GGPlot2Intro.pdf" class="uri">http://heather.cs.ucdavis.edu/~matloff/GGPlot2/GGPlot2Intro.pdf</a></li>
+</ul></li>
+<li><strong>Interactive Visualisations</strong>:
+<ul>
+<li>Interactive graphics (rCharts, jQuery): <a href="http://www.computerworld.com/article/2473365/business-intelligence/business-intelligence-106897-how-to-turn-csv-data-into-interactive-visualizations-with-r-and-rchart.html" class="uri">http://www.computerworld.com/article/2473365/business-intelligence/business-intelligence-106897-how-to-turn-csv-data-into-interactive-visualizations-with-r-and-rchart.html</a></li>
+</ul></li>
+</ul>
+<hr />
+<ul>
+<li><strong>Statistics</strong>:
+<ul>
+<li>Detailed Statistics Primer: <a href="http://health.adelaide.edu.au/psychology/ccs/docs/lsr/lsr-0.3.pdf" class="uri">http://health.adelaide.edu.au/psychology/ccs/docs/lsr/lsr-0.3.pdf</a></li>
+<li>Beginner guide to statistical topics in R: <a href="http://www.cyclismo.org/tutorial/R/" class="uri">http://www.cyclismo.org/tutorial/R/</a></li>
+</ul></li>
+<li><strong>Linear Models</strong>: <a href="http://data.princeton.edu/R/gettingStarted.html" class="uri">http://data.princeton.edu/R/gettingStarted.html</a></li>
+<li><strong>Time Series Analysis</strong>: <a href="https://www.otexts.org/fpp/resources" class="uri">https://www.otexts.org/fpp/resources</a></li>
+<li><strong>Little Book of R series</strong>:
+<ul>
+<li>Time Series: <a href="http://a-little-book-of-r-for-time-series.readthedocs.org/en/latest/" class="uri">http://a-little-book-of-r-for-time-series.readthedocs.org/en/latest/</a></li>
+<li>Biomedical Statistics: <a href="http://a-little-book-of-r-for-biomedical-statistics.readthedocs.org/en/latest/" class="uri">http://a-little-book-of-r-for-biomedical-statistics.readthedocs.org/en/latest/</a></li>
+<li>Multivariate Statistics: <a href="http://little-book-of-r-for-multivariate-analysis.readthedocs.org/en/latest/" class="uri">http://little-book-of-r-for-multivariate-analysis.readthedocs.org/en/latest/</a></li>
+</ul></li>
+</ul>
+<hr />
+<ul>
+<li><strong>RStudio Cheat Sheets</strong>:
+<ul>
+<li>RStudio IDE: <a href="http://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf" class="uri">http://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf</a></li>
+<li>Data Wrangling (dplyr &amp; tidyr): <a href="https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" class="uri">https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf</a></li>
+<li>Data Viz (ggplot2): <a href="https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf" class="uri">https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf</a></li>
+<li>Reproducible Reports (markdown): <a href="https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf" class="uri">https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf</a></li>
+<li>Interactive Web Apps (shiny): <a href="https://www.rstudio.com/wp-content/uploads/2015/02/shiny-cheatsheet.pdf" class="uri">https://www.rstudio.com/wp-content/uploads/2015/02/shiny-cheatsheet.pdf</a></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="specialist-topics" class="section level3">
+<h3><span class="header-section-number">6.1.2</span> Specialist Topics</h3>
+<ul>
+<li><strong>Google Analytics</strong>: <a href="http://online-behavior.com/analytics/r" class="uri">http://online-behavior.com/analytics/r</a></li>
+<li><strong>Spatial Cheat Sheet</strong>: <a href="http://www.maths.lancs.ac.uk/~rowlings/Teaching/UseR2012/cheatsheet.html" class="uri">http://www.maths.lancs.ac.uk/~rowlings/Teaching/UseR2012/cheatsheet.html</a></li>
+<li><strong>Translating between R and SQL</strong>: <a href="http://www.burns-stat.com/translating-r-sql-basics/" class="uri">http://www.burns-stat.com/translating-r-sql-basics/</a></li>
+<li><strong>Google’s R style guide</strong>: <a href="https://google.github.io/styleguide/Rguide.xml" class="uri">https://google.github.io/styleguide/Rguide.xml</a></li>
+</ul>
+<hr />
+</div>
+<div id="operational-basics" class="section level3">
+<h3><span class="header-section-number">6.1.3</span> Operational Basics</h3>
+<ul>
+<li><strong>Working Directory</strong>:<br />
+Example on a mac = <code>setwd(&quot;~/Desktop/R&quot;)</code> or <code>setwd(&quot;/Users/CRT/Desktop/R&quot;)</code><br />
+Example on windows = <code>setwd(&quot;C:/Desktop/R&quot;)</code><br />
+</li>
+<li><strong>Help</strong>:<br />
+<code>?functionName</code><br />
+<code>example(functionName)</code><br />
+<code>args(functionName)</code><br />
+<code>help.search(&quot;your search term&quot;)</code><br />
+</li>
+<li><strong>Assignment Operator</strong>: <code>&lt;-</code></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="getting-your-data-into-r" class="section level2">
+<h2><span class="header-section-number">6.2</span> Getting Your Data into R</h2>
+<ol style="list-style-type: decimal">
+<li>Loading Existing Local Data</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>When already in the working directory where the data is</li>
+</ol>
+<p>Import a local <strong>csv</strong> file (i.e. where data is separated by <strong>commas</strong>), saving it as an object:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="co">#this will create a data frame called &quot;object&quot;</span></a>
+<a class="sourceLine" id="cb55-2" data-line-number="2"><span class="co">#the header argument is defaulted to TRUE, i.e. read.csv assumes your file has a header row and will take the first row of your csv to be the column names</span></a>
+<a class="sourceLine" id="cb55-3" data-line-number="3">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;xxx.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb55-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb55-5" data-line-number="5"><span class="co">#if your csv does not have a header row, add header = FALSE to the command</span></a>
+<a class="sourceLine" id="cb55-6" data-line-number="6"><span class="co">#in this call default column headers will be assigned which can be changed</span></a>
+<a class="sourceLine" id="cb55-7" data-line-number="7">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;xxx.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<p>Import a local tab delimited file (i.e. where data is separated by <strong>tabs</strong>), saving is as an object:</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>When NOT in the working directory where the data is</li>
+</ol>
+<p>For example to import and save a local <strong>csv</strong> file from a different working directory you can either need to specify the file path (operating system specific), e.g.:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="co">#on a mac</span></a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;~/Desktop/R/data.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb56-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb56-4" data-line-number="4"><span class="co">#on windows</span></a>
+<a class="sourceLine" id="cb56-5" data-line-number="5">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;C:/Desktop/R/data.csv&quot;</span>)</a></code></pre></div>
+<p>OR</p>
+<p>You can use the file.choose() command which will interactively open up the file dialog box for you to browse and select the local file, e.g.:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">file.choose</span>())</a></code></pre></div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Copying and Pasting Data</li>
+</ol>
+<p>For relatively small amounts of data you can do an equivalent copy paste (operating system specific):</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="co">#on a mac</span></a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">pipe</span>(<span class="st">&quot;pbpaste&quot;</span>))</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="co">#on windows</span></a>
+<a class="sourceLine" id="cb58-5" data-line-number="5">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> <span class="st">&quot;clipboard&quot;</span>)</a></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Loading Non-Numerical Data - character strings</li>
+</ol>
+<p>Be careful when loading text data! R may assume character strings are statistical factor variables, e.g. “low”, “medium”, “high”, when are just individual labels like names. To specify text data NOT to be converted into factor variables, add <code>stringsAsFactor = FALSE</code> to your <code>read.csv/read.table</code> command:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;xxx.txt&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Downloading Remote Data</li>
+</ol>
+<p>For accessing files from the web you can use the same <code>read.csv/read.table</code> commands. However, the file being downloaded does need to be in an R-friendly format (maximum of 1 header row, subsequent rows are the equivalent of one data record per row, no extraneous footnotes etc.). Here is an example downloading an online csv file from Pew Research:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/AirPassengers.csv&quot;</span>)</a></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Other Formats - Excel, SPSS, SAS etc.</li>
+</ol>
+<p>For other file formats, you will need specific R packages to import these data.</p>
+<p>Here’s a good site for an overview: <a href="http://www.statmethods.net/input/importingdata.html" class="uri">http://www.statmethods.net/input/importingdata.html</a></p>
+<p>Here’s a more detailed site: <a href="http://r4stats.com/examples/data-import/" class="uri">http://r4stats.com/examples/data-import/</a></p>
+<p>Here’s some info on the <code>foreign</code> package for loading statistical software file types: <a href="http://www.ats.ucla.edu/stat/r/faq/inputdata_R.htm" class="uri">http://www.ats.ucla.edu/stat/r/faq/inputdata_R.htm</a></p>
+<hr />
+</div>
+<div id="getting-your-data-out-of-r" class="section level2">
+<h2><span class="header-section-number">6.3</span> Getting Your Data out of R</h2>
+<ol style="list-style-type: decimal">
+<li>Exporting data</li>
+</ol>
+<p>Navigate to the working directory you want to save the data table into, then run the command (in this case creating a tab delimited file):
+- write.table(object, “xxx.txt”, sep = &quot;)</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Save down an R object
+Navigate to the working directory you want to save the object in then run the command:</li>
+</ol>
+<ul>
+<li>save(object, file = “xxx.rda”)</li>
+</ul>
+<p>reload the object:
+- load(“xxx.rda”)</p>
+<hr />
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="final-words.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
