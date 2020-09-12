@@ -1,0 +1,573 @@
+# Demo for Data.table 
+
+
+Load libraries:
+
+```{r load libraries for data.table, message= FALSE}
+# Load data.table
+library(data.table)
+library(bikeshare14)
+library(tidyverse)
+```
+
+
+Create the data.table:
+
+```{r make a table}
+X <- data.table(id = c("a", "b", "c"), value = c(0.5, 1.0, 1.5))
+
+print(X)
+```
+
+
+Get number of columns in batrips:
+
+```{r get cols}
+batrips <- as.data.table(batrips)
+col_number <- ncol(batrips)
+col_number
+```
+
+Print the first 4 rows:
+
+```{r see rows}
+head(batrips, 4)
+```
+
+Print the last 4 rows:
+
+```{r see tails}
+tail(batrips, 4)
+```
+
+Print the structure of batrips:
+
+```{r structure}
+str(batrips)
+```
+
+Filter third row:
+
+```{r row numbers}
+row_3 <- batrips[3]
+row_3 %>%
+  head(3)
+```
+
+Filter rows 1 through 2:
+
+```{r rows }
+rows_1_2 <- batrips[1:2]
+rows_1_2 %>%
+  head(2)
+```
+
+Filter the 1st, 6th and 10th rows:
+
+```{r row numbers 1,6,10}
+rows_1_6_10 <- batrips[c(1, 6, 10)]
+rows_1_6_10 %>%
+  head()
+```
+
+Select all rows except the first two:
+
+```{r exclude rows}
+not_first_two <- batrips[-(1:2)]
+not_first_two %>%
+  head(2)
+```
+
+Select all rows except 1 through 5 and 10 through 15:
+
+```{r exclude more}
+exclude_some <- batrips[-c(1:5, 10:15)]
+exclude_some %>%
+  head(2)
+```
+
+Select all rows except the first and last:
+
+```{r all rows}
+not_first_last <- batrips[-c(1, .N)] 
+# Or
+# batrips[-c(1, nrow(batrips))]
+
+not_first_last %>%
+  head(2)
+```
+
+Filter all rows where start_station is "Market at 10th":
+
+```{r start}
+trips_mlk <- batrips[start_station == "Market at 10th"]
+trips_mlk %>%
+  head(2)
+```
+
+Filter all rows where start_station is "MLK Library" AND duration > 1600:
+
+```{r filter is }
+trips_mlk_1600 <- batrips[start_station == "MLK Library" & duration > 1600]
+trips_mlk_1600 %>%
+  head(2)
+```
+
+Filter all rows where `subscription_type` is not `"Subscriber"`::
+
+```{r filter is not}
+customers <- batrips[subscription_type != "Subscriber"]
+customers %>%
+  head(2)
+```
+
+Filter all rows where start_station is "Ryland Park" AND subscription_type is not "Customer":
+
+```{r filter all}
+ryland_park_subscribers <- batrips[start_station == "Ryland Park" & subscription_type != "Customer"]
+ryland_park_subscribers %>%
+  head(2)
+```
+
+Filter all rows where end_station contains "Market":
+```{r filter ending with}
+
+any_markets <- batrips[end_station %like% "Market"]
+any_markets %>%
+  head(2)
+```
+
+Filter all rows where trip_id is 588841, 139560, or 139562:
+```{r filter combinations}
+
+filter_trip_ids <- batrips[trip_id %in% c(588841, 139560, 139562)]
+filter_trip_ids %>%
+  head(2)
+```
+
+Filter all rows where duration is between [5000, 6000]:
+```{r filter between}
+
+duration_5k_6k <- batrips[duration %between% c(5000, 6000)]
+duration_5k_6k %>%
+  head(2)
+```
+
+Filter all rows with specific start stations:
+```{r filter in}
+
+two_stations <- batrips[start_station %chin% c("San Francisco City Hall", "Embarcadero at Sansome")]
+two_stations %>%
+  head(2)
+```
+
+
+Selecting columns from a data.table
+Select bike_id and trip_id using a character vector:
+```{r select some columns}
+
+df_way <- batrips[, c("bike_id", "trip_id")]
+df_way %>%
+  head(2)
+```
+
+Select start_station and end_station cols without a character vector:
+```{r start and end with }
+
+dt_way <- batrips[, .(start_station, end_station)]
+dt_way %>%
+  head(2)
+```
+
+Deselect start_terminal and end_terminal columns:
+```{r select not }
+
+drop_terminal_cols <- batrips[, !c("start_terminal", "end_terminal")]
+drop_terminal_cols %>%
+  head(2)
+```
+
+Calculate median duration using the j argument:
+```{r calculate median}
+
+median_duration <- batrips[, median(duration)]
+median_duration %>%
+  head()
+```
+
+Get median duration after filtering:
+```{r median after filtering}
+
+median_duration_filter <- batrips[end_station == "Market at 10th" & subscription_type == "Subscriber", median(duration)]
+median_duration_filter %>%
+  head()
+```
+
+Compute duration of all trips:
+```{r duration}
+
+trip_duration <- batrips[, difftime(end_date, start_date, units = "min")]
+head(trip_duration) %>%
+  head(2)
+```
+
+Have the column mean_durn:
+```{r make a mean_durn}
+
+mean_duration <- batrips[, .(mean_durn = mean(duration))]
+mean_duration %>%
+  head(2)
+```
+
+Get the min and max duration values:
+```{r make a min/max}
+
+min_max_duration <- batrips[, .(min(duration), max(duration))]
+min_max_duration %>%
+  head(2)
+```
+
+Calculate the number of unique values:
+```{r calculate unique}
+
+other_stats <- batrips[, .(mean_duration = mean(duration), 
+                           last_ride = max(end_date))]
+other_stats %>%
+  head(2)
+```
+
+```{r select min / max}
+duration_stats <- batrips[start_station == "Townsend at 7th" & duration < 500, 
+                          .(min_dur = min(duration), 
+                            max_dur = max(duration))]
+duration_stats
+```
+
+Plot the histogram of duration based on conditions:
+```{r make histogram}
+
+batrips[start_station == "Townsend at 7th" & duration < 500, hist(duration)]
+```
+
+
+Computations by groups
+Compute the mean duration for every start_station:
+```{r compute by group}
+
+mean_start_stn <- batrips[, .(mean_duration = mean(duration)), by = start_station]
+mean_start_stn %>%
+  head(2)
+```
+
+Compute the mean duration for every start and end station:
+```{r compute for start/end}
+
+mean_station <- batrips[, .(mean_duration = mean(duration)), by = .(start_station, end_station)]
+mean_station %>%
+  head(2)
+```
+
+Compute the mean duration grouped by start_station and month:
+```{r grouped}
+
+mean_start_station <- batrips[, .(mean_duration = mean(duration)), by = .(start_station, month(start_date))]
+mean_start_station %>%
+  head(2)
+```
+
+Compute mean of duration and total trips grouped by start and end stations:
+```{r duration and total}
+
+aggregate_mean_trips <- batrips[, .(mean_duration = mean(duration), 
+                                    total_trips = .N), 
+                                by = .(start_station, end_station)]
+aggregate_mean_trips %>%
+  head(2)
+```
+
+Compute min and max duration grouped by start station, end station, and month:
+```{r min and max}
+
+aggregate_min_max <- batrips[, .(min_duration = min(duration), 
+                                 max_duration = max(duration)), 
+                             by = .(start_station, end_station, 
+                                    month(start_date))]
+aggregate_min_max %>%
+  head(2)
+```
+
+Chaining data.table expressions:
+Compute the total trips grouped by start_station and end_station
+
+```{r Compute the total}
+
+trips_dec <- batrips[, .N, by = .(start_station, 
+                                  end_station)]
+trips_dec %>%
+  head(2)
+```
+
+Arrange the total trips grouped by start_station and end_station in decreasing order:
+```{r Arrange}
+
+trips_dec <- batrips[, .N, by = .(start_station, 
+                                  end_station)][order(-N)]
+trips_dec %>%
+  head(2)
+``` 
+
+Top five most popular destinations:
+```{r Top five}
+
+top_5 <- batrips[, .N, by = end_station][order(-N)][1:5]
+top_5
+```
+
+Compute most popular end station for every start station:
+```{r Compute most popular}
+
+popular_end_station <- trips_dec[, .(end_station = end_station[1]), 
+                                 by = start_station]
+popular_end_station %>%
+  head(2)
+```
+
+Find the first and last ride for each start_station:
+```{r  first and last}
+
+first_last <- batrips[order(start_date), 
+                      .(start_date = start_date[c(1, .N)]), 
+                      by = start_station]
+first_last
+```
+
+Using .SD (I)
+
+```{r standard deviation}
+
+relevant_cols <- c("start_station", "end_station", 
+                   "start_date", "end_date", "duration")
+```
+
+Find the row corresponding to the shortest trip per month:
+
+```{r date selection}
+
+shortest <- batrips[, .SD[which.min(duration)], 
+                    by = month(start_date), 
+                    .SDcols = relevant_cols]
+shortest %>%
+  head(2)
+```
+
+Using .SD (II)
+Find the total number of unique start stations and zip codes per month:
+
+```{r date by month}
+
+unique_station_month <- batrips[, lapply(.SD, uniqueN), 
+                                by = month(start_date), 
+                                .SDcols = c("start_station", "zip_code")]
+unique_station_month %>%
+  head(2)
+```
+
+
+Adding and updating columns by reference
+Add a new column, duration_hour:
+
+```{r duration calculations}
+batrips[, duration_hour := duration / 3600]
+```
+
+Fix/edit spelling in the second row of start_station:
+
+```{r select based on speeling}
+batrips[2, start_station := "San Francisco City Hall 2"]
+```
+
+Replace negative duration values with NA:
+
+```{r less or more}
+batrips[duration < 0, duration := NA]
+```
+
+Add a new column equal to total trips for every start station:
+
+```{r make a new column}
+batrips[, trips_N := .N, by = start_station]
+```
+
+Add new column for every start_station and end_station:
+
+```{r new column with calculation}
+batrips[, duration_mean := mean(duration), by = .(start_station, end_station)]
+```
+
+Calculate the mean duration for each month:
+
+```{r calculate mean}
+batrips[, mean_dur := mean(duration, na.rm = TRUE), 
+            by = month(start_date)]
+```
+
+Replace NA values in duration with the mean value of duration for that month:
+
+```{r mean value per month}
+batrips[, mean_dur := mean(duration, na.rm = TRUE), 
+            by = month(start_date)][is.na(duration), 
+                                    duration := mean_dur]
+```
+
+Delete the mean_dur column by reference:
+
+```{r mean duration}
+batrips[, mean_dur := mean(duration, na.rm = TRUE), 
+            by = month(start_date)][is.na(duration), 
+                                    duration := mean_dur][, mean_dur := NULL]
+```
+
+Add columns using the LHS := RHS form
+LHS := RHS form. In the LHS, you specify column names as a character vector and in the RHS, you specify values/expressions to be added inside list() (or the alias, .()):
+
+```{r left and right hand side }
+batrips[, c("mean_duration", 
+            "median_duration") := .(mean(duration), median(duration)), 
+        by = start_station]
+```
+
+Add columns using the functional form:
+
+```{r functions}
+batrips[, `:=`(mean_duration = mean(duration), 
+               median_duration = median(duration)), 
+        by = start_station]
+```
+
+Add the mean_duration column:
+
+```{r function duration selection}
+batrips[duration > 600, mean_duration := mean(duration), 
+        by = .(start_station, end_station)]
+```
+
+Use read.csv() to import batrips
+Fread is much faster!
+
+- system.time(read.csv("batrips.csv"))
+- system.time(fread("batrips.csv"))
+
+
+Import using read.csv():
+
+```{r read in a file}
+csv_file <- read.csv("data/sample.csv", fill = NA, quote = "", 
+                     stringsAsFactors = FALSE, strip.white = TRUE, 
+                     header = TRUE)
+csv_file %>%
+  head(2)
+```
+
+Import using fread():
+
+```{r read in a csv file}
+csv_file <- fread("data/sample.csv")
+csv_file %>%
+  head(2)
+```
+
+Check the class of Sex column:
+
+```{r check class}
+class(csv_file$Sex)
+```
+
+Import using read.csv with defaults:
+
+```{r check structure}
+str(csv_file)
+```
+
+Select "id" and "val" columns:
+
+```{r read and select some columns}
+select_columns <- fread("data/sample.csv", select = c("GEO", "Sex"))
+select_columns %>%
+  head(2)
+```
+
+Drop the "val" column:
+
+```{r read and drop columns}
+drop_column <- fread("data/sample.csv", drop = "Sex")
+drop_column %>%
+  head(2)
+```
+
+Import the file while avoiding the warning:
+
+```{r read first three rows}
+only_data <- fread("data/sample.csv", nrows = 3)
+only_data
+```
+
+Import only the metadata:
+
+```{r read while skipping some lines}
+only_metadata <- fread("data/sample.csv", skip = 7)
+only_metadata %>%
+  head(2)
+```
+
+Import using read.csv:
+
+```{r read a csv in R}
+base_r <- read.csv("data/sample.csv", 
+                   colClasses = c(rep("factor", 4), 
+                                  "character", 
+                                  "numeric"))
+str(base_r)
+```
+
+Import using fread:
+
+```{r read csv with column classes}
+import_fread <- fread("data/sample.csv", 
+                      colClasses = list(factor = 1:4, numeric = 7:10))
+str(import_fread)
+```
+
+Import the file correctly,  use the fill argument to ensure all rows are imported correctly:
+
+```{r read with fill}
+correct <- fread("data/sample.csv", fill = TRUE)
+correct %>%
+  head(2)
+```
+
+Import the file using na.strings
+The missing values are encoded as "##". Note that fread() handles an empty field ,, by default as NA
+
+```{r read csv}
+missing_values <- fread("data/sample.csv", na.strings = "##") 
+missing_values %>%
+  head(2)
+```
+
+Write dt to fwrite.txt:
+- fwrite(dt, "fwrite.txt")
+
+Import the file using readLines():
+
+```{r readlines into R}
+readLines("data/sample.csv") %>%
+  head(2)
+```
+
+Write batrips_dates to file using "ISO" format:
+- fwrite(batrips_dates, "iso.txt", dateTimeAs = "ISO")
+
+Write batrips_dates to file using "squash" format:
+- fwrite(batrips_dates, "squash.txt", dateTimeAs = "squash")
+
+

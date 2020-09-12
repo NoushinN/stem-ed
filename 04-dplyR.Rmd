@@ -1,91 +1,85 @@
 # Demo for dplyr
 
-If you don't have ElemStatLearn, you can install it, by running
-install.packPetal.Widths("ElemStatLearn")
-iris is a Data to examine the correlation between the level of iris-specific antigen and a number of clinical measures in men who were about to receive a radical irisctomy.
-
-```{r load libraries}
+```{r load libraries for dplyr, message= FALSE}
 # Load data and dependencies:
 library(dplyr)
 
 data(iris)
 ```
-____________________________________________________________________________
 
 Explore the iris data
 
-```{r explore data}
+```{r explore data, eval = FALSE}
 head(iris)
 pairs(iris)
 str(iris)
 summary(iris)
 ```
 
-A. Select: keeps only the variables you mention
+A. **Select**: keeps only the variables you mention
 
-```{r explore}
+```{r explore, eval = FALSE}
 select(iris, 1:3)
 select(iris, Petal.Width, Species)
 select(iris, contains("Petal.Width"))
 select(iris, starts_with("Species"))
-select(iris, -train)
 
 ```
 
-B. Arrange: sort a variable in descending order
+B. **Arrange**: sort a variable in descending order
 
-```{r arrange}
+```{r arrange, eval = FALSE}
 arrange(iris, Sepal.Length)
 arrange(iris, desc(Sepal.Length))
 arrange(iris, Sepal.Length, desc(Sepal.Width))
 ```
 
-C. Filter: find rows/cases where conditions are true
+C. **Filter**: find rows/cases where conditions are true
 Note: rows where the condition evaluates to NA are dropped
 
-```{r conditions}
+```{r conditions, eval = FALSE}
 filter(iris, Petal.Length > 5)
 filter(iris, Petal.Length > 5 & Species == "setosa")
-filter(iris, Petal.Length > 5, Species == "setosa") the comma is a shorthand for &
+filter(iris, Petal.Length > 5, Species == "setosa") #the comma is a shorthand for &
 filter(iris, !Species == "setosa")
 ```
 
-D. Pipe Example with MaggriteR (ref: Rene Magritte This is not a pipe)
+D. **Pipe Example with MaggriteR** (ref: Rene Magritte This is not a pipe)
 The long Way, before nesting or multiple variables
-```{r long way}
+```{r long way, eval = FALSE}
 data1 <- filter(iris, Petal.Length > 6)
 data2 <- select(data1, Petal.Length, Species)
 ```
 
-With DPLYR:
+With **DPLYR**:
 
 ```{r pipes}
 select(
   filter(iris, Petal.Length > 6),
-  Petal.Length, Species)
+  Petal.Length, Species) %>%
+  head()
 ```
 
-using pipes with the data variable
+Using pipes with the data variable
 
 ```{r pipes and verbs}
 iris %>%
-  filter(iris, Petal.Length > 6) %>%
-  select(Petal.Length, Species)
+  filter(Petal.Length > 6) %>%
+  select(Petal.Length, Species) %>%
+  head()
 ```
 
-
-using the . to specify where the incoming variable will be piped to:
-```{r pipes .}
+Using the . to specify where the incoming variable will be piped to: 
+- myFunction(arg1, arg2 = .)
+ 
+```{r pipes with filter, eval = FALSE}
 iris %>%
- myFunction(arg1, arg2 = .)
-
-iris %>%
-  filter( ., Species == "setosa")
+  filter(., Species == "versicolor")
 ```
 
-Other magrittr examples
+Other magrittr examples:
 
-```{r pipes .}
+```{r unique, eval = FALSE}
 iris %>%
   filter(Petal.Length > 2.0) %>%
   select(1:3)
@@ -109,16 +103,18 @@ iris %>%
   unique()
 ```
 
-a second way to get the unique values
-```{r pipes .}
+a second way to get the unique values:
+
+```{r distinct }
 iris %>%
   filter(Petal.Width  == 0.1) %>%
   distinct(Sepal.Width)
 ```
 
 
-E. Mutate: adds new variables and preserves existing; transmute() drops existing variables
-```{r pipes .}
+E. **Mutate**: adds new variables and preserves existing; transmute() drops existing variables
+
+```{r dplyr verbs, eval = FALSE}
 iris %>%
   mutate(highSpecies = Sepal.Width > 6) %>%
   head()
@@ -141,15 +137,15 @@ iris %>%
 
 
 iris %>%
-  mutate(Petal.WidthBuckets = case_when(Petal.Width < 50 ~ "Low",
-                               Petal.Width >= 60 & Sepal.Width < 5 ~ "Med",
-                               Petal.Width >= 70 ~ "High")) %>%
+  mutate(Petal.WidthBuckets = case_when(Petal.Width < 1 ~ "Low",
+                               Petal.Width >= 2 & Sepal.Width < 3 ~ "Med",
+                               Petal.Width >= 4 ~ "High")) %>%
   head()
 ```
 
-E. Group_by and Summarise: used on grouped data created by group_by().
+E. **Group_by and Summarise**: used on grouped data created by group_by().
 The output will have one row for each group.
-```{r group by}
+```{r group by, eval = FALSE}
 iris %>%
   summarise(Petal.WidthMean = mean(Petal.Width),
             Petal.WidthSD = sd(Petal.Width))
@@ -167,16 +163,17 @@ iris %>%
   summarise(count = n())
 ```
 
-F. Slice: Slice does not work with relational databases because they have no intrinsic notion of row order.
-If you want to perform the equivalent operation, use filter() and row_number().
+F. **Slice**: Slice does not work with relational databases because they have no intrinsic notion of row order. If you want to perform the equivalent operation, use filter() and row_number().
+
 ```{r slice}
 iris %>%
-  slice(2:7)
+  slice(2:4) %>%
+  head()
 ```
 
-Other verbs within DPLYR: 'Scoped verbs'
+Other verbs within DPLYR: **Scoped verbs**
 
-```{r verb examples}
+```{r verb examples, eval = FALSE}
 # ungroup
 iris %>%
   group_by(Petal.Width, Species) %>%
@@ -207,7 +204,7 @@ iris %>%
 
 # summarise_if
 iris %>%
-  summarise_if(is.numeric, Petal.Width)
+  summarise_if(is.numeric, mean)
 
 iris %>%
   summarise_if(is.factor, ~length(unique(.)))
@@ -231,7 +228,7 @@ iris %>%
 
 # Rename
 iris %>%
-  rename(Species == "Sertosa") %>%
+  rename("sp" = "Species") %>%
   head()
 
 # And finally: make a test and save

@@ -24,14 +24,14 @@
 <meta name="author" content="Noushin Nabavi" />
 
 
-<meta name="date" content="2020-09-10" />
+<meta name="date" content="2020-09-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="final-words.html"/>
+<link rel="prev" href="demo-for-data-table.html"/>
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -145,8 +145,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>4.2</b> R Syntax</a></li>
 <li class="chapter" data-level="4.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>4.3</b> Functional examples</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="exploratory-data-analysis-using-sql.html"><a href="exploratory-data-analysis-using-sql.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis using SQL</a></li>
-<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="5" data-path="demo-for-dplyr.html"><a href="demo-for-dplyr.html"><i class="fa fa-check"></i><b>5</b> Demo for dplyr</a></li>
+<li class="chapter" data-level="6" data-path="demo-for-data-table.html"><a href="demo-for-data-table.html"><i class="fa fa-check"></i><b>6</b> Demo for Data.table</a></li>
 <li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
 <li class="chapter" data-level="6.1" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>6.1</b> Beginner Resources by Topic</a><ul>
 <li class="chapter" data-level="6.1.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>6.1.1</b> Getting Set-Up with R &amp; RStudio</a></li>
@@ -292,45 +292,45 @@ Example on windows = <code>setwd(&quot;C:/Desktop/R&quot;)</code><br />
 <li>When already in the working directory where the data is</li>
 </ol>
 <p>Import a local <strong>csv</strong> file (i.e. where data is separated by <strong>commas</strong>), saving it as an object:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="co">#this will create a data frame called &quot;object&quot;</span></a>
-<a class="sourceLine" id="cb55-2" data-line-number="2"><span class="co">#the header argument is defaulted to TRUE, i.e. read.csv assumes your file has a header row and will take the first row of your csv to be the column names</span></a>
-<a class="sourceLine" id="cb55-3" data-line-number="3">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;xxx.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb55-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb55-5" data-line-number="5"><span class="co">#if your csv does not have a header row, add header = FALSE to the command</span></a>
-<a class="sourceLine" id="cb55-6" data-line-number="6"><span class="co">#in this call default column headers will be assigned which can be changed</span></a>
-<a class="sourceLine" id="cb55-7" data-line-number="7">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;xxx.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1"><span class="co">#this will create a data frame called &quot;object&quot;</span></a>
+<a class="sourceLine" id="cb171-2" data-line-number="2"><span class="co">#the header argument is defaulted to TRUE, i.e. read.csv assumes your file has a header row and will take the first row of your csv to be the column names</span></a>
+<a class="sourceLine" id="cb171-3" data-line-number="3">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;xxx.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb171-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb171-5" data-line-number="5"><span class="co">#if your csv does not have a header row, add header = FALSE to the command</span></a>
+<a class="sourceLine" id="cb171-6" data-line-number="6"><span class="co">#in this call default column headers will be assigned which can be changed</span></a>
+<a class="sourceLine" id="cb171-7" data-line-number="7">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;xxx.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>Import a local tab delimited file (i.e. where data is separated by <strong>tabs</strong>), saving is as an object:</p>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>When NOT in the working directory where the data is</li>
 </ol>
 <p>For example to import and save a local <strong>csv</strong> file from a different working directory you can either need to specify the file path (operating system specific), e.g.:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="co">#on a mac</span></a>
-<a class="sourceLine" id="cb56-2" data-line-number="2">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;~/Desktop/R/data.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb56-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb56-4" data-line-number="4"><span class="co">#on windows</span></a>
-<a class="sourceLine" id="cb56-5" data-line-number="5">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;C:/Desktop/R/data.csv&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1"><span class="co">#on a mac</span></a>
+<a class="sourceLine" id="cb172-2" data-line-number="2">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;~/Desktop/R/data.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb172-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb172-4" data-line-number="4"><span class="co">#on windows</span></a>
+<a class="sourceLine" id="cb172-5" data-line-number="5">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;C:/Desktop/R/data.csv&quot;</span>)</a></code></pre></div>
 <p>OR</p>
 <p>You can use the file.choose() command which will interactively open up the file dialog box for you to browse and select the local file, e.g.:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">file.choose</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">file.choose</span>())</a></code></pre></div>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Copying and Pasting Data</li>
 </ol>
 <p>For relatively small amounts of data you can do an equivalent copy paste (operating system specific):</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="co">#on a mac</span></a>
-<a class="sourceLine" id="cb58-2" data-line-number="2">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">pipe</span>(<span class="st">&quot;pbpaste&quot;</span>))</a>
-<a class="sourceLine" id="cb58-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="co">#on windows</span></a>
-<a class="sourceLine" id="cb58-5" data-line-number="5">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> <span class="st">&quot;clipboard&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" data-line-number="1"><span class="co">#on a mac</span></a>
+<a class="sourceLine" id="cb174-2" data-line-number="2">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="kw">pipe</span>(<span class="st">&quot;pbpaste&quot;</span>))</a>
+<a class="sourceLine" id="cb174-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb174-4" data-line-number="4"><span class="co">#on windows</span></a>
+<a class="sourceLine" id="cb174-5" data-line-number="5">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">file =</span> <span class="st">&quot;clipboard&quot;</span>)</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Loading Non-Numerical Data - character strings</li>
 </ol>
 <p>Be careful when loading text data! R may assume character strings are statistical factor variables, e.g. “low”, “medium”, “high”, when are just individual labels like names. To specify text data NOT to be converted into factor variables, add <code>stringsAsFactor = FALSE</code> to your <code>read.csv/read.table</code> command:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;xxx.txt&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb175-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;xxx.txt&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Downloading Remote Data</li>
 </ol>
 <p>For accessing files from the web you can use the same <code>read.csv/read.table</code> commands. However, the file being downloaded does need to be in an R-friendly format (maximum of 1 header row, subsequent rows are the equivalent of one data record per row, no extraneous footnotes etc.). Here is an example downloading an online csv file from Pew Research:</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/AirPassengers.csv&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1">object &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/AirPassengers.csv&quot;</span>)</a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Other Formats - Excel, SPSS, SAS etc.</li>
 </ol>
@@ -365,7 +365,7 @@ Navigate to the working directory you want to save the object in then run the co
           </div>
         </div>
       </div>
-<a href="final-words.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="demo-for-data-table.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

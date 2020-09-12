@@ -111,7 +111,7 @@
 
 \title{Codes for STEM}
 \author{Noushin Nabavi}
-\date{2020-09-10}
+\date{2020-09-11}
 
 \begin{document}
 \maketitle
@@ -1154,596 +1154,1564 @@ reload the object:
 
 \ldots{}..Ad Infinitum!!
 
-\hypertarget{exploratory-data-analysis-using-sql}{%
-\chapter{Exploratory data analysis using SQL}\label{exploratory-data-analysis-using-sql}}
+\hypertarget{demo-for-dplyr}{%
+\chapter{Demo for dplyr}\label{demo-for-dplyr}}
 
-What is in a database?\\
-- This set of exercises explores writing functions and stored procedures in SQL servers.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load data and dependencies:}
+\KeywordTok{library}\NormalTok{(dplyr)}
 
-Eexplore data tables:
-- Select the count of the number of rows
+\KeywordTok{data}\NormalTok{(iris)}
+\end{Highlighting}
+\end{Shaded}
+
+Explore the iris data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(iris)}
+\KeywordTok{pairs}\NormalTok{(iris)}
+\KeywordTok{str}\NormalTok{(iris)}
+\KeywordTok{summary}\NormalTok{(iris)}
+\end{Highlighting}
+\end{Shaded}
+
+A. \textbf{Select}: keeps only the variables you mention
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{select}\NormalTok{(iris, }\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)}
+\KeywordTok{select}\NormalTok{(iris, Petal.Width, Species)}
+\KeywordTok{select}\NormalTok{(iris, }\KeywordTok{contains}\NormalTok{(}\StringTok{"Petal.Width"}\NormalTok{))}
+\KeywordTok{select}\NormalTok{(iris, }\KeywordTok{starts_with}\NormalTok{(}\StringTok{"Species"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+B. \textbf{Arrange}: sort a variable in descending order
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{arrange}\NormalTok{(iris, Sepal.Length)}
+\KeywordTok{arrange}\NormalTok{(iris, }\KeywordTok{desc}\NormalTok{(Sepal.Length))}
+\KeywordTok{arrange}\NormalTok{(iris, Sepal.Length, }\KeywordTok{desc}\NormalTok{(Sepal.Width))}
+\end{Highlighting}
+\end{Shaded}
+
+C. \textbf{Filter}: find rows/cases where conditions are true
+Note: rows where the condition evaluates to NA are dropped
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{filter}\NormalTok{(iris, Petal.Length }\OperatorTok{>}\StringTok{ }\DecValTok{5}\NormalTok{)}
+\KeywordTok{filter}\NormalTok{(iris, Petal.Length }\OperatorTok{>}\StringTok{ }\DecValTok{5} \OperatorTok{&}\StringTok{ }\NormalTok{Species }\OperatorTok{==}\StringTok{ "setosa"}\NormalTok{)}
+\KeywordTok{filter}\NormalTok{(iris, Petal.Length }\OperatorTok{>}\StringTok{ }\DecValTok{5}\NormalTok{, Species }\OperatorTok{==}\StringTok{ "setosa"}\NormalTok{) }\CommentTok{#the comma is a shorthand for &}
+\KeywordTok{filter}\NormalTok{(iris, }\OperatorTok{!}\NormalTok{Species }\OperatorTok{==}\StringTok{ "setosa"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+D. \textbf{Pipe Example with MaggriteR} (ref: Rene Magritte This is not a pipe)
+The long Way, before nesting or multiple variables
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data1 <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(iris, Petal.Length }\OperatorTok{>}\StringTok{ }\DecValTok{6}\NormalTok{)}
+\NormalTok{data2 <-}\StringTok{ }\KeywordTok{select}\NormalTok{(data1, Petal.Length, Species)}
+\end{Highlighting}
+\end{Shaded}
+
+With \textbf{DPLYR}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{select}\NormalTok{(}
+  \KeywordTok{filter}\NormalTok{(iris, Petal.Length }\OperatorTok{>}\StringTok{ }\DecValTok{6}\NormalTok{),}
+\NormalTok{  Petal.Length, Species) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-SELECT count(*) 
-  FROM tablename;
+##   Petal.Length   Species
+## 1          6.6 virginica
+## 2          6.3 virginica
+## 3          6.1 virginica
+## 4          6.7 virginica
+## 5          6.9 virginica
+## 6          6.7 virginica
 \end{verbatim}
 
-Counting missing data:
-- Select the count of ticker,
-- subtract from the total number of rows,
-- and alias as missing
+Using pipes with the data variable
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Petal.Length }\OperatorTok{>}\StringTok{ }\DecValTok{6}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Petal.Length, Species) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-SELECT count(*) - count(ticker) AS missing
-  FROM fortune500;
+##   Petal.Length   Species
+## 1          6.6 virginica
+## 2          6.3 virginica
+## 3          6.1 virginica
+## 4          6.7 virginica
+## 5          6.9 virginica
+## 6          6.7 virginica
 \end{verbatim}
+
+Using the . to specify where the incoming variable will be piped to:
+- myFunction(arg1, arg2 = .)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(., Species }\OperatorTok{==}\StringTok{ "versicolor"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Other magrittr examples:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Petal.Length }\OperatorTok{>}\StringTok{ }\FloatTok{2.0}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\KeywordTok{contains}\NormalTok{(}\StringTok{"Width"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(Petal.Width) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Petal.Width }\OperatorTok{==}\StringTok{ "versicolor"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(Sepal.Width))}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Sepal.Width }\OperatorTok{>}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{View}\NormalTok{()}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Petal.Width  }\OperatorTok{==}\StringTok{ }\FloatTok{0.1}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Sepal.Width) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unique}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+a second way to get the unique values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Petal.Width  }\OperatorTok{==}\StringTok{ }\FloatTok{0.1}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{distinct}\NormalTok{(Sepal.Width)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Sepal.Width
+## 1         3.1
+## 2         3.0
+## 3         4.1
+## 4         3.6
+\end{verbatim}
+
+E. \textbf{Mutate}: adds new variables and preserves existing; transmute() drops existing variables
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{highSpecies =}\NormalTok{ Sepal.Width }\OperatorTok{>}\StringTok{ }\DecValTok{6}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{size =}\NormalTok{ Sepal.Width }\OperatorTok{+}\StringTok{ }\NormalTok{Petal.Width) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{MeanPetal.Width =} \KeywordTok{mean}\NormalTok{(Petal.Width, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{),}
+         \DataTypeTok{greaterThanMeanPetal.Width =} \KeywordTok{ifelse}\NormalTok{(Petal.Width }\OperatorTok{>}\StringTok{ }\NormalTok{MeanPetal.Width, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{buckets =} \KeywordTok{cut}\NormalTok{(Petal.Width, }\DecValTok{3}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Petal.WidthBuckets =} \KeywordTok{case_when}\NormalTok{(Petal.Width }\OperatorTok{<}\StringTok{ }\DecValTok{1} \OperatorTok{~}\StringTok{ "Low"}\NormalTok{,}
+\NormalTok{                               Petal.Width }\OperatorTok{>=}\StringTok{ }\DecValTok{2} \OperatorTok{&}\StringTok{ }\NormalTok{Sepal.Width }\OperatorTok{<}\StringTok{ }\DecValTok{3} \OperatorTok{~}\StringTok{ "Med"}\NormalTok{,}
+\NormalTok{                               Petal.Width }\OperatorTok{>=}\StringTok{ }\DecValTok{4} \OperatorTok{~}\StringTok{ "High"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+E. \textbf{Group\_by and Summarise}: used on grouped data created by group\_by().
+The output will have one row for each group.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{Petal.WidthMean =} \KeywordTok{mean}\NormalTok{(Petal.Width),}
+            \DataTypeTok{Petal.WidthSD =} \KeywordTok{sd}\NormalTok{(Petal.Width))}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Petal.Width) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Petal.WidthMean =} \KeywordTok{mean}\NormalTok{(Petal.Width))}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Petal.Width) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{Petal.WidthMean =} \KeywordTok{mean}\NormalTok{(Petal.Width))}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Petal.Width, Species) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{count =} \KeywordTok{n}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+F. \textbf{Slice}: Slice does not work with relational databases because they have no intrinsic notion of row order. If you want to perform the equivalent operation, use filter() and row\_number().
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{slice}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{4}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          4.9         3.0          1.4         0.2  setosa
+## 2          4.7         3.2          1.3         0.2  setosa
+## 3          4.6         3.1          1.5         0.2  setosa
+\end{verbatim}
+
+Other verbs within DPLYR: \textbf{Scoped verbs}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# ungroup}
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Petal.Width, Species) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{count =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{()}
+
+\CommentTok{# Summarise_all}
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_all}\NormalTok{(mean)}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_all}\NormalTok{(}\KeywordTok{funs}\NormalTok{(mean, min))}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_all}\NormalTok{(}\OperatorTok{~}\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(.)))}
+
+\CommentTok{# summarise_at}
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_at}\NormalTok{(}\KeywordTok{vars}\NormalTok{(}\OperatorTok{-}\NormalTok{Petal.Width), mean)}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_at}\NormalTok{(}\KeywordTok{vars}\NormalTok{(}\KeywordTok{contains}\NormalTok{(}\StringTok{"Petal.Width"}\NormalTok{)), }\KeywordTok{funs}\NormalTok{(mean, min))}
+
+\CommentTok{# summarise_if}
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_if}\NormalTok{(is.numeric, mean)}
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise_if}\NormalTok{(is.factor, }\OperatorTok{~}\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(.)))}
+
+\CommentTok{# other verbs:}
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate_if}\NormalTok{(is.factor, as.character) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{str}\NormalTok{()}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate_at}\NormalTok{(}\KeywordTok{vars}\NormalTok{(}\KeywordTok{contains}\NormalTok{(}\StringTok{"Width"}\NormalTok{)), }\OperatorTok{~}\StringTok{ }\KeywordTok{round}\NormalTok{(.))}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter_all}\NormalTok{(}\KeywordTok{any_vars}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(.)))}
+
+
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter_all}\NormalTok{(}\KeywordTok{all_vars}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(.)))}
+
+\CommentTok{# Rename}
+\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{rename}\NormalTok{(}\StringTok{"sp"}\NormalTok{ =}\StringTok{ "Species"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+
+\CommentTok{# And finally: make a test and save}
+\NormalTok{test <-}\StringTok{ }\NormalTok{iris }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Petal.Width) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{MeanPetal.Width =} \KeywordTok{mean}\NormalTok{(Petal.Width))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{demo-for-data.table}{%
+\chapter{Demo for Data.table}\label{demo-for-data.table}}
+
+Load libraries:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load data.table}
+\KeywordTok{library}\NormalTok{(data.table)}
+\KeywordTok{library}\NormalTok{(bikeshare14)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+Create the data.table:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{id =} \KeywordTok{c}\NormalTok{(}\StringTok{"a"}\NormalTok{, }\StringTok{"b"}\NormalTok{, }\StringTok{"c"}\NormalTok{), }\DataTypeTok{value =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{1.0}\NormalTok{, }\FloatTok{1.5}\NormalTok{))}
+
+\KeywordTok{print}\NormalTok{(X)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    id value
+## 1:  a   0.5
+## 2:  b   1.0
+## 3:  c   1.5
+\end{verbatim}
+
+Get number of columns in batrips:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips <-}\StringTok{ }\KeywordTok{as.data.table}\NormalTok{(batrips)}
+\NormalTok{col_number <-}\StringTok{ }\KeywordTok{ncol}\NormalTok{(batrips)}
+\NormalTok{col_number}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 11
+\end{verbatim}
+
+Print the first 4 rows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(batrips, }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date           start_station start_terminal
+## 1:  139545      435 2014-01-01 00:14:00 San Francisco City Hall             58
+## 2:  139546      432 2014-01-01 00:14:00 San Francisco City Hall             58
+## 3:  139547     1523 2014-01-01 00:17:00  Embarcadero at Sansome             60
+## 4:  139549     1620 2014-01-01 00:23:00       Steuart at Market             74
+##               end_date        end_station end_terminal bike_id
+## 1: 2014-01-01 00:21:00    Townsend at 7th           65     473
+## 2: 2014-01-01 00:21:00    Townsend at 7th           65     395
+## 3: 2014-01-01 00:42:00    Beale at Market           56     331
+## 4: 2014-01-01 00:50:00 Powell Street BART           39     605
+##    subscription_type zip_code
+## 1:        Subscriber    94612
+## 2:        Subscriber    94107
+## 3:        Subscriber    94112
+## 4:          Customer    92007
+\end{verbatim}
+
+Print the last 4 rows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{tail}\NormalTok{(batrips, }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date                   start_station
+## 1:  588911      422 2014-12-31 23:19:00 Grant Avenue at Columbus Avenue
+## 2:  588912     1487 2014-12-31 23:31:00        South Van Ness at Market
+## 3:  588913     1458 2014-12-31 23:32:00        South Van Ness at Market
+## 4:  588914      364 2014-12-31 23:33:00           Embarcadero at Bryant
+##    start_terminal            end_date
+## 1:             73 2014-12-31 23:26:00
+## 2:             66 2014-12-31 23:56:00
+## 3:             66 2014-12-31 23:56:00
+## 4:             54 2014-12-31 23:40:00
+##                                      end_station end_terminal bike_id
+## 1: Yerba Buena Center of the Arts (3rd @ Howard)           68     604
+## 2:                             Steuart at Market           74     480
+## 3:                             Steuart at Market           74     277
+## 4:                                 Howard at 2nd           63      56
+##    subscription_type zip_code
+## 1:        Subscriber    94133
+## 2:          Customer    94109
+## 3:          Customer    94109
+## 4:        Subscriber    94105
+\end{verbatim}
+
+Print the structure of batrips:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(batrips)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Classes 'data.table' and 'data.frame':	326339 obs. of  11 variables:
+##  $ trip_id          : int  139545 139546 139547 139549 139550 139551 139552 139553 139554 139555 ...
+##  $ duration         : int  435 432 1523 1620 1617 779 784 721 624 574 ...
+##  $ start_date       : POSIXct, format: "2014-01-01 00:14:00" "2014-01-01 00:14:00" ...
+##  $ start_station    : chr  "San Francisco City Hall" "San Francisco City Hall" "Embarcadero at Sansome" "Steuart at Market" ...
+##  $ start_terminal   : int  58 58 60 74 74 74 74 74 57 57 ...
+##  $ end_date         : POSIXct, format: "2014-01-01 00:21:00" "2014-01-01 00:21:00" ...
+##  $ end_station      : chr  "Townsend at 7th" "Townsend at 7th" "Beale at Market" "Powell Street BART" ...
+##  $ end_terminal     : int  65 65 56 39 39 46 46 46 68 68 ...
+##  $ bike_id          : int  473 395 331 605 453 335 580 563 358 365 ...
+##  $ subscription_type: chr  "Subscriber" "Subscriber" "Subscriber" "Customer" ...
+##  $ zip_code         : chr  "94612" "94107" "94112" "92007" ...
+##  - attr(*, ".internal.selfref")=<externalptr>
+\end{verbatim}
+
+Filter third row:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{row_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{batrips[}\DecValTok{3}\NormalTok{]}
+\NormalTok{row_}\DecValTok{3} \OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date          start_station start_terminal
+## 1:  139547     1523 2014-01-01 00:17:00 Embarcadero at Sansome             60
+##               end_date     end_station end_terminal bike_id subscription_type
+## 1: 2014-01-01 00:42:00 Beale at Market           56     331        Subscriber
+##    zip_code
+## 1:    94112
+\end{verbatim}
+
+Filter rows 1 through 2:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rows_}\DecValTok{1}\NormalTok{_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{batrips[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{]}
+\NormalTok{rows_}\DecValTok{1}\NormalTok{_}\DecValTok{2} \OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date           start_station start_terminal
+## 1:  139545      435 2014-01-01 00:14:00 San Francisco City Hall             58
+## 2:  139546      432 2014-01-01 00:14:00 San Francisco City Hall             58
+##               end_date     end_station end_terminal bike_id subscription_type
+## 1: 2014-01-01 00:21:00 Townsend at 7th           65     473        Subscriber
+## 2: 2014-01-01 00:21:00 Townsend at 7th           65     395        Subscriber
+##    zip_code
+## 1:    94612
+## 2:    94107
+\end{verbatim}
+
+Filter the 1st, 6th and 10th rows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rows_}\DecValTok{1}\NormalTok{_}\DecValTok{6}\NormalTok{_}\DecValTok{10}\NormalTok{ <-}\StringTok{ }\NormalTok{batrips[}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{)]}
+\NormalTok{rows_}\DecValTok{1}\NormalTok{_}\DecValTok{6}\NormalTok{_}\DecValTok{10} \OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date           start_station start_terminal
+## 1:  139545      435 2014-01-01 00:14:00 San Francisco City Hall             58
+## 2:  139551      779 2014-01-01 00:24:00       Steuart at Market             74
+## 3:  139555      574 2014-01-01 00:25:00           5th at Howard             57
+##               end_date                                   end_station
+## 1: 2014-01-01 00:21:00                               Townsend at 7th
+## 2: 2014-01-01 00:37:00                         Washington at Kearney
+## 3: 2014-01-01 00:35:00 Yerba Buena Center of the Arts (3rd @ Howard)
+##    end_terminal bike_id subscription_type zip_code
+## 1:           65     473        Subscriber    94612
+## 2:           46     335          Customer    94109
+## 3:           68     365          Customer    94941
+\end{verbatim}
+
+Select all rows except the first two:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{not_first_two <-}\StringTok{ }\NormalTok{batrips[}\OperatorTok{-}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{)]}
+\NormalTok{not_first_two }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date          start_station start_terminal
+## 1:  139547     1523 2014-01-01 00:17:00 Embarcadero at Sansome             60
+## 2:  139549     1620 2014-01-01 00:23:00      Steuart at Market             74
+##               end_date        end_station end_terminal bike_id
+## 1: 2014-01-01 00:42:00    Beale at Market           56     331
+## 2: 2014-01-01 00:50:00 Powell Street BART           39     605
+##    subscription_type zip_code
+## 1:        Subscriber    94112
+## 2:          Customer    92007
+\end{verbatim}
+
+Select all rows except 1 through 5 and 10 through 15:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{exclude_some <-}\StringTok{ }\NormalTok{batrips[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{10}\OperatorTok{:}\DecValTok{15}\NormalTok{)]}
+\NormalTok{exclude_some }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date     start_station start_terminal
+## 1:  139551      779 2014-01-01 00:24:00 Steuart at Market             74
+## 2:  139552      784 2014-01-01 00:24:00 Steuart at Market             74
+##               end_date           end_station end_terminal bike_id
+## 1: 2014-01-01 00:37:00 Washington at Kearney           46     335
+## 2: 2014-01-01 00:37:00 Washington at Kearney           46     580
+##    subscription_type zip_code
+## 1:          Customer    94109
+## 2:          Customer
+\end{verbatim}
+
+Select all rows except the first and last:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{not_first_last <-}\StringTok{ }\NormalTok{batrips[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, .N)] }
+\CommentTok{# Or}
+\CommentTok{# batrips[-c(1, nrow(batrips))]}
+
+\NormalTok{not_first_last }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date           start_station start_terminal
+## 1:  139546      432 2014-01-01 00:14:00 San Francisco City Hall             58
+## 2:  139547     1523 2014-01-01 00:17:00  Embarcadero at Sansome             60
+##               end_date     end_station end_terminal bike_id subscription_type
+## 1: 2014-01-01 00:21:00 Townsend at 7th           65     395        Subscriber
+## 2: 2014-01-01 00:42:00 Beale at Market           56     331        Subscriber
+##    zip_code
+## 1:    94107
+## 2:    94112
+\end{verbatim}
+
+Filter all rows where start\_station is ``Market at 10th'':
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trips_mlk <-}\StringTok{ }\NormalTok{batrips[start_station }\OperatorTok{==}\StringTok{ "Market at 10th"}\NormalTok{]}
+\NormalTok{trips_mlk }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date  start_station start_terminal
+## 1:  139605     1352 2014-01-01 07:40:00 Market at 10th             67
+## 2:  139609     1130 2014-01-01 08:08:00 Market at 10th             67
+##               end_date    end_station end_terminal bike_id subscription_type
+## 1: 2014-01-01 08:03:00 Market at 10th           67     545        Subscriber
+## 2: 2014-01-01 08:27:00 Market at 10th           67     545        Subscriber
+##    zip_code
+## 1:    94590
+## 2:    94590
+\end{verbatim}
+
+Filter all rows where start\_station is ``MLK Library'' AND duration \textgreater{} 1600:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trips_mlk_}\DecValTok{1600}\NormalTok{ <-}\StringTok{ }\NormalTok{batrips[start_station }\OperatorTok{==}\StringTok{ "MLK Library"} \OperatorTok{&}\StringTok{ }\NormalTok{duration }\OperatorTok{>}\StringTok{ }\DecValTok{1600}\NormalTok{]}
+\NormalTok{trips_mlk_}\DecValTok{1600} \OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date start_station start_terminal
+## 1:  147733     1744 2014-01-09 11:47:00   MLK Library             11
+## 2:  158900    61848 2014-01-19 16:42:00   MLK Library             11
+##               end_date           end_station end_terminal bike_id
+## 1: 2014-01-09 12:16:00    San Jose City Hall           10     691
+## 2: 2014-01-20 09:52:00 San Jose Civic Center            3      86
+##    subscription_type zip_code
+## 1:        Subscriber    95112
+## 2:          Customer    95608
+\end{verbatim}
+
+Filter all rows where \texttt{subscription\_type} is not \texttt{"Subscriber"}::
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{customers <-}\StringTok{ }\NormalTok{batrips[subscription_type }\OperatorTok{!=}\StringTok{ "Subscriber"}\NormalTok{]}
+\NormalTok{customers }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date     start_station start_terminal
+## 1:  139549     1620 2014-01-01 00:23:00 Steuart at Market             74
+## 2:  139550     1617 2014-01-01 00:23:00 Steuart at Market             74
+##               end_date        end_station end_terminal bike_id
+## 1: 2014-01-01 00:50:00 Powell Street BART           39     605
+## 2: 2014-01-01 00:50:00 Powell Street BART           39     453
+##    subscription_type zip_code
+## 1:          Customer    92007
+## 2:          Customer    92007
+\end{verbatim}
+
+Filter all rows where start\_station is ``Ryland Park'' AND subscription\_type is not ``Customer'':
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ryland_park_subscribers <-}\StringTok{ }\NormalTok{batrips[start_station }\OperatorTok{==}\StringTok{ "Ryland Park"} \OperatorTok{&}\StringTok{ }\NormalTok{subscription_type }\OperatorTok{!=}\StringTok{ "Customer"}\NormalTok{]}
+\NormalTok{ryland_park_subscribers }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date start_station start_terminal
+## 1:  243456      330 2014-04-10 09:10:00   Ryland Park             84
+## 2:  244497      594 2014-04-11 07:28:00   Ryland Park             84
+##               end_date                       end_station end_terminal bike_id
+## 1: 2014-04-10 09:16:00                         Japantown            9      23
+## 2: 2014-04-11 07:38:00 San Jose Diridon Caltrain Station            2      54
+##    subscription_type zip_code
+## 1:        Subscriber    95110
+## 2:        Subscriber    95110
+\end{verbatim}
+
+Filter all rows where end\_station contains ``Market'':
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{any_markets <-}\StringTok{ }\NormalTok{batrips[end_station }\OperatorTok{%like%}\StringTok{ "Market"}\NormalTok{]}
+\NormalTok{any_markets }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date                        start_station
+## 1:  139547     1523 2014-01-01 00:17:00               Embarcadero at Sansome
+## 2:  139558     1600 2014-01-01 00:28:00 Harry Bridges Plaza (Ferry Building)
+##    start_terminal            end_date       end_station end_terminal bike_id
+## 1:             60 2014-01-01 00:42:00   Beale at Market           56     331
+## 2:             50 2014-01-01 00:54:00 Steuart at Market           74     413
+##    subscription_type zip_code
+## 1:        Subscriber    94112
+## 2:        Subscriber    94102
+\end{verbatim}
+
+Filter all rows where trip\_id is 588841, 139560, or 139562:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{filter_trip_ids <-}\StringTok{ }\NormalTok{batrips[trip_id }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{588841}\NormalTok{, }\DecValTok{139560}\NormalTok{, }\DecValTok{139562}\NormalTok{)]}
+\NormalTok{filter_trip_ids }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date     start_station start_terminal
+## 1:  139560     3793 2014-01-01 00:32:00 Steuart at Market             74
+## 2:  139562     3626 2014-01-01 00:33:00 Steuart at Market             74
+##               end_date       end_station end_terminal bike_id subscription_type
+## 1: 2014-01-01 01:35:00 Steuart at Market           74     311          Customer
+## 2: 2014-01-01 01:33:00 Steuart at Market           74     271          Customer
+##    zip_code
+## 1:    55417
+## 2:    94070
+\end{verbatim}
+
+Filter all rows where duration is between {[}5000, 6000{]}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{duration_5k_6k <-}\StringTok{ }\NormalTok{batrips[duration }\OperatorTok{%between%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5000}\NormalTok{, }\DecValTok{6000}\NormalTok{)]}
+\NormalTok{duration_5k_6k }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date     start_station start_terminal
+## 1:  139607     5987 2014-01-01 07:57:00 Market at Sansome             77
+## 2:  139608     5974 2014-01-01 07:57:00 Market at Sansome             77
+##               end_date                     end_station end_terminal bike_id
+## 1: 2014-01-01 09:37:00 Grant Avenue at Columbus Avenue           73     591
+## 2: 2014-01-01 09:37:00 Grant Avenue at Columbus Avenue           73     596
+##    subscription_type zip_code
+## 1:          Customer    75201
+## 2:          Customer    75201
+\end{verbatim}
+
+Filter all rows with specific start stations:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{two_stations <-}\StringTok{ }\NormalTok{batrips[start_station }\OperatorTok{%chin%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"San Francisco City Hall"}\NormalTok{, }\StringTok{"Embarcadero at Sansome"}\NormalTok{)]}
+\NormalTok{two_stations }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date           start_station start_terminal
+## 1:  139545      435 2014-01-01 00:14:00 San Francisco City Hall             58
+## 2:  139546      432 2014-01-01 00:14:00 San Francisco City Hall             58
+##               end_date     end_station end_terminal bike_id subscription_type
+## 1: 2014-01-01 00:21:00 Townsend at 7th           65     473        Subscriber
+## 2: 2014-01-01 00:21:00 Townsend at 7th           65     395        Subscriber
+##    zip_code
+## 1:    94612
+## 2:    94107
+\end{verbatim}
+
+Selecting columns from a data.table
+Select bike\_id and trip\_id using a character vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df_way <-}\StringTok{ }\NormalTok{batrips[, }\KeywordTok{c}\NormalTok{(}\StringTok{"bike_id"}\NormalTok{, }\StringTok{"trip_id"}\NormalTok{)]}
+\NormalTok{df_way }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    bike_id trip_id
+## 1:     473  139545
+## 2:     395  139546
+\end{verbatim}
+
+Select start\_station and end\_station cols without a character vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dt_way <-}\StringTok{ }\NormalTok{batrips[, .(start_station, end_station)]}
+\NormalTok{dt_way }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station     end_station
+## 1: San Francisco City Hall Townsend at 7th
+## 2: San Francisco City Hall Townsend at 7th
+\end{verbatim}
+
+Deselect start\_terminal and end\_terminal columns:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{drop_terminal_cols <-}\StringTok{ }\NormalTok{batrips[, }\OperatorTok{!}\KeywordTok{c}\NormalTok{(}\StringTok{"start_terminal"}\NormalTok{, }\StringTok{"end_terminal"}\NormalTok{)]}
+\NormalTok{drop_terminal_cols }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    trip_id duration          start_date           start_station
+## 1:  139545      435 2014-01-01 00:14:00 San Francisco City Hall
+## 2:  139546      432 2014-01-01 00:14:00 San Francisco City Hall
+##               end_date     end_station bike_id subscription_type zip_code
+## 1: 2014-01-01 00:21:00 Townsend at 7th     473        Subscriber    94612
+## 2: 2014-01-01 00:21:00 Townsend at 7th     395        Subscriber    94107
+\end{verbatim}
+
+Calculate median duration using the j argument:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{median_duration <-}\StringTok{ }\NormalTok{batrips[, }\KeywordTok{median}\NormalTok{(duration)]}
+\NormalTok{median_duration }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 511
+\end{verbatim}
+
+Get median duration after filtering:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{median_duration_filter <-}\StringTok{ }\NormalTok{batrips[end_station }\OperatorTok{==}\StringTok{ "Market at 10th"} \OperatorTok{&}\StringTok{ }\NormalTok{subscription_type }\OperatorTok{==}\StringTok{ "Subscriber"}\NormalTok{, }\KeywordTok{median}\NormalTok{(duration)]}
+\NormalTok{median_duration_filter }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 651
+\end{verbatim}
+
+Compute duration of all trips:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trip_duration <-}\StringTok{ }\NormalTok{batrips[, }\KeywordTok{difftime}\NormalTok{(end_date, start_date, }\DataTypeTok{units =} \StringTok{"min"}\NormalTok{)]}
+\KeywordTok{head}\NormalTok{(trip_duration) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Time differences in mins
+## [1] 7 7
+\end{verbatim}
+
+Have the column mean\_durn:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean_duration <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{mean_durn =} \KeywordTok{mean}\NormalTok{(duration))]}
+\NormalTok{mean_duration }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    mean_durn
+## 1:  1131.967
+\end{verbatim}
+
+Get the min and max duration values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{min_max_duration <-}\StringTok{ }\NormalTok{batrips[, .(}\KeywordTok{min}\NormalTok{(duration), }\KeywordTok{max}\NormalTok{(duration))]}
+\NormalTok{min_max_duration }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    V1       V2
+## 1: 60 17270400
+\end{verbatim}
+
+Calculate the number of unique values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{other_stats <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{mean_duration =} \KeywordTok{mean}\NormalTok{(duration), }
+                           \DataTypeTok{last_ride =} \KeywordTok{max}\NormalTok{(end_date))]}
+\NormalTok{other_stats }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    mean_duration           last_ride
+## 1:      1131.967 2015-06-24 20:18:00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{duration_stats <-}\StringTok{ }\NormalTok{batrips[start_station }\OperatorTok{==}\StringTok{ "Townsend at 7th"} \OperatorTok{&}\StringTok{ }\NormalTok{duration }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{, }
+\NormalTok{                          .(}\DataTypeTok{min_dur =} \KeywordTok{min}\NormalTok{(duration), }
+                            \DataTypeTok{max_dur =} \KeywordTok{max}\NormalTok{(duration))]}
+\NormalTok{duration_stats}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    min_dur max_dur
+## 1:      62     499
+\end{verbatim}
+
+Plot the histogram of duration based on conditions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[start_station }\OperatorTok{==}\StringTok{ "Townsend at 7th"} \OperatorTok{&}\StringTok{ }\NormalTok{duration }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{, }\KeywordTok{hist}\NormalTok{(duration)]}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{code4stem_files/figure-latex/make histogram-1.pdf}
+
+\begin{verbatim}
+## $breaks
+##  [1]  50 100 150 200 250 300 350 400 450 500
+## 
+## $counts
+## [1]   28   15  792 2042  920  314  314  497  538
+## 
+## $density
+## [1] 1.025641e-04 5.494505e-05 2.901099e-03 7.479853e-03 3.369963e-03
+## [6] 1.150183e-03 1.150183e-03 1.820513e-03 1.970696e-03
+## 
+## $mids
+## [1]  75 125 175 225 275 325 375 425 475
+## 
+## $xname
+## [1] "duration"
+## 
+## $equidist
+## [1] TRUE
+## 
+## attr(,"class")
+## [1] "histogram"
+\end{verbatim}
+
+Computations by groups
+Compute the mean duration for every start\_station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean_start_stn <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{mean_duration =} \KeywordTok{mean}\NormalTok{(duration)), by =}\StringTok{ }\NormalTok{start_station]}
+\NormalTok{mean_start_stn }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station mean_duration
+## 1: San Francisco City Hall      1893.936
+## 2:  Embarcadero at Sansome      1418.182
+\end{verbatim}
+
+Compute the mean duration for every start and end station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean_station <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{mean_duration =} \KeywordTok{mean}\NormalTok{(duration)), by =}\StringTok{ }\NormalTok{.(start_station, end_station)]}
+\NormalTok{mean_station }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station     end_station mean_duration
+## 1: San Francisco City Hall Townsend at 7th      678.6364
+## 2:  Embarcadero at Sansome Beale at Market      651.2367
+\end{verbatim}
+
+Compute the mean duration grouped by start\_station and month:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean_start_station <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{mean_duration =} \KeywordTok{mean}\NormalTok{(duration)), by =}\StringTok{ }\NormalTok{.(start_station, }\KeywordTok{month}\NormalTok{(start_date))]}
+\NormalTok{mean_start_station }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station month mean_duration
+## 1: San Francisco City Hall     1     1548.2591
+## 2:  Embarcadero at Sansome     1      952.1756
+\end{verbatim}
+
+Compute mean of duration and total trips grouped by start and end stations:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aggregate_mean_trips <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{mean_duration =} \KeywordTok{mean}\NormalTok{(duration), }
+                                    \DataTypeTok{total_trips =}\NormalTok{ .N), }
+\NormalTok{                                by =}\StringTok{ }\NormalTok{.(start_station, end_station)]}
+\NormalTok{aggregate_mean_trips }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station     end_station mean_duration total_trips
+## 1: San Francisco City Hall Townsend at 7th      678.6364         121
+## 2:  Embarcadero at Sansome Beale at Market      651.2367         545
+\end{verbatim}
+
+Compute min and max duration grouped by start station, end station, and month:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aggregate_min_max <-}\StringTok{ }\NormalTok{batrips[, .(}\DataTypeTok{min_duration =} \KeywordTok{min}\NormalTok{(duration), }
+                                 \DataTypeTok{max_duration =} \KeywordTok{max}\NormalTok{(duration)), }
+\NormalTok{                             by =}\StringTok{ }\NormalTok{.(start_station, end_station, }
+                                    \KeywordTok{month}\NormalTok{(start_date))]}
+\NormalTok{aggregate_min_max }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station     end_station month min_duration max_duration
+## 1: San Francisco City Hall Townsend at 7th     1          370          661
+## 2:  Embarcadero at Sansome Beale at Market     1          345         1674
+\end{verbatim}
+
+Chaining data.table expressions:
+Compute the total trips grouped by start\_station and end\_station
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trips_dec <-}\StringTok{ }\NormalTok{batrips[, .N, by =}\StringTok{ }\NormalTok{.(start_station, }
+\NormalTok{                                  end_station)]}
+\NormalTok{trips_dec }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              start_station     end_station   N
+## 1: San Francisco City Hall Townsend at 7th 121
+## 2:  Embarcadero at Sansome Beale at Market 545
+\end{verbatim}
+
+Arrange the total trips grouped by start\_station and end\_station in decreasing order:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trips_dec <-}\StringTok{ }\NormalTok{batrips[, .N, by =}\StringTok{ }\NormalTok{.(start_station, }
+\NormalTok{                                  end_station)][}\KeywordTok{order}\NormalTok{(}\OperatorTok{-}\NormalTok{N)]}
+\NormalTok{trips_dec }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                              start_station
+## 1:                         Townsend at 7th
+## 2: San Francisco Caltrain 2 (330 Townsend)
+##                                 end_station    N
+## 1: San Francisco Caltrain (Townsend at 4th) 3158
+## 2:                          Townsend at 7th 2937
+\end{verbatim}
+
+Top five most popular destinations:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\NormalTok{batrips[, .N, by =}\StringTok{ }\NormalTok{end_station][}\KeywordTok{order}\NormalTok{(}\OperatorTok{-}\NormalTok{N)][}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{]}
+\NormalTok{top_}\DecValTok{5}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                 end_station     N
+## 1: San Francisco Caltrain (Townsend at 4th) 33213
+## 2:     Harry Bridges Plaza (Ferry Building) 15692
+## 3:  San Francisco Caltrain 2 (330 Townsend) 15333
+## 4:                        Market at Sansome 14816
+## 5:                          2nd at Townsend 14064
+\end{verbatim}
+
+Compute most popular end station for every start station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{popular_end_station <-}\StringTok{ }\NormalTok{trips_dec[, .(}\DataTypeTok{end_station =}\NormalTok{ end_station[}\DecValTok{1}\NormalTok{]), }
+\NormalTok{                                 by =}\StringTok{ }\NormalTok{start_station]}
+\NormalTok{popular_end_station }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                              start_station
+## 1:                         Townsend at 7th
+## 2: San Francisco Caltrain 2 (330 Townsend)
+##                                 end_station
+## 1: San Francisco Caltrain (Townsend at 4th)
+## 2:                          Townsend at 7th
+\end{verbatim}
+
+Find the first and last ride for each start\_station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{first_last <-}\StringTok{ }\NormalTok{batrips[}\KeywordTok{order}\NormalTok{(start_date), }
+\NormalTok{                      .(}\DataTypeTok{start_date =}\NormalTok{ start_date[}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, .N)]), }
+\NormalTok{                      by =}\StringTok{ }\NormalTok{start_station]}
+\NormalTok{first_last}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                        start_station          start_date
+##   1:         San Francisco City Hall 2014-01-01 00:14:00
+##   2:         San Francisco City Hall 2014-12-31 22:06:00
+##   3:          Embarcadero at Sansome 2014-01-01 00:17:00
+##   4:          Embarcadero at Sansome 2014-12-31 22:08:00
+##   5:               Steuart at Market 2014-01-01 00:23:00
+##  ---                                                    
+## 144: Santa Clara County Civic Center 2014-12-31 15:32:00
+## 145:                     Ryland Park 2014-04-10 09:10:00
+## 146:                     Ryland Park 2014-12-31 07:56:00
+## 147:        Stanford in Redwood City 2014-09-03 19:41:00
+## 148:        Stanford in Redwood City 2014-12-22 16:56:00
+\end{verbatim}
+
+Using .SD (I)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{relevant_cols <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"start_station"}\NormalTok{, }\StringTok{"end_station"}\NormalTok{, }
+                   \StringTok{"start_date"}\NormalTok{, }\StringTok{"end_date"}\NormalTok{, }\StringTok{"duration"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Find the row corresponding to the shortest trip per month:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{shortest <-}\StringTok{ }\NormalTok{batrips[, .SD[}\KeywordTok{which.min}\NormalTok{(duration)], }
+\NormalTok{                    by =}\StringTok{ }\KeywordTok{month}\NormalTok{(start_date), }
+\NormalTok{                    .SDcols =}\StringTok{ }\NormalTok{relevant_cols]}
+\NormalTok{shortest }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    month                            start_station
+## 1:     1                          2nd at Townsend
+## 2:     2 San Francisco Caltrain (Townsend at 4th)
+##                                 end_station          start_date
+## 1:                          2nd at Townsend 2014-01-21 13:01:00
+## 2: San Francisco Caltrain (Townsend at 4th) 2014-02-08 14:28:00
+##               end_date duration
+## 1: 2014-01-21 13:02:00       60
+## 2: 2014-02-08 14:29:00       61
+\end{verbatim}
+
+Using .SD (II)
+Find the total number of unique start stations and zip codes per month:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{unique_station_month <-}\StringTok{ }\NormalTok{batrips[, }\KeywordTok{lapply}\NormalTok{(.SD, uniqueN), }
+\NormalTok{                                by =}\StringTok{ }\KeywordTok{month}\NormalTok{(start_date), }
+\NormalTok{                                .SDcols =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"start_station"}\NormalTok{, }\StringTok{"zip_code"}\NormalTok{)]}
+\NormalTok{unique_station_month }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    month start_station zip_code
+## 1:     1            68      710
+## 2:     2            69      591
+\end{verbatim}
+
+Adding and updating columns by reference
+Add a new column, duration\_hour:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, duration_hour }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{duration }\OperatorTok{/}\StringTok{ }\DecValTok{3600}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Fix/edit spelling in the second row of start\_station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[}\DecValTok{2}\NormalTok{, start_station }\OperatorTok{:}\ErrorTok{=}\StringTok{ "San Francisco City Hall 2"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Replace negative duration values with NA:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[duration }\OperatorTok{<}\StringTok{ }\DecValTok{0}\NormalTok{, duration }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\OtherTok{NA}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Add a new column equal to total trips for every start station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, trips_N }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{.N, by =}\StringTok{ }\NormalTok{start_station]}
+\end{Highlighting}
+\end{Shaded}
+
+Add new column for every start\_station and end\_station:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, duration_mean }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{mean}\NormalTok{(duration), by =}\StringTok{ }\NormalTok{.(start_station, end_station)]}
+\end{Highlighting}
+\end{Shaded}
+
+Calculate the mean duration for each month:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, mean_dur }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{mean}\NormalTok{(duration, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{), }
+\NormalTok{            by =}\StringTok{ }\KeywordTok{month}\NormalTok{(start_date)]}
+\end{Highlighting}
+\end{Shaded}
+
+Replace NA values in duration with the mean value of duration for that month:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, mean_dur }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{mean}\NormalTok{(duration, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{), }
+\NormalTok{            by =}\StringTok{ }\KeywordTok{month}\NormalTok{(start_date)][}\KeywordTok{is.na}\NormalTok{(duration), }
+\NormalTok{                                    duration }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{mean_dur]}
+\end{Highlighting}
+\end{Shaded}
+
+Delete the mean\_dur column by reference:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, mean_dur }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{mean}\NormalTok{(duration, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{), }
+\NormalTok{            by =}\StringTok{ }\KeywordTok{month}\NormalTok{(start_date)][}\KeywordTok{is.na}\NormalTok{(duration), }
+\NormalTok{                                    duration }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{mean_dur][, mean_dur }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\OtherTok{NULL}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Add columns using the LHS := RHS form
+LHS := RHS form. In the LHS, you specify column names as a character vector and in the RHS, you specify values/expressions to be added inside list() (or the alias, .()):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, }\KeywordTok{c}\NormalTok{(}\StringTok{"mean_duration"}\NormalTok{, }
+            \StringTok{"median_duration"}\NormalTok{) }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{.(}\KeywordTok{mean}\NormalTok{(duration), }\KeywordTok{median}\NormalTok{(duration)), }
+\NormalTok{        by =}\StringTok{ }\NormalTok{start_station]}
+\end{Highlighting}
+\end{Shaded}
+
+Add columns using the functional form:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[, }\StringTok{`}\DataTypeTok{:=}\StringTok{`}\NormalTok{(}\DataTypeTok{mean_duration =} \KeywordTok{mean}\NormalTok{(duration), }
+               \DataTypeTok{median_duration =} \KeywordTok{median}\NormalTok{(duration)), }
+\NormalTok{        by =}\StringTok{ }\NormalTok{start_station]}
+\end{Highlighting}
+\end{Shaded}
+
+Add the mean\_duration column:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{batrips[duration }\OperatorTok{>}\StringTok{ }\DecValTok{600}\NormalTok{, mean_duration }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{mean}\NormalTok{(duration), }
+\NormalTok{        by =}\StringTok{ }\NormalTok{.(start_station, end_station)]}
+\end{Highlighting}
+\end{Shaded}
+
+Use read.csv() to import batrips
+Fread is much faster!
 
 \begin{itemize}
 \tightlist
 \item
-  Select the count of profits\_change,
+  system.time(read.csv(``batrips.csv''))
 \item
-  subtract from total number of rows, and alias as missing
+  system.time(fread(``batrips.csv''))
 \end{itemize}
 
-\begin{verbatim}
-SELECT count(*) - count(profits_change) AS missing
-  FROM fortune500;
-\end{verbatim}
+Import using read.csv():
 
-\begin{itemize}
-\tightlist
-\item
-  Select the count of industry,
-\item
-  subtract from total number of rows, and alias as missing
-\end{itemize}
-
-\begin{verbatim}
-SELECT count(*) - count(industry) AS missing
-  FROM fortune500;
-\end{verbatim}
-
-Joining tables:
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{csv_file <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{NA}\NormalTok{, }\DataTypeTok{quote =} \StringTok{""}\NormalTok{, }
+                     \DataTypeTok{stringsAsFactors =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{strip.white =} \OtherTok{TRUE}\NormalTok{, }
+                     \DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{csv_file }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-SELECT company.name 
--- Table(s) to select from
-  FROM company 
-       INNER JOIN fortune500 
-       ON company.ticker=fortune500.ticker;
+##   YEAR    GEO Age_group  Sex                                     Element
+## 1 1980 Canada         0 Both           Number of survivors at age x (lx)
+## 2 1980 Canada         0 Both Number of deaths between age x and x+1 (dx)
+##   AVG_VALUE
+## 1    100000
+## 2       976
 \end{verbatim}
 
-The keys to the database (e.g.~foreign vs.~primary keys)
-- Read an entity relationship diagram
+Import using fread():
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{csv_file <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{)}
+\NormalTok{csv_file }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Count the number of tags with each type
-SELECT type, count(*) AS count
-  FROM tag_type
- -- To get the count for each type, what do you need to do?
- GROUP BY type
- -- Order the results with the most common
- -- tag types listed first
- ORDER BY count DESC;
+##    YEAR    GEO Age_group  Sex                                     Element
+## 1: 1980 Canada         0 Both           Number of survivors at age x (lx)
+## 2: 1980 Canada         0 Both Number of deaths between age x and x+1 (dx)
+##    AVG_VALUE
+## 1:    100000
+## 2:       976
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  or:
-\end{itemize}
+Check the class of Sex column:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{(csv_file}\OperatorTok{$}\NormalTok{Sex)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Select the 3 columns desired
-SELECT name, tag_type.tag, tag_type.type
-  FROM company
-  	   -- Join the tag_company and company tables
-       INNER JOIN tag_company 
-       ON company.id = tag_company.company_id
-       -- Join the tag_type and company tables
-       INNER JOIN tag_type
-       ON tag_company.tag = tag_type.tag
-  -- Filter to most common type
-  WHERE type='cloud';
+## [1] "character"
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  coalesce function (to combine columns)
-\end{itemize}
+Import using read.csv with defaults:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(csv_file)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Use coalesce
-SELECT coalesce(industry, sector, 'Unknown') AS industry2,
-       -- Don't forget to count!
-       count(*) 
-  FROM fortune500 
--- Group by what? (What are you counting by?)
- GROUP BY industry2
--- Order results to see most common first
- ORDER BY count DESC
--- Limit results to get just the one value you want
- LIMIT 1;
+## Classes 'data.table' and 'data.frame':	1048575 obs. of  6 variables:
+##  $ YEAR     : int  1980 1980 1980 1980 1980 1980 1980 1980 1980 1980 ...
+##  $ GEO      : chr  "Canada" "Canada" "Canada" "Canada" ...
+##  $ Age_group: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Sex      : chr  "Both" "Both" "Both" "Both" ...
+##  $ Element  : chr  "Number of survivors at age x (lx)" "Number of deaths between age x and x+1 (dx)" "Death probability between age x and x+1 (qx)" "Margin of error of the death probability (m.e.(qx))" ...
+##  $ AVG_VALUE: num  1.00e+05 9.76e+02 9.76e-03 1.80e-04 9.90e-01 ...
+##  - attr(*, ".internal.selfref")=<externalptr>
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Coalesce with a self-join:
-\end{itemize}
+Select ``id'' and ``val'' columns:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{select_columns <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{select =} \KeywordTok{c}\NormalTok{(}\StringTok{"GEO"}\NormalTok{, }\StringTok{"Sex"}\NormalTok{))}
+\NormalTok{select_columns }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-SELECT company_original.name, title, rank
-  -- Start with original company information
-  FROM company AS company_original
-       -- Join to another copy of company with parent
-       -- company information
-	   LEFT JOIN company AS company_parent
-       ON company_original.parent_id = company_parent.id 
-       -- Join to fortune500, only keep rows that match
-       INNER JOIN fortune500 
-       -- Use parent ticker if there is one, 
-       -- otherwise original ticker
-       ON coalesce(company_parent.ticker, 
-                   company_original.ticker) = 
-             fortune500.ticker
- -- For clarity, order by rank
- ORDER BY rank; 
+##       GEO  Sex
+## 1: Canada Both
+## 2: Canada Both
 \end{verbatim}
 
-Column types and constraints
-- Effects of casting
-- SELECT CAST(value AS new\_type);
+Drop the ``val'' column:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{drop_column <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{drop =} \StringTok{"Sex"}\NormalTok{)}
+\NormalTok{drop_column }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Select the original value
-SELECT profits_change, 
-	   -- Cast profits_change
-       CAST(profits_change AS integer) AS profits_change_int
-  FROM fortune500;
+##    YEAR    GEO Age_group                                     Element AVG_VALUE
+## 1: 1980 Canada         0           Number of survivors at age x (lx)    100000
+## 2: 1980 Canada         0 Number of deaths between age x and x+1 (dx)       976
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  SELECT and divide
-\end{itemize}
+Import the file while avoiding the warning:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{only_data <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{nrows =} \DecValTok{3}\NormalTok{)}
+\NormalTok{only_data}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Divide 10 by 3
-SELECT 10/3,
-       -- Divide 10 cast as numeric by 3
-       10::numeric/3;
+##    YEAR    GEO Age_group  Sex                                      Element
+## 1: 1980 Canada         0 Both            Number of survivors at age x (lx)
+## 2: 1980 Canada         0 Both  Number of deaths between age x and x+1 (dx)
+## 3: 1980 Canada         0 Both Death probability between age x and x+1 (qx)
+##    AVG_VALUE
+## 1:  1.00e+05
+## 2:  9.76e+02
+## 3:  9.76e-03
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  SELECT value::new\_type
-\end{itemize}
+Import only the metadata:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{only_metadata <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{skip =} \DecValTok{7}\NormalTok{)}
+\NormalTok{only_metadata }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-SELECT '3.2'::numeric,
-       '-123'::numeric,
-       '1e3'::numeric,
-       '1e-3'::numeric,
-       '02314'::numeric,
-       '0002'::numeric;
+##      V1     V2 V3   V4                                                      V5
+## 1: 1980 Canada  0 Both Cumulative number of life years lived beyond age x (Tx)
+## 2: 1980 Canada  0 Both                Life expectancy (in years) at age x (ex)
+##           V6
+## 1: 7543058.0
+## 2:      75.4
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Summarize the distribution of numeric values
-\end{itemize}
+Import using read.csv:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{base_r <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }
+                   \DataTypeTok{colClasses =} \KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{"factor"}\NormalTok{, }\DecValTok{4}\NormalTok{), }
+                                  \StringTok{"character"}\NormalTok{, }
+                                  \StringTok{"numeric"}\NormalTok{))}
+\KeywordTok{str}\NormalTok{(base_r)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Select the count of each value of revenues_change
-SELECT revenues_change, count(*) 
-  FROM fortune500
- GROUP BY revenues_change 
- -- order by the values of revenues_change
- ORDER BY revenues_change;
+## 'data.frame':	1048575 obs. of  6 variables:
+##  $ YEAR     : Factor w/ 35 levels "1980","1981",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ GEO      : Factor w/ 10 levels "Alberta","British Columbia",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ Age_group: Factor w/ 111 levels "0","1","10","100",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Sex      : Factor w/ 3 levels "Both","F","M": 1 1 1 1 1 1 1 1 1 3 ...
+##  $ Element  : chr  "Number of survivors at age x (lx)" "Number of deaths between age x and x+1 (dx)" "Death probability between age x and x+1 (qx)" "Margin of error of the death probability (m.e.(qx))" ...
+##  $ AVG_VALUE: num  1.00e+05 9.76e+02 9.76e-03 1.80e-04 9.90e-01 ...
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Additional exploration syntax:
-\end{itemize}
+Import using fread:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{import_fread <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }
+                      \DataTypeTok{colClasses =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{factor =} \DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{, }\DataTypeTok{numeric =} \DecValTok{7}\OperatorTok{:}\DecValTok{10}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Count rows 
-SELECT count(*)
-  FROM fortune500
- -- Where...
- WHERE revenues_change > 0;
+## Warning in fread("data/sample.csv", colClasses = list(factor = 1:4, numeric =
+## 7:10)): Column number 7 (colClasses[[2]][1]) is out of range [1,ncol=6]
 \end{verbatim}
-
-Numeric data types and summary functions
-
-Division
 
 \begin{verbatim}
--- Select average revenue per employee by sector
-SELECT sector, 
-       avg(revenues/employees::numeric) AS avg_rev_employee
-  FROM fortune500
- GROUP BY sector
- -- Use the alias to order the results
- ORDER BY avg_rev_employee;
+## Warning in fread("data/sample.csv", colClasses = list(factor = 1:4, numeric =
+## 7:10)): Column number 8 (colClasses[[2]][2]) is out of range [1,ncol=6]
 \end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  explore by division:
-\end{itemize}
 
 \begin{verbatim}
--- Divide unanswered_count by question_count
-SELECT unanswered_count/question_count::numeric AS computed_pct, 
-       -- What are you comparing the above quantity to?
-       unanswered_pct
-  FROM stackoverflow
- -- eliminate rows where question_count is not 0
- WHERE question_count != 0
- LIMIT 10;
- 
+## Warning in fread("data/sample.csv", colClasses = list(factor = 1:4, numeric =
+## 7:10)): Column number 9 (colClasses[[2]][3]) is out of range [1,ncol=6]
 \end{verbatim}
-
-Following SQL functions DATEDIFF( ), DATENAME( ), DATEPART( ), CAST( ), CONVERT( ), GETDATE( ) and DATEADD( ) explore transactions per day
 
 \begin{verbatim}
-
-SELECT
-  -- Select the date portion of StartDate
-  CONVERT(DATE, StartDate) as StartDate,
-  -- Measure how many records exist for each StartDate
-  COUNT(ID) as CountOfRows 
-FROM CapitalBikeShare 
--- Group by the date portion of StartDate
-GROUP BY CONVERT(DATE, StartDate)
--- Sort the results by the date portion of StartDate
-ORDER BY CONVERT(DATE, StartDate);
+## Warning in fread("data/sample.csv", colClasses = list(factor = 1:4, numeric =
+## 7:10)): Column number 10 (colClasses[[2]][4]) is out of range [1,ncol=6]
 \end{verbatim}
 
-seconds or no?
-- DATEDIFF() can be used to calculate the trip time by finding the difference between Start and End time
-- Here, we will use DATEPART() to see how many transactions have seconds greater than zero and how many have them equal to zero
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(import_fread)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-SELECT
-	-- Count the number of IDs
-	COUNT(ID) AS Count,
-    -- Use DATEPART() to evaluate the SECOND part of StartDate
-    "StartDate" = CASE WHEN DATEPART(SECOND, StartDate) = 0 THEN 'SECONDS = 0'
-					   WHEN DATEPART(SECOND, StartDate) > 0 THEN 'SECONDS > 0' END
-FROM CapitalBikeShare
-GROUP BY
-    -- Complete the CASE statement
-	CASE WHEN DATEPART(SECOND, StartDate) = 0 THEN 'SECONDS = 0'
-		 WHEN DATEPART(SECOND, StartDate) > 0 THEN 'SECONDS > 0' END
+## Classes 'data.table' and 'data.frame':	1048575 obs. of  6 variables:
+##  $ YEAR     : Factor w/ 35 levels "1980","1981",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ GEO      : Factor w/ 10 levels "Alberta","British Columbia",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ Age_group: Factor w/ 111 levels "0","1","10","100",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Sex      : Factor w/ 3 levels "Both","F","M": 1 1 1 1 1 1 1 1 1 3 ...
+##  $ Element  : chr  "Number of survivors at age x (lx)" "Number of deaths between age x and x+1 (dx)" "Death probability between age x and x+1 (qx)" "Margin of error of the death probability (m.e.(qx))" ...
+##  $ AVG_VALUE: num  1.00e+05 9.76e+02 9.76e-03 1.80e-04 9.90e-01 ...
+##  - attr(*, ".internal.selfref")=<externalptr>
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Which day of week is busiest?
-\end{itemize}
+Import the file correctly, use the fill argument to ensure all rows are imported correctly:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{correct <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{fill =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{correct }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-
-SELECT
-    -- Select the day of week value for StartDate
-	DATENAME(weekday, StartDate) as DayOfWeek,
-    -- Calculate TotalTripHours
-	SUM(DATEDIFF(second, StartDate, EndDate))/ 3600 as TotalTripHours 
-FROM CapitalBikeShare 
--- Group by the day of week
-GROUP BY DATENAME(weekday, StartDate)
--- Order TotalTripHours in descending order
-ORDER BY TotalTripHours DESC
+##    YEAR    GEO Age_group  Sex                                     Element
+## 1: 1980 Canada         0 Both           Number of survivors at age x (lx)
+## 2: 1980 Canada         0 Both Number of deaths between age x and x+1 (dx)
+##    AVG_VALUE
+## 1:    100000
+## 2:       976
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  finding the outliers:
-\end{itemize}
+Import the file using na.strings
+The missing values are encoded as ``\#\#''. Note that fread() handles an empty field ,, by default as NA
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{missing_values <-}\StringTok{ }\KeywordTok{fread}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{, }\DataTypeTok{na.strings =} \StringTok{"##"}\NormalTok{) }
+\NormalTok{missing_values }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-
-SELECT
-	-- Calculate TotalRideHours using SUM() and DATEDIFF()
-  	SUM(DATEDIFF(SECOND, StartDate, EndDate))/ 3600 AS TotalRideHours,
-    -- Select the DATE portion of StartDate
-  	CONVERT(DATE, StartDate) AS DateOnly,
-    -- Select the WEEKDAY
-  	DATENAME(WEEKDAY, CONVERT(DATE, StartDate)) AS DayOfWeek 
-FROM CapitalBikeShare
--- Only include Saturday
-WHERE DATENAME(WEEKDAY, StartDate) = 'Saturday' 
-GROUP BY CONVERT(DATE, StartDate);
+##    YEAR    GEO Age_group  Sex                                     Element
+## 1: 1980 Canada         0 Both           Number of survivors at age x (lx)
+## 2: 1980 Canada         0 Both Number of deaths between age x and x+1 (dx)
+##    AVG_VALUE
+## 1:  1.00E+05
+## 2:       976
 \end{verbatim}
 
-Variables for datetime data: storing data in variables
-DECLARE \& CAST
-- use CapitalBikeShare table as starting point
+Write dt to fwrite.txt:
+- fwrite(dt, ``fwrite.txt'')
+
+Import the file using readLines():
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{readLines}\NormalTok{(}\StringTok{"data/sample.csv"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
--- Create @ShiftStartTime
-DECLARE @ShiftStartTime AS time = '08:00 AM'
-
--- Create @StartDate
-DECLARE @StartDate AS date
-
--- Set StartDate to the first StartDate from CapitalBikeShare
-SET 
-	@StartDate = (
-    	SELECT TOP 1 StartDate 
-    	FROM CapitalBikeShare 
-    	ORDER BY StartDate ASC
-		)
-
--- Create ShiftStartDateTime
-DECLARE @ShiftStartDateTime AS datetime
-
--- Cast StartDate and ShiftStartTime to datetime data types
-SET @ShiftStartDateTime = CAST(@StartDate AS datetime) + CAST(@ShiftStartTime AS datetime) 
-
-SELECT @ShiftStartDateTime
+## Warning in readLines("data/sample.csv"): incomplete final line found on 'data/
+## sample.csv'
 \end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  DECLARE a TABLE:
-\end{itemize}
 
 \begin{verbatim}
--- Create @Shifts
-DECLARE @Shifts TABLE(
-    -- Create StartDateTime column
-	StartDateTime datetime,
-    -- Create EndDateTime column
-	EndDateTime datetime)
--- Populate @Shifts
-INSERT INTO @Shifts (StartDateTime, EndDateTime)
-	SELECT '3/1/2018 8:00 AM', '3/1/2018 4:00 PM' 
-SELECT * 
-FROM @Shifts
+## [1] "YEAR,GEO,Age_group,Sex,Element,AVG_VALUE"                     
+## [2] "1980,Canada,0,Both,Number of survivors at age x (lx),1.00E+05"
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  INSERT INTO \citet{TABLE} based on CapitalBikeShare table:
-\end{itemize}
+Write batrips\_dates to file using ``ISO'' format:
+- fwrite(batrips\_dates, ``iso.txt'', dateTimeAs = ``ISO'')
 
-\begin{verbatim}
--- Create @RideDates
-DECLARE @RideDates TABLE(
-    -- Create RideStart
-	RideStart date,
-    -- Create RideEnd
-	RideEnd date)
--- Populate @RideDates
-INSERT INTO @RideDates(RideStart, RideEnd)
--- Select the unique date values of StartDate and EndDate
-SELECT DISTINCT
-    -- Cast StartDate as date
-	CAST(StartDate as date),
-    -- Cast EndDate as date
-	CAST(EndDate as date) 
-FROM CapitalBikeShare 
-SELECT * 
-FROM @RideDates;
-\end{verbatim}
-
-Date manipulation
-- First day of month:
-
-\begin{verbatim}
--- Find the first day of the current month
-SELECT DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0)
--- Or
-SELECT DATEDIFF(month, 0, GETDATE()), 0)
--- Or
-SELECT DATEDIFF(year, '12/31/2017', '1/1/2019')
--- Or for yesterday use -1
-WHERE CAST(year as date) = DATEADD (d, -1, GETDATE())
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  What was yesterday? Creating a function that returns yesterday's date
-\end{itemize}
-
-\begin{verbatim}
-
--- Create GetYesterday()
-CREATE FUNCTION GetYesterday()
--- Specify return data type
-RETURNS date
-AS
-BEGIN
--- Calculate yesterday's date value
-RETURN(SELECT DATEADD(day, -1, GETDATE()))
-END 
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  1 input/output
-\item
-  Create a function named SumRideHrsSingleDay() which returns the total ride time in hours for the \citet{DateParm} parameter passed.
-\end{itemize}
-
-\begin{verbatim}
--- Create SumRideHrsSingleDay
-CREATE FUNCTION SumRideHrsSingleDay (@DateParm date)
--- Specify return data type
-RETURNS numeric
-AS
--- Begin
-BEGIN
-RETURN
--- Add the difference between StartDate and EndDate
-(SELECT SUM(DATEDIFF(second, StartDate, EndDate))/3600
-FROM CapitalBikeShare
- -- Only include transactions where StartDate = @DateParm
-WHERE CAST(StartDate AS date) = @DateParm)
--- End
-END
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  Multiple inputs/outputs
-\item
-  Create a function that accepts both StartDate and EndDate then returns the total ride hours for all transactions that occur within the parameter values.
-\end{itemize}
-
-\begin{verbatim}
--- Create the function
-CREATE FUNCTION SumRideHrsDateRange (@StartDateParm datetime, @EndDateParm datetime)
--- Specify return data type
-RETURNS numeric
-AS
-BEGIN
-RETURN
--- Sum the difference between StartDate and EndDate
-(SELECT SUM(DATEDIFF(second, StartDate, EndDate))/3600
-FROM CapitalBikeShare
--- Include only the relevant transactions
-WHERE StartDate > @StartDateParm and StartDate <@EndDateParm)
-END
-\end{verbatim}
-
-User defined functions: inline (faster) and multi-statement value functions (slower)
-- Inline value function:
-
-\begin{verbatim}
-
--- Create the function
-CREATE FUNCTION SumStationStats(@StartDate AS datetime)
--- Specify return data type
-RETURNS TABLE
-AS
-RETURN
-SELECT
-	StartStation,
-    -- Use COUNT() to select RideCount
-	COUNT(ID) as RideCount,
-    -- Use SUM() to calculate TotalDuration
-    SUM(DURATION) as TotalDuration
-FROM CapitalBikeShare
-WHERE CAST(StartDate as Date) = @StartDate
--- Group by StartStation
-GROUP BY StartStation;
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  Multi statement value function
-\end{itemize}
-
-\begin{verbatim}
-
--- Create the function
-CREATE FUNCTION CountTripAvgDuration (@Month CHAR(2), @Year CHAR(4))
--- Specify return variable
-RETURNS @DailyTripStats TABLE(
-	TripDate	date,
-	TripCount	int,
-	AvgDuration	numeric)
-AS
-BEGIN
--- Insert query results into @DailyTripStats
-INSERT @DailyTripStats
-SELECT
-    -- Cast StartDate as a date
-	CAST(StartDate AS date),
-    COUNT(ID),
-    AVG(Duration)
-FROM CapitalBikeShare
-WHERE
-	DATEPART(month, StartDate) = @Month AND
-    DATEPART(year, StartDate) = @Year
--- Group by StartDate as a date
-GROUP BY CAST(StartDate AS date)
--- Return
-RETURN
-END
-\end{verbatim}
-
-User defined functions in action: i.e.~execute functions
-- can use SELECT to execute scalar functions
-
-\begin{verbatim}
-
--- Create @BeginDate
-DECLARE @BeginDate AS date = '3/1/2018'
--- Create @EndDate
-DECLARE @EndDate AS date = '3/10/2018' 
-SELECT
-  -- Select @BeginDate
-  @BeginDate AS BeginDate,
-  -- Select @EndDate
-  @EndDate AS EndDate,
-  -- Execute SumRideHrsDateRange()
-  dbo.SumRideHrsDateRange(@BeginDate, @EndDate) AS TotalRideHrs
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  anotehr example:
-\end{itemize}
-
-\begin{verbatim}
--- Create @RideHrs
-DECLARE @RideHrs AS numeric
--- Execute SumRideHrsSingleDay()
-EXEC @RideHrs = dbo.SumRideHrsSingleDay @DateParm = '3/5/2018' 
-SELECT 
-  'Total Ride Hours for 3/5/2018:', 
-  @RideHrs
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  Execute TVF into variable:
-\end{itemize}
-
-\begin{verbatim}
-
--- Create @StationStats
-DECLARE @StationStats TABLE(
-	StartStation nvarchar(100), 
-	RideCount int, 
-	TotalDuration numeric)
--- Populate @StationStats with the results of the function
-INSERT INTO @StationStats
-SELECT TOP 10 *
--- Execute SumStationStats with 3/15/2018
-FROM dbo.SumStationStats ('3/15/2018') 
-ORDER BY RideCount DESC
--- Select all the records from @StationStats
-SELECT * 
-FROM @StationStats
-\end{verbatim}
-
-\hypertarget{final-words}{%
-\chapter{Final Words}\label{final-words}}
+Write batrips\_dates to file using ``squash'' format:
+- fwrite(batrips\_dates, ``squash.txt'', dateTimeAs = ``squash'')
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
