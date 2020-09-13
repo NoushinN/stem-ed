@@ -1,228 +1,301 @@
-# Planning experiments
-dependent variables = outcome; and independent variables = explanatory variables
+# Tests for experiments
 
-experiment components
-randomization, replication, blocking
+Prior to performing experiments, we need to set the dependent variables (outcome), and independent variables (explanatory variables).
 
-load dependencies
+Other experimental components to consider include randomization, replication, blocking
+
+```{r load libraries ggplot broom, message= FALSE}
+# load dependencies
 library(ggplot2) 
+library(broom)
+library(tidyverse)
+library(pwr)
+library(haven)
+library(simputation)
+library(sampling)
+library(agricolae)
+library(naniar)
+```
 
 
+load data: Dataset is on the Effect of Vitamin C on Tooth Growth in Guinea Pigs:
+```{r load data, message= FALSE}
+data(ToothGrowth) 
 
-load data
-data(ToothGrowth) Dataset - The Effect of Vitamin C on Tooth Growth in Guinea Pigs
+ToothGrowth %>%
+  head(2)
+```
 
-Perform a two-sided t-test
+Perform a two-sided t-test:
+```{r perform t-test on one variable, message= FALSE}
+
 t.test(x = ToothGrowth$len, alternative = "two.sided", mu = 18)
+```
 
 Perform a t-test
+```{r perform t-test on two variables, message= FALSE}
+
 ToothGrowth_ttest <- t.test(len ~ supp, data = ToothGrowth)
+ToothGrowth_ttest
+```
 
-Load broom
-library(broom)
 
-Tidy ToothGrowth_ttest
+Tidy ToothGrowth_ttest:
+```{r tidy, message= FALSE}
 tidy(ToothGrowth_ttest)
+```
 
-Load dplyr
-library(dplyr)
 
-Replication
+Replication:
 Count number of observations for each combination of supp and dose
+```{r tidy, message= FALSE}
+
 ToothGrowth %>% 
-  count(supp, dose)
+  count(supp, dose) 
+```
 
-
-Blocking
+Blocking:
 Create a boxplot with geom_boxplot()
 aov() creates a linear regression model by calling lm() and examining results with anova() all in one function call.
+
+```{r Visualize, message= FALSE}
+
 ggplot(ToothGrowth, aes(x = dose, y = len)) + 
   geom_boxplot()
+```
 
-Create ToothGrowth_aov
+
+Create ToothGrowth_aov and 
+Examine ToothGrowth_aov with summary():
+
+```{r aov, message= FALSE}
+
 ToothGrowth_aov <- aov(len ~ dose + supp, data = ToothGrowth)
-
-Examine ToothGrowth_aov with summary()
 summary(ToothGrowth_aov)
+```
 
 
+Hypothesis Testing (null and alternative) with `pwr` package
+one sided and two sided tests: 
+- type ?t.test to find out more
+```{r pwr less, message= FALSE}
 
-Hypothesis Testing (null and alternative)
-library(pwr)
-
-one sided and two sided tests:
-Less than
-?t.test
+#Less than
 t.test(x = ToothGrowth$len,
        alternative = "less",
        mu = 18)
+```
 
+```{r pwr greater, message= FALSE}
 
-Greater than
+# Greater than
 t.test(x = ToothGrowth$len,
        alternative = "greater",
        mu = 18)
+```
+
 
 It turns out the mean of len is actually very close to 18, so neither of these tests tells us much about the mean of tooth length.
 ?pwr.t.test()
 
-Calculate sample size
+Calculate sample size:
+
+```{r pwr sample size, message= FALSE}
+
 pwr.t.test(n = NULL,
-           d = 0.25, 
+           d = 0.25,  # small effect size of 0.25
            sig.level = 0.05, 
            type = "one.sample", 
            alternative = "greater", 
            power = 0.8)
+```
 
-Calculate power
+
+Calculate power:
+
+```{r pwr power, message= FALSE}
+
 pwr.t.test(n = 100,
            d = 0.35,
            sig.level = 0.1,
            type = "two.sample",
            alternative = "two.sided",
            power = NULL)
+```
 
-power for multiple groups
+power for multiple groups:
+
+```{r pwr power for multiple groups k, message= FALSE}
+
 pwr.anova.test(k = 3,
                n = 20,
-               f = 0.2, effect size
+               f = 0.2, #effect size
                sig.level = 0.05,
                power = NULL)
-
+```
 
 
 Anova tests (for multiple groups) can be done in two ways
 
+Basic Experiments for exploratory data analysis including A/B testing
 
+get data:
 
+```{r get data txhousing, message= FALSE}
 
-
-Basic Experiments
-Exploratory data analysis including A/B testing
-
-get data
 data(txhousing)
 
-remove NAs
+txhousing %>%
+  head(2)
+```
+
+
+remove NAs:
+```{r omit NA, message= FALSE}
 tx_housing <- na.omit(txhousing)
 
-Examine the variables with glimpse()
+# Examine the variables with glimpse()
 glimpse(tx_housing)
+```
 
-Find median and means with summarize()
-tx_housing %>% summarize(median(volume), mean(sales), mean(inventory))
+Find median and means with summarize():
 
+```{r find med/mean, message= FALSE}
+tx_housing %>% 
+  summarize(median(volume), mean(sales), mean(inventory))
 
-Use ggplot2 to build a bar chart of purpose
+```
+
+Use ggplot2 to build a bar chart of purpose:
+
+```{r visualize txhousing, message= FALSE}
 ggplot(data=tx_housing, aes(x = city)) + 
   geom_bar() +
   coord_flip()
-
+```
 Use recode() to create the new purpose_recode variable
 
+```{r recode, message= FALSE}
 tx_housing$city_recode <- tx_housing$city %>%
   recode("Bay Area" = "California",
          "El Paso" = "California")
+```
 
-Build a linear regression model, purpose_recode_model
+Build a linear regression model, purpose_recode_model:
+```{r recode lm, message= FALSE}
 purpose_recode_model <- lm(sales ~ city_recode, data = tx_housing)
 
-Examine results of purpose_recode_model
+# Examine results of purpose_recode_model
 summary(purpose_recode_model)
+```
 
-Get anova results and save as purpose_recode_anova
+
+
+Get anova results and save as purpose_recode_anova:
+
+```{r recode anova, message= FALSE}
+
 purpose_recode_anova <- anova(purpose_recode_model)
 
-Print purpose_recode_anova
+# Print purpose_recode_anova
 purpose_recode_anova
 
-Examine class of purpose_recode_anova
+```
+
+
+Examine class of purpose_recode_anova:
+```{r recode class, message= FALSE}
+
 class(purpose_recode_anova)
+```
 
-Use aov() to build purpose_aov
+Use aov() to build purpose_aov:
+```{r recode aov, message= FALSE}
+
+# Analysis of variance
 purpose_aov <- aov(sales ~ city_recode, data = tx_housing)
+```
 
-Conduct Tukey's HSD test to create tukey_output
+Conduct Tukey's HSD test to create tukey_output:
+```{r recode tukey test, message= FALSE}
+
 tukey_output <- TukeyHSD(purpose_aov, "city_recode", conf.level = 0.95)
 
-Tidy tukey_output to make sense of the results
+# Tidy tukey_output to make sense of the results
 tidy(tukey_output)
+```
 
 
-
-Multiple factor experiments
-
+Multiple factor experiments:
 Use aov() to build purpose_emp_aov
+```{r manova, message= FALSE}
+
 purpose_emp_aov <- aov(sales ~ city_recode + volume , data = tx_housing)
 
-Print purpose_emp_aov to the console
-purpose_emp_aov
+# Print purpose_emp_aov to the console
+# purpose_emp_aov
 
-Call summary() to see the p-values
+#Call summary() to see the p-values:
 summary(purpose_emp_aov)
+```
 
 
 
 Model validation
 Pre-modeling exploratory data analysis
-
 Examine the summary of sales
+
+```{r exploratory, message= FALSE}
 summary(tx_housing$sales)
+```
 
+Examine sales by volume:
 
-Examine sales by volume
+```{r examine sales, message= FALSE}
 tx_housing %>% 
   group_by(volume) %>% 
   summarize(mean = mean(sales), var = var(sales), median = median(sales))
+```
 
 Make a boxplot of sales by volume
+
+```{r box plot of sales a/b test, message= FALSE}
 ggplot(tx_housing, aes(x = volume, y = sales)) + 
   geom_boxplot()
+```
 
 Use aov() to create volume_aov plus call summary() to print results
+```{r aov and summary, message= FALSE}
 volume_aov <- aov(volume ~ sales, data = tx_housing)
 summary(volume_aov)
+```
 
 Post-modeling validation plots + variance
 For a 2x2 grid of plots:
+
+```{r qq plots, message= FALSE}
 par(mfrow = c(2, 2))
 
-Plot grade_aov
+# Plot grade_aov
 plot(volume_aov)
+```
 
 Bartlett's test for homogeneity of variance
-We can test for homogeneity of variances using bartlett.test(), which takes a formula and a dataset as inputs
-bartlett.test(volume ~ sales, data = tx_housing)
+We can test for homogeneity of variances using bartlett.test(), which takes a formula and a dataset as inputs:
 
-Conduct the Kruskal-Wallis rank sum test
+```{r Bartlett test, message= FALSE}
+bartlett.test(volume ~ sales, data = tx_housing)
+```
+
+Conduct the Kruskal-Wallis rank sum test:
 kruskal.test() to examine whether volume varies by sales when a non-parametric model is employed
+
+```{r Kruskal-Wallis, message= FALSE}
 kruskal.test(volume ~ sales,
              data = tx_housing)
+```
 
 The low p-value indicates that based on this test, we can be confident in our result, which we found across this experiment, that volume varies by sales
-
-
-
-Sample size for A/B test
-Load the pwr package
-library(pwr)
-
-Use the correct function from pwr to find the sample size
-pwr.t.test(n = NULL, 
-           d = 0.2, small effect size of 0.2
-           sig.level = 0.05,
-           power = 0.8,
-           alternative = "two.sided")
-
-
-
-Plot the A/B test results
-ggplot(tx_housing, aes(x = sales, y = volume)) + 
-  geom_boxplot()
-
-Conduct a two-sided t-test
-t.test(sales ~ volume, data = tx_housing)
-
 
 
 Sampling [randomized experiments]
@@ -230,107 +303,154 @@ Sampling [randomized experiments]
 load data from NHANES dataset
 https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2015
 
-Load haven
-library(haven)
+Import the three datasets using read_xpt():
 
-Import the three datasets using read_xpt()
+```{r import data from urls, message= FALSE}
 nhanes_demo <- read_xpt(url("https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.XPT"))
 nhanes_bodymeasures <- read_xpt(url("https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BMX_I.XPT"))
 nhanes_medical <- read_xpt(url("https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/MCQ_I.XPT"))
+```
 
-Merge the 3 datasets you just created to create nhanes_combined
+Merge the 3 datasets you just created to create nhanes_combined:
+
+```{r merge data, message= FALSE}
+
 nhanes_combined <- list(nhanes_demo, nhanes_medical, nhanes_bodymeasures) %>%
   Reduce(function(df1, df2) inner_join(df1, df2, by = "SEQN"), .)
+```
 
+Fill in the dplyr code:
+```{r summarize merged data, message= FALSE}
 
-Fill in the dplyr code
 nhanes_combined %>% 
   group_by(MCQ035) %>% 
   summarize(mean = mean(INDHHIN2, na.rm = TRUE))
+```
 
-Fill in the ggplot2 code
+Fill in the ggplot2 code:
+
+```{r  plot data, message= FALSE}
 nhanes_combined %>% 
   ggplot(aes(as.factor(MCQ035), INDHHIN2)) +
   geom_boxplot() +
   labs(x = "Disease type",
        y = "Income")
-
+```
 
 NHANES Data Cleaning
-Filter to keep only those 16+
+Filter to keep only those greater than 16:
+```{r  filter age, message= FALSE}
 nhanes_filter <- nhanes_combined %>% filter(RIDAGEYR > 16)
+```
 
-Load simputation & impute bmxwt by riagendr
-library(simputation)
+Load simputation & impute bmxwt by riagendr: library(simputation)
+```{r use simputation, message= FALSE}
+
 nhanes_final <- impute_median(nhanes_filter, INDHHIN2 ~ RIDAGEYR)
+```
 
-Recode mcq365d with recode() & examine with count()
+Recode mcq365d with recode() & examine with count():
+```{r  recode mcq365d, message= FALSE}
+
 nhanes_final$mcq365d <- recode(nhanes_final$MCQ035, 
                                `1` = 1,
                                `2` = 2,
                                `9` = 2)
 nhanes_final %>% count(MCQ035)
+```
 
+Resampling NHANES data:
+Use sample_n() to create nhanes_srs:
+```{r  resample, message= FALSE}
 
-Resampling NHANES data
-Use sample_n() to create nhanes_srs
 nhanes_srs <- nhanes_final %>% sample_n(2500)
+```
 
 Create nhanes_stratified with group_by() and sample_n()
-nhanes_stratified <- nhanes_final %>% group_by(RIDAGEYR) %>% sample_n(2000, replace = TRUE)
+```{r  sample_n, message= FALSE}
 
+nhanes_stratified <- nhanes_final %>% group_by(RIDAGEYR) %>% sample_n(2000, replace = TRUE)
 
 nhanes_stratified %>% 
   count(RIDAGEYR)
+```
 
-Load sampling package and create nhanes_cluster with cluster()
-library(sampling)
+
+Load sampling package and create nhanes_cluster with cluster(): library(sampling)
+
+```{r  sample_n, message= FALSE}
+
 nhanes_cluster <- cluster(nhanes_final, c("INDHHIN2"), 6, method = "srswor")
 
+```
 
-
-Randomized complete block designs (RCBD)
+Randomized complete block designs (RCBD): use library(agricolae)
 block = experimental groups are blocked to be similar (e.g. by sex)
 complete = each treatment is used the same of times in every block
 randomized = the treatment is assigned randomly inside each block
 
-library(agricolae)
+Create designs using ls():
+```{r  agricolae library, message= FALSE}
 
-Create designs using ls()
 designs <- ls("package:agricolae", pattern = "design")
 print(designs)
+```
 
-Use str() to view design.rcbd's criteria
+Use str() to view design.rcbd's criteria:
+```{r str to view design, message= FALSE}
+
 str(design.rcbd)
+```
 
 Build treats and rep
+
+```{r build letters, message= FALSE}
+
 treats <- LETTERS[1:5]
 blocks <- 4
+blocks
+```
 
-NHANES RCBD
+
+NHANES RCBD:
 Build my_design_rcbd and view the sketch
+```{r str to view design, message= FALSE}
+
 my_design_rcbd <- design.rcbd(treats, r = blocks, seed = 42)
 my_design_rcbd$sketch
+```
 
-Use aov() to create nhanes_rcbd
+Use aov() to create nhanes_rcbd:
+```{r str to view design, message= FALSE}
+
 nhanes_rcbd <- aov(INDHHIN2 ~ MCQ035 + RIDAGEYR, data = nhanes_final)
+```
+Check results of nhanes_rcbd with summary():
+```{r str to view design, message= FALSE}
 
-Check results of nhanes_rcbd with summary()
 summary(nhanes_rcbd)
+```
+Print mean weights by mcq365d and riagendr:
+```{r str to view design, message= FALSE}
 
-Print mean weights by mcq365d and riagendr
 nhanes_final %>% 
   group_by(MCQ035, RIDAGEYR) %>% 
   summarize(mean_ind = mean(INDHHIN2, na.rm = TRUE))
+```
 
 RCBD Model Validation
 Set up the 2x2 plotting grid and plot nhanes_rcbd
+```{r str to view design, message= FALSE}
+
 par(mfrow = c(2, 2))
 plot(nhanes_rcbd)
+```
 
-Run the code to view the interaction plots
+Run the code to view the interaction plots:
+```{r str to view design, message= FALSE}
+
 with(nhanes_final, interaction.plot(MCQ035, RIDAGEYR, INDHHIN2))
-
+```
 
 
 Balanced incomplete block design (BIBD)
@@ -343,41 +463,66 @@ str(design.bib)
 Columns are a blocking factor
 
 create my_design_bibd_1
+```{r str to view design, message= FALSE}
+
 my_design_bibd_1 <- design.bib(LETTERS[1:3], k = 4, seed = 42)
+```
 
 create my_design_bibd_2
-my_design_bibd_2 <- design.bib(LETTERS[1:8], k = 3, seed = 42)
+```{r str to view design, message= FALSE}
 
-create my_design_bibd_3
+my_design_bibd_2 <- design.bib(LETTERS[1:8], k = 3, seed = 42)
+```
+
+
+
+create my_design_bibd_3:
+  
+```{r str to view design, message= FALSE}
+
 my_design_bibd_3 <- design.bib(LETTERS[1:4], k = 4, seed = 42)
 my_design_bibd_3$sketch
+```
 
-Calculate lambda
+Calculate lambda:
+```{r calculate lambda, message= FALSE}
+
 lambda <- r(k - 1) / (t - 1)
 t = 4
 k = 3
 r = 3
 lambda(4, 3, 3)
+```
 
+Build the data.frame:
+```{r build data, message= FALSE}
 
-Build the data.frame
 creatinine <- c(1.98, 1.97, 2.35, 2.09, 1.87, 1.95, 2.08, 2.01, 1.84, 2.06, 1.97, 2.22)
 food <- as.factor(c("A", "C", "D", "A", "B", "C", "B", "C", "D", "A", "B", "D"))
 color <- as.factor(rep(c("Black", "White", "Orange", "Spotted"), each = 3))
 cat_experiment <- as.data.frame(cbind(creatinine, food, color))
+```
 
-Create cat_model and examine with summary()
+Create cat_model and examine with summary():
+
+```{r create model, message= FALSE}
+
 cat_model <- aov(creatinine ~ food + color, data = cat_experiment)
 summary(cat_model)
+```
 
+Calculate lambda:
 
-Calculate lambda
+```{r calculate lambda, message= FALSE}
 lambda(3, 2, 2)
+```
 
-Create weightlift_model & examine results
+Create weightlift_model & examine results:
+```{r create model /results, message= FALSE}
+
 weightlift_model <- aov(MCQ035 ~ INDHHIN2 + RIDAGEYR, data = nhanes_final)
 summary(weightlift_model)
-
+```
 
 
 Latin Squares Design
@@ -387,18 +532,19 @@ Analyze like RCBD
 
 sat_scores <- read.csv(url("https://data.ct.gov/api/views/kbxi-4ia7/rows.csv?accessType=DOWNLOAD"))
 
-Mean, var, and median of Math score by Borough
+Mean, var, and median of Math score by Borough:
+
+```{r calculate lambda, message= FALSE}
+
 sat_scores %>%
   group_by(District, Test.takers..2012) %>% 
   summarize(mean = mean(Test.takers..2012, na.rm = TRUE),
             var = var(Test.takers..2012, na.rm = TRUE),
             median = median(Test.takers..2012, na.rm = TRUE))
-
-Load naniar
-library(naniar)
+```
 
 Dealing with Missing Test Scores
-Examine missingness with miss_var_summary()
+Examine missingness with miss_var_summary(): using library(naniar)
 sat_scores %>% miss_var_summary()
 sat_scores <- na.omit(sat_scores)
 
@@ -425,23 +571,28 @@ sat_scores_2 %>%
 
 
 Drawing Latin Squares with agricolae
-Load agricolae
-library(agricolae)
 
 Design a LS with 5 treatments A:E then look at the sketch
+```{r ls with 5 treatments, message= FALSE}
 my_design_lsd <- design.lsd(trt = LETTERS[1:5], seed = 42)
 my_design_lsd$sketch
+```
 
-Build nyc_scores_ls_lm
+Build nyc_scores_ls_lm:
+
+```{r ls_lm, message= FALSE}
 sat_scores_ls_lm <- lm(Test.takers..2012 ~ Test.takers..2013 + District,
                        data = sat_scores)
 
 Tidy the results with broom
 tidy(sat_scores_ls_lm)
+```
 
-Examine the results with anova
+Examine the results with anova:
+
+```{r anova for scores, message= FALSE}
 anova(sat_scores_ls_lm)
-
+```
 
 
 Graeco-Latin Squares
@@ -450,35 +601,46 @@ Key assumption: the treatment and two blocking factors do NOT interact
 Analyze like RCBD
 
 Drawing Graeco-Latin Squares with agricolae
+
 Create trt1 and trt2
 trt1 <- LETTERS[1:5]
 trt2 <- 1:5
 
 Create my_graeco_design
+```{r graeco design, message= FALSE}
 my_graeco_design <- design.graeco(trt1, trt2, seed = 42)
+```
 
-Examine the parameters and sketch
+Examine the parameters and sketch:
+
+```{r parameters/sketch, message= FALSE}
 my_graeco_design$parameters
 my_graeco_design$sketch
+```
 
-
-Create a boxplot of scores by District, with a title and x/y axis labels
+Create a boxplot of scores by District, with a title and x/y axis labels:
+```{r scores and titles, message= FALSE}
 ggplot(sat_scores, aes(District, Test.takers..2012)) +
   geom_boxplot() + 
   labs(title = "Average SAT Math Scores by District in 2012",
        x = "District",
        y = "Test Takers in 2012")
+```
 
-Build sat_scores_gls_lm
+Build sat_scores_gls_lm:
+
+```{r gls_lm, message= FALSE}
 sat_scores_gls_lm <- lm(Test.takers..2012 ~ Test.takers..2013 + District + School,
                         data = sat_scores)
 
-Tidy the results with broom
+# Tidy the results with broom
 tidy(sat_scores_gls_lm)
+```
 
 Examine the results with anova
+```{r anova examination, message= FALSE}
 anova(sat_scores_gls_lm)
-
+```
 
 
 Factorial Experiment Design
@@ -487,25 +649,31 @@ All of the possible interactions between factors are considered as effect on out
 e.g. high/low water on high/low light
 
 
-Load ggplot2
-library(ggplot2)
+Build the boxplot for the district vs. test taker score:
 
-Build the boxplot for the district vs. test taker score
+```{r boxplot with scores, message= FALSE}
 ggplot(sat_scores,
        aes(District, Test.takers..2012)) + 
   geom_boxplot()
+```
 
-Create sat_scores_factorial and examine the results
+Create sat_scores_factorial and examine the results:
+```{r aov and tidy, message= FALSE}
 sat_scores_factorial <- aov(Test.takers..2012 ~ Test.takers..2013 * District * School, data = sat_scores)
 
 tidy(sat_scores_factorial)
-
+```
 
 Evaluating the sat_scores Factorial Model
 
-Use shapiro.test() to test the outcome
+Use shapiro.test() to test the outcome:
+```{r shapiro test, message= FALSE}
 shapiro.test(sat_scores$Test.takers..2013)
+```
 
-Plot nyc_scores_factorial to examine residuals
+Plot nyc_scores_factorial to examine residuals:
+
+```{r plot residuals, message= FALSE}
 par(mfrow = c(2,2))
 plot(sat_scores_factorial)
+```
