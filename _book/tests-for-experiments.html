@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Tests for experiments | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Tests for experiments | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Tests for experiments | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-13" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="demo-for-data-table.html"/>
+<link rel="next" href="demo-for-ab-testing.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>3</b> R for Reporting</a><ul>
+<li class="chapter" data-level="3.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>3.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>3.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="3.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>3.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>3.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>4</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="4.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>4.1</b> Contents</a></li>
+<li class="chapter" data-level="4.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>4.2</b> R Syntax</a></li>
+<li class="chapter" data-level="4.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>4.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="demo-for-dplyr.html"><a href="demo-for-dplyr.html"><i class="fa fa-check"></i><b>5</b> Demo for dplyr</a></li>
+<li class="chapter" data-level="6" data-path="demo-for-data-table.html"><a href="demo-for-data-table.html"><i class="fa fa-check"></i><b>6</b> Demo for Data.table</a></li>
+<li class="chapter" data-level="7" data-path="tests-for-experiments.html"><a href="tests-for-experiments.html"><i class="fa fa-check"></i><b>7</b> Tests for experiments</a></li>
+<li class="chapter" data-level="8" data-path="demo-for-ab-testing.html"><a href="demo-for-ab-testing.html"><i class="fa fa-check"></i><b>8</b> Demo for A/B testing</a></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="8.1" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>8.1</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>8.1.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="8.1.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>8.1.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="8.1.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>8.1.3</b> Operational Basics</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="resources.html"><a href="resources.html#getting-your-data-into-r"><i class="fa fa-check"></i><b>8.2</b> Getting Your Data into R</a></li>
+<li class="chapter" data-level="8.3" data-path="resources.html"><a href="resources.html#getting-your-data-out-of-r"><i class="fa fa-check"></i><b>8.3</b> Getting Your Data out of R</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="tests-for-experiments" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Tests for experiments</h1>
+<p>Prior to performing experiments, we need to set the dependent variables (outcome), and independent variables (explanatory variables).</p>
+<p>Other experimental components to consider include randomization, replication, blocking</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># load dependencies</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(ggplot2) </a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(pwr)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">library</span>(haven)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">library</span>(simputation)</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">library</span>(sampling)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">library</span>(agricolae)</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">library</span>(naniar)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">library</span>(DescTools)</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">library</span>(mice)</a></code></pre></div>
+<p>load data: Dataset is on the Effect of Vitamin C on Tooth Growth in Guinea Pigs:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(ToothGrowth) </a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">ToothGrowth <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>(<span class="dv">2</span>)</a></code></pre></div>
+<pre><code>##    len supp dose
+## 1  4.2   VC  0.5
+## 2 11.5   VC  0.5</code></pre>
+<p>Perform a two-sided t-test:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">t.test</span>(<span class="dt">x =</span> ToothGrowth<span class="op">$</span>len, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">mu =</span> <span class="dv">18</span>)</a></code></pre></div>
+<pre><code>## 
+## 	One Sample t-test
+## 
+## data:  ToothGrowth$len
+## t = 0.82361, df = 59, p-value = 0.4135
+## alternative hypothesis: true mean is not equal to 18
+## 95 percent confidence interval:
+##  16.83731 20.78936
+## sample estimates:
+## mean of x 
+##  18.81333</code></pre>
+<p>Perform a t-test</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">ToothGrowth_ttest &lt;-<span class="st"> </span><span class="kw">t.test</span>(len <span class="op">~</span><span class="st"> </span>supp, <span class="dt">data =</span> ToothGrowth)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">ToothGrowth_ttest</a></code></pre></div>
+<pre><code>## 
+## 	Welch Two Sample t-test
+## 
+## data:  len by supp
+## t = 1.9153, df = 55.309, p-value = 0.06063
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1710156  7.5710156
+## sample estimates:
+## mean in group OJ mean in group VC 
+##         20.66333         16.96333</code></pre>
+<p>Tidy ToothGrowth_ttest:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">tidy</span>(ToothGrowth_ttest)</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 10
+##   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
+##      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1     3.70      20.7      17.0      1.92  0.0606      55.3   -0.171      7.57
+## # … with 2 more variables: method &lt;chr&gt;, alternative &lt;chr&gt;</code></pre>
+<p>Replication:
+Count number of observations for each combination of supp and dose</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">ToothGrowth <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(supp, dose) </a></code></pre></div>
+<pre><code>##   supp dose  n
+## 1   OJ  0.5 10
+## 2   OJ  1.0 10
+## 3   OJ  2.0 10
+## 4   VC  0.5 10
+## 5   VC  1.0 10
+## 6   VC  2.0 10</code></pre>
+<p>Blocking:
+Create a boxplot with geom_boxplot()
+aov() creates a linear regression model by calling lm() and examining results with anova() all in one function call.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">ggplot</span>(ToothGrowth, <span class="kw">aes</span>(<span class="dt">x =</span> dose, <span class="dt">y =</span> len)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
+<pre><code>## Warning: Continuous x aesthetic -- did you forget aes(group=...)?</code></pre>
+<p><img src="code4stem_files/figure-html/Visualize-1.png" width="672" /></p>
+<p>Create ToothGrowth_aov and
+Examine ToothGrowth_aov with summary():</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">ToothGrowth_aov &lt;-<span class="st"> </span><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>dose <span class="op">+</span><span class="st"> </span>supp, <span class="dt">data =</span> ToothGrowth)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw">summary</span>(ToothGrowth_aov)</a></code></pre></div>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## dose         1 2224.3  2224.3  123.99 6.31e-16 ***
+## supp         1  205.3   205.3   11.45   0.0013 ** 
+## Residuals   57 1022.6    17.9                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Hypothesis Testing (null and alternative) with <code>pwr</code> package
+one sided and two sided tests:
+- type ?t.test to find out more</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">#Less than</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">t.test</span>(<span class="dt">x =</span> ToothGrowth<span class="op">$</span>len,</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">       <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>,</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">       <span class="dt">mu =</span> <span class="dv">18</span>)</a></code></pre></div>
+<pre><code>## 
+## 	One Sample t-test
+## 
+## data:  ToothGrowth$len
+## t = 0.82361, df = 59, p-value = 0.7933
+## alternative hypothesis: true mean is less than 18
+## 95 percent confidence interval:
+##      -Inf 20.46358
+## sample estimates:
+## mean of x 
+##  18.81333</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># Greater than</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw">t.test</span>(<span class="dt">x =</span> ToothGrowth<span class="op">$</span>len,</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">       <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>,</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">       <span class="dt">mu =</span> <span class="dv">18</span>)</a></code></pre></div>
+<pre><code>## 
+## 	One Sample t-test
+## 
+## data:  ToothGrowth$len
+## t = 0.82361, df = 59, p-value = 0.2067
+## alternative hypothesis: true mean is greater than 18
+## 95 percent confidence interval:
+##  17.16309      Inf
+## sample estimates:
+## mean of x 
+##  18.81333</code></pre>
+<p>It turns out the mean of len is actually very close to 18, so neither of these tests tells us much about the mean of tooth length.
+?pwr.t.test()</p>
+<p>Calculate sample size:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">pwr.t.test</span>(<span class="dt">n =</span> <span class="ot">NULL</span>,</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">           <span class="dt">d =</span> <span class="fl">0.25</span>,  <span class="co"># small effect size of 0.25</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">           <span class="dt">sig.level =</span> <span class="fl">0.05</span>, </a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">           <span class="dt">type =</span> <span class="st">&quot;one.sample&quot;</span>, </a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">           <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>, </a>
+<a class="sourceLine" id="cb20-6" data-line-number="6">           <span class="dt">power =</span> <span class="fl">0.8</span>)</a></code></pre></div>
+<pre><code>## 
+##      One-sample t test power calculation 
+## 
+##               n = 100.2877
+##               d = 0.25
+##       sig.level = 0.05
+##           power = 0.8
+##     alternative = greater</code></pre>
+<p>Calculate power:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">pwr.t.test</span>(<span class="dt">n =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">           <span class="dt">d =</span> <span class="fl">0.35</span>,</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">           <span class="dt">sig.level =</span> <span class="fl">0.1</span>,</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">           <span class="dt">type =</span> <span class="st">&quot;two.sample&quot;</span>,</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">           <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>,</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">           <span class="dt">power =</span> <span class="ot">NULL</span>)</a></code></pre></div>
+<pre><code>## 
+##      Two-sample t test power calculation 
+## 
+##               n = 100
+##               d = 0.35
+##       sig.level = 0.1
+##           power = 0.7943532
+##     alternative = two.sided
+## 
+## NOTE: n is number in *each* group</code></pre>
+<p>power for multiple groups:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">pwr.anova.test</span>(<span class="dt">k =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">               <span class="dt">n =</span> <span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">               <span class="dt">f =</span> <span class="fl">0.2</span>, <span class="co">#effect size</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">               <span class="dt">sig.level =</span> <span class="fl">0.05</span>,</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">               <span class="dt">power =</span> <span class="ot">NULL</span>)</a></code></pre></div>
+<pre><code>## 
+##      Balanced one-way analysis of variance power calculation 
+## 
+##               k = 3
+##               n = 20
+##               f = 0.2
+##       sig.level = 0.05
+##           power = 0.2521043
+## 
+## NOTE: n is number in each group</code></pre>
+<p>Anova tests (for multiple groups) can be done in two ways</p>
+<p>Basic Experiments for exploratory data analysis including A/B testing</p>
+<p>get data:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">data</span>(txhousing)</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">txhousing <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>(<span class="dv">2</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 9
+##   city     year month sales  volume median listings inventory  date
+##   &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 Abilene  2000     1    72 5380000  71400      701       6.3 2000 
+## 2 Abilene  2000     2    98 6505000  58700      746       6.6 2000.</code></pre>
+<p>remove NAs:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">tx_housing &lt;-<span class="st"> </span><span class="kw">na.omit</span>(txhousing)</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="co"># Examine the variables with glimpse()</span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="kw">glimpse</span>(tx_housing)</a></code></pre></div>
+<pre><code>## Rows: 7,126
+## Columns: 9
+## $ city      &lt;chr&gt; &quot;Abilene&quot;, &quot;Abilene&quot;, &quot;Abilene&quot;, &quot;Abilene&quot;, &quot;Abilene&quot;, &quot;Abi…
+## $ year      &lt;int&gt; 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,…
+## $ month     &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7,…
+## $ sales     &lt;dbl&gt; 72, 98, 130, 98, 141, 156, 152, 131, 104, 101, 100, 92, 75,…
+## $ volume    &lt;dbl&gt; 5380000, 6505000, 9285000, 9730000, 10590000, 13910000, 126…
+## $ median    &lt;dbl&gt; 71400, 58700, 58100, 68600, 67300, 66900, 73500, 75000, 645…
+## $ listings  &lt;dbl&gt; 701, 746, 784, 785, 794, 780, 742, 765, 771, 764, 721, 658,…
+## $ inventory &lt;dbl&gt; 6.3, 6.6, 6.8, 6.9, 6.8, 6.6, 6.2, 6.4, 6.5, 6.6, 6.2, 5.7,…
+## $ date      &lt;dbl&gt; 2000.000, 2000.083, 2000.167, 2000.250, 2000.333, 2000.417,…</code></pre>
+<p>Find median and means with summarize():</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">tx_housing <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span><span class="kw">summarize</span>(<span class="kw">median</span>(volume), <span class="kw">mean</span>(sales), <span class="kw">mean</span>(inventory))</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##   `median(volume)` `mean(sales)` `mean(inventory)`
+##              &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;
+## 1        26240116.          603.              7.17</code></pre>
+<p>Use ggplot2 to build a bar chart of purpose:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data=</span>tx_housing, <span class="kw">aes</span>(<span class="dt">x =</span> city)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span><span class="kw">coord_flip</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20txhousing-1.png" width="672" />
+Use recode() to create the new purpose_recode variable</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">tx_housing<span class="op">$</span>city_recode &lt;-<span class="st"> </span>tx_housing<span class="op">$</span>city <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2"><span class="st">  </span><span class="kw">recode</span>(<span class="st">&quot;Bay Area&quot;</span> =<span class="st"> &quot;California&quot;</span>,</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">         <span class="st">&quot;El Paso&quot;</span> =<span class="st"> &quot;California&quot;</span>)</a></code></pre></div>
+<p>Build a linear regression model, purpose_recode_model:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">purpose_recode_model &lt;-<span class="st"> </span><span class="kw">lm</span>(sales <span class="op">~</span><span class="st"> </span>city_recode, <span class="dt">data =</span> tx_housing)</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="co"># Examine results of purpose_recode_model</span></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="kw">summary</span>(purpose_recode_model)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sales ~ city_recode, data = tx_housing)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2938.1   -40.2    -2.5    30.5  3353.9 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                       150.462     23.162   6.496 8.80e-11 ***
+## city_recodeAmarillo                87.680     32.936   2.662 0.007781 ** 
+## city_recodeArlington              272.425     32.756   8.317  &lt; 2e-16 ***
+## city_recodeAustin                1846.227     32.712  56.438  &lt; 2e-16 ***
+## city_recodeBeaumont                26.596     32.712   0.813 0.416221    
+## city_recodeBrazoria County        -62.400     36.194  -1.724 0.084743 .  
+## city_recodeBrownsville            -92.975     41.873  -2.220 0.026425 *  
+## city_recodeBryan-College Station   36.281     32.712   1.109 0.267428    
+## city_recodeCalifornia             338.886     28.706  11.805  &lt; 2e-16 ***
+## city_recodeCollin County          931.871     32.756  28.449  &lt; 2e-16 ***
+## city_recodeCorpus Christi         194.427     33.028   5.887 4.12e-09 ***
+## city_recodeDallas                4205.000     32.756 128.373  &lt; 2e-16 ***
+## city_recodeDenton County          476.242     32.756  14.539  &lt; 2e-16 ***
+## city_recodeFort Bend              669.758     32.756  20.447  &lt; 2e-16 ***
+## city_recodeFort Worth             622.441     32.756  19.002  &lt; 2e-16 ***
+## city_recodeGalveston              -65.862     34.666  -1.900 0.057484 .  
+## city_recodeGarland                 42.683     32.756   1.303 0.192600    
+## city_recodeHarlingen              -85.571     36.987  -2.314 0.020721 *  
+## city_recodeHouston               5440.672     32.756 166.096  &lt; 2e-16 ***
+## city_recodeIrving                 -30.478     32.756  -0.930 0.352161    
+## city_recodeKerrville             -106.291     43.005  -2.472 0.013475 *  
+## city_recodeKilleen-Fort Hood       64.930     33.892   1.916 0.055430 .  
+## city_recodeLaredo                 -61.776     41.192  -1.500 0.133732    
+## city_recodeLongview-Marshall       35.689     34.995   1.020 0.307840    
+## city_recodeLubbock                113.511     32.756   3.465 0.000533 ***
+## city_recodeLufkin                -103.349     40.871  -2.529 0.011471 *  
+## city_recodeMcAllen                  5.969     38.104   0.157 0.875530    
+## city_recodeMidland                 -4.081     38.559  -0.106 0.915706    
+## city_recodeMontgomery County      410.027     32.756  12.518  &lt; 2e-16 ***
+## city_recodeNacogdoches           -120.412     37.177  -3.239 0.001206 ** 
+## city_recodeNE Tarrant County      532.387     32.756  16.253  &lt; 2e-16 ***
+## city_recodeOdessa                 -59.912     42.235  -1.419 0.156075    
+## city_recodeParis                 -115.998     33.622  -3.450 0.000564 ***
+## city_recodePort Arthur            -83.849     32.982  -2.542 0.011034 *  
+## city_recodeSan Angelo             -37.368     33.570  -1.113 0.265688    
+## city_recodeSan Antonio           1574.038     32.845  47.923  &lt; 2e-16 ***
+## city_recodeSan Marcos            -128.040     39.563  -3.236 0.001216 ** 
+## city_recodeSherman-Denison        -46.134     32.756  -1.408 0.159050    
+## city_recodeSouth Padre Island    -121.366     46.324  -2.620 0.008814 ** 
+## city_recodeTemple-Belton          -19.992     34.477  -0.580 0.562030    
+## city_recodeTexarkana              -73.142     38.443  -1.903 0.057132 .  
+## city_recodeTyler                   97.971     32.712   2.995 0.002755 ** 
+## city_recodeVictoria               -80.922     32.800  -2.467 0.013645 *  
+## city_recodeWaco                    36.947     36.802   1.004 0.315437    
+## city_recodeWichita Falls          -13.232     32.712  -0.405 0.685850    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 315.9 on 7081 degrees of freedom
+## Multiple R-squared:  0.9269,	Adjusted R-squared:  0.9264 
+## F-statistic:  2040 on 44 and 7081 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Get anova results and save as purpose_recode_anova:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">purpose_recode_anova &lt;-<span class="st"> </span><span class="kw">anova</span>(purpose_recode_model)</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="co"># Print purpose_recode_anova</span></a>
+<a class="sourceLine" id="cb36-4" data-line-number="4">purpose_recode_anova</a></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: sales
+##               Df     Sum Sq   Mean Sq F value    Pr(&gt;F)    
+## city_recode   44 8955309044 203529751  2039.7 &lt; 2.2e-16 ***
+## Residuals   7081  706580734     99785                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Examine class of purpose_recode_anova:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">class</span>(purpose_recode_anova)</a></code></pre></div>
+<pre><code>## [1] &quot;anova&quot;      &quot;data.frame&quot;</code></pre>
+<p>Use aov() to build purpose_aov:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Analysis of variance</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">purpose_aov &lt;-<span class="st"> </span><span class="kw">aov</span>(sales <span class="op">~</span><span class="st"> </span>city_recode, <span class="dt">data =</span> tx_housing)</a></code></pre></div>
+<p>Conduct Tukey’s HSD test to create tukey_output:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">tukey_output &lt;-<span class="st"> </span><span class="kw">TukeyHSD</span>(purpose_aov, <span class="st">&quot;city_recode&quot;</span>, <span class="dt">conf.level =</span> <span class="fl">0.95</span>)</a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="co"># Tidy tukey_output to make sense of the results</span></a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="kw">tidy</span>(tukey_output)</a></code></pre></div>
+<pre><code>## # A tibble: 990 x 7
+##    term     contrast          null.value estimate conf.low conf.high adj.p.value
+##    &lt;chr&gt;    &lt;chr&gt;                  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+##  1 city_re… Amarillo-Abilene           0     87.7    -42.3     218.     8.41e- 1
+##  2 city_re… Arlington-Abilene          0    272.     143.      402.     8.51e-12
+##  3 city_re… Austin-Abilene             0   1846.    1717.     1975.     7.92e-12
+##  4 city_re… Beaumont-Abilene           0     26.6   -102.      156.     1.00e+ 0
+##  5 city_re… Brazoria County-…          0    -62.4   -205.       80.4    1.00e+ 0
+##  6 city_re… Brownsville-Abil…          0    -93.0   -258.       72.2    9.86e- 1
+##  7 city_re… Bryan-College St…          0     36.3    -92.8     165.     1.00e+ 0
+##  8 city_re… California-Abile…          0    339.     226.      452.     7.92e-12
+##  9 city_re… Collin County-Ab…          0    932.     803.     1061.     7.92e-12
+## 10 city_re… Corpus Christi-A…          0    194.      64.1     325.     4.00e- 6
+## # … with 980 more rows</code></pre>
+<p>Multiple factor experiments:
+Use aov() to build purpose_emp_aov</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">purpose_emp_aov &lt;-<span class="st"> </span><span class="kw">aov</span>(sales <span class="op">~</span><span class="st"> </span>city_recode <span class="op">+</span><span class="st"> </span>volume , <span class="dt">data =</span> tx_housing)</a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="co"># Print purpose_emp_aov to the console</span></a>
+<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="co"># purpose_emp_aov</span></a>
+<a class="sourceLine" id="cb43-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb43-6" data-line-number="6"><span class="co">#Call summary() to see the p-values:</span></a>
+<a class="sourceLine" id="cb43-7" data-line-number="7"><span class="kw">summary</span>(purpose_emp_aov)</a></code></pre></div>
+<pre><code>##               Df    Sum Sq   Mean Sq F value Pr(&gt;F)    
+## city_recode   44 8.955e+09 203529751   12992 &lt;2e-16 ***
+## volume         1 5.957e+08 595663462   38022 &lt;2e-16 ***
+## Residuals   7080 1.109e+08     15666                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Model validation
+Pre-modeling exploratory data analysis
+Examine the summary of sales</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">summary</span>(tx_housing<span class="op">$</span>sales)</a></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##       6      95     187     603     527    8945</code></pre>
+<p>Examine sales by volume:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">tx_housing <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb47-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(volume) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb47-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(sales), <span class="dt">var =</span> <span class="kw">var</span>(sales), <span class="dt">median =</span> <span class="kw">median</span>(sales))</a></code></pre></div>
+<pre><code>## # A tibble: 6,855 x 4
+##     volume  mean   var median
+##      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1  835000    14    NA     14
+##  2 1018825    14    NA     14
+##  3 1110000     9    NA      9
+##  4 1156999     6    NA      6
+##  5 1165000    18    NA     18
+##  6 1215000    11    NA     11
+##  7 1260000    23    NA     23
+##  8 1305000    16    NA     16
+##  9 1419500    25    NA     25
+## 10 1434950    22    NA     22
+## # … with 6,845 more rows</code></pre>
+<p>Make a boxplot of sales by volume</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">ggplot</span>(tx_housing, <span class="kw">aes</span>(<span class="dt">x =</span> volume, <span class="dt">y =</span> sales)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb49-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
+<pre><code>## Warning: Continuous x aesthetic -- did you forget aes(group=...)?</code></pre>
+<p><img src="code4stem_files/figure-html/box%20plot%20of%20sales%20a/b%20test-1.png" width="672" /></p>
+<p>Use aov() to create volume_aov plus call summary() to print results</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1">volume_aov &lt;-<span class="st"> </span><span class="kw">aov</span>(volume <span class="op">~</span><span class="st"> </span>sales, <span class="dt">data =</span> tx_housing)</a>
+<a class="sourceLine" id="cb51-2" data-line-number="2"><span class="kw">summary</span>(volume_aov)</a></code></pre></div>
+<pre><code>##               Df    Sum Sq   Mean Sq F value Pr(&gt;F)    
+## sales          1 4.535e+20 4.535e+20  180283 &lt;2e-16 ***
+## Residuals   7124 1.792e+19 2.515e+15                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Post-modeling validation plots + variance
+For a 2x2 grid of plots:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb53-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb53-3" data-line-number="3"><span class="co"># Plot grade_aov</span></a>
+<a class="sourceLine" id="cb53-4" data-line-number="4"><span class="kw">plot</span>(volume_aov)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/qq%20plots-1.png" width="672" /></p>
+<p>Bartlett’s test for homogeneity of variance
+We can test for homogeneity of variances using bartlett.test(), which takes a formula and a dataset as inputs:
+- bartlett.test(volume ~ sales, data = tx_housing)</p>
+<p>Conduct the Kruskal-Wallis rank sum test:
+kruskal.test() to examine whether volume varies by sales when a non-parametric model is employed</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">kruskal.test</span>(volume <span class="op">~</span><span class="st"> </span>sales,</a>
+<a class="sourceLine" id="cb54-2" data-line-number="2">             <span class="dt">data =</span> tx_housing)</a></code></pre></div>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  volume by sales
+## Kruskal-Wallis chi-squared = 6877.9, df = 1702, p-value &lt; 2.2e-16</code></pre>
+<p>The low p-value indicates that based on this test, we can be confident in our result, which we found across this experiment, that volume varies by sales</p>
+<p>Sampling [randomized experiments]</p>
+<p>load data from NHANES dataset
+<a href="https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2015" class="uri">https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2015</a></p>
+<p>Import the three datasets using read_xpt():</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">nhanes_demo &lt;-<span class="st"> </span><span class="kw">read_xpt</span>(<span class="kw">url</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.XPT&quot;</span>))</a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">nhanes_bodymeasures &lt;-<span class="st"> </span><span class="kw">read_xpt</span>(<span class="kw">url</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BMX_I.XPT&quot;</span>))</a>
+<a class="sourceLine" id="cb56-3" data-line-number="3">nhanes_medical &lt;-<span class="st"> </span><span class="kw">read_xpt</span>(<span class="kw">url</span>(<span class="st">&quot;https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/MCQ_I.XPT&quot;</span>))</a></code></pre></div>
+<p>Merge the 3 datasets you just created to create nhanes_combined:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">nhanes_combined &lt;-<span class="st"> </span><span class="kw">list</span>(nhanes_demo, nhanes_medical, nhanes_bodymeasures) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-2" data-line-number="2"><span class="st">  </span><span class="kw">Reduce</span>(<span class="cf">function</span>(df1, df2) <span class="kw">inner_join</span>(df1, df2, <span class="dt">by =</span> <span class="st">&quot;SEQN&quot;</span>), .)</a></code></pre></div>
+<p>Fill in the dplyr code:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">nhanes_combined <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb58-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(MCQ035) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(INDHHIN2, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   MCQ035  mean
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1      1  9.89
+## 2      2 10.4 
+## 3      9 17.8 
+## 4     NA 11.7</code></pre>
+<p>Fill in the ggplot2 code:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">nhanes_combined <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb60-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="kw">as.factor</span>(MCQ035), INDHHIN2)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb60-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb60-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Disease type&quot;</span>,</a>
+<a class="sourceLine" id="cb60-5" data-line-number="5">       <span class="dt">y =</span> <span class="st">&quot;Income&quot;</span>)</a></code></pre></div>
+<pre><code>## Warning: Removed 273 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="code4stem_files/figure-html/plot%20data-1.png" width="672" /></p>
+<p>NHANES Data Cleaning
+Filter to keep only those greater than 16:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">nhanes_filter &lt;-<span class="st"> </span>nhanes_combined <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(RIDAGEYR <span class="op">&gt;</span><span class="st"> </span><span class="dv">16</span>)</a></code></pre></div>
+<p>Load simputation &amp; impute bmxwt by riagendr: library(simputation)</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">nhanes_final &lt;-<span class="st"> </span>simputation<span class="op">::</span><span class="kw">impute_median</span>(nhanes_filter, INDHHIN2 <span class="op">~</span><span class="st"> </span>RIDAGEYR)</a></code></pre></div>
+<p>Recode mcq365d with recode() &amp; examine with count():</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">nhanes_final<span class="op">$</span>mcq365d &lt;-<span class="st"> </span><span class="kw">recode</span>(nhanes_final<span class="op">$</span>MCQ035, </a>
+<a class="sourceLine" id="cb64-2" data-line-number="2">                               <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> </span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb64-3" data-line-number="3">                               <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> </span><span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb64-4" data-line-number="4">                               <span class="st">`</span><span class="dt">9</span><span class="st">`</span> =<span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb64-5" data-line-number="5">nhanes_final <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(MCQ035)</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   MCQ035     n
+##    &lt;dbl&gt; &lt;int&gt;
+## 1      1   522
+## 2      2   369
+## 3      9    15
+## 4     NA  4981</code></pre>
+<p>Resampling NHANES data:
+Use sample_n() to create nhanes_srs:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">nhanes_srs &lt;-<span class="st"> </span>nhanes_final <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">2500</span>)</a></code></pre></div>
+<p>Create nhanes_stratified with group_by() and sample_n()</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">nhanes_stratified &lt;-<span class="st"> </span>nhanes_final <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(RIDAGEYR) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">2000</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb67-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb67-3" data-line-number="3">nhanes_stratified <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb67-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>(RIDAGEYR)</a></code></pre></div>
+<pre><code>## # A tibble: 64 x 2
+## # Groups:   RIDAGEYR [64]
+##    RIDAGEYR     n
+##       &lt;dbl&gt; &lt;int&gt;
+##  1       17  2000
+##  2       18  2000
+##  3       19  2000
+##  4       20  2000
+##  5       21  2000
+##  6       22  2000
+##  7       23  2000
+##  8       24  2000
+##  9       25  2000
+## 10       26  2000
+## # … with 54 more rows</code></pre>
+<p>Load sampling package and create nhanes_cluster with cluster(): library(sampling)</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">nhanes_cluster &lt;-<span class="st"> </span><span class="kw">cluster</span>(nhanes_final, <span class="kw">c</span>(<span class="st">&quot;INDHHIN2&quot;</span>), <span class="dv">6</span>, <span class="dt">method =</span> <span class="st">&quot;srswor&quot;</span>)</a></code></pre></div>
+<p>Randomized complete block designs (RCBD): use library(agricolae)
+block = experimental groups are blocked to be similar (e.g. by sex)
+complete = each treatment is used the same of times in every block
+randomized = the treatment is assigned randomly inside each block</p>
+<p>Create designs using ls():</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1">designs &lt;-<span class="st"> </span><span class="kw">ls</span>(<span class="st">&quot;package:agricolae&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;design&quot;</span>)</a>
+<a class="sourceLine" id="cb70-2" data-line-number="2"><span class="kw">print</span>(designs)</a></code></pre></div>
+<pre><code>##  [1] &quot;design.ab&quot;      &quot;design.alpha&quot;   &quot;design.bib&quot;     &quot;design.crd&quot;    
+##  [5] &quot;design.cyclic&quot;  &quot;design.dau&quot;     &quot;design.graeco&quot;  &quot;design.lattice&quot;
+##  [9] &quot;design.lsd&quot;     &quot;design.mat&quot;     &quot;design.rcbd&quot;    &quot;design.split&quot;  
+## [13] &quot;design.strip&quot;   &quot;design.youden&quot;</code></pre>
+<p>Use str() to view design.rcbd’s criteria:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="kw">str</span>(design.rcbd)</a></code></pre></div>
+<pre><code>## function (trt, r, serie = 2, seed = 0, kinds = &quot;Super-Duper&quot;, first = TRUE, 
+##     continue = FALSE, randomization = TRUE)</code></pre>
+<p>Build treats and rep</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1">treats &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
+<a class="sourceLine" id="cb74-2" data-line-number="2">blocks &lt;-<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb74-3" data-line-number="3">blocks</a></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p>NHANES RCBD:
+Build my_design_rcbd and view the sketch</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1">my_design_rcbd &lt;-<span class="st"> </span><span class="kw">design.rcbd</span>(treats, <span class="dt">r =</span> blocks, <span class="dt">seed =</span> <span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb76-2" data-line-number="2">my_design_rcbd<span class="op">$</span>sketch</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,] &quot;D&quot;  &quot;A&quot;  &quot;C&quot;  &quot;B&quot;  &quot;E&quot; 
+## [2,] &quot;E&quot;  &quot;A&quot;  &quot;C&quot;  &quot;D&quot;  &quot;B&quot; 
+## [3,] &quot;D&quot;  &quot;B&quot;  &quot;E&quot;  &quot;A&quot;  &quot;C&quot; 
+## [4,] &quot;B&quot;  &quot;D&quot;  &quot;E&quot;  &quot;C&quot;  &quot;A&quot;</code></pre>
+<p>Use aov() to create nhanes_rcbd:</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1">nhanes_rcbd &lt;-<span class="st"> </span><span class="kw">aov</span>(INDHHIN2 <span class="op">~</span><span class="st"> </span>MCQ035 <span class="op">+</span><span class="st"> </span>RIDAGEYR, <span class="dt">data =</span> nhanes_final)</a></code></pre></div>
+<p>Check results of nhanes_rcbd with summary():</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" data-line-number="1"><span class="kw">summary</span>(nhanes_rcbd)</a></code></pre></div>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## MCQ035        1   1399  1398.5   8.242 0.00419 **
+## RIDAGEYR      1    312   312.4   1.841 0.17519   
+## Residuals   903 153221   169.7                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 4981 observations deleted due to missingness</code></pre>
+<p>Print mean weights by mcq365d and riagendr:</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1">nhanes_final <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb81-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(MCQ035, RIDAGEYR) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb81-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_ind =</span> <span class="kw">mean</span>(INDHHIN2, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 204 x 3
+## # Groups:   MCQ035 [4]
+##    MCQ035 RIDAGEYR mean_ind
+##     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1      1       17    10.3 
+##  2      1       18     8   
+##  3      1       19     5.38
+##  4      1       20     8   
+##  5      1       21     8.75
+##  6      1       22     6.27
+##  7      1       23     7.18
+##  8      1       24    14   
+##  9      1       25     9.11
+## 10      1       26    10.6 
+## # … with 194 more rows</code></pre>
+<p>RCBD Model Validation
+Set up the 2x2 plotting grid and plot nhanes_rcbd</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb83-2" data-line-number="2"><span class="kw">plot</span>(nhanes_rcbd)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/2x2%20grid-1.png" width="672" /></p>
+<p>Run the code to view the interaction plots:</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1"><span class="kw">with</span>(nhanes_final, <span class="kw">interaction.plot</span>(MCQ035, RIDAGEYR, INDHHIN2))</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/view%20final-1.png" width="672" /></p>
+<p>Balanced incomplete block design (BIBD)
+Balanced = each pair of treatment occur together in a block an equal of times
+Incomplete = not every treatment will appear in every block</p>
+<p>Use str() to view design.bibd’s criteria
+str(design.bib)</p>
+<p>Columns are a blocking factor</p>
+<p>create my_design_bibd_1</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1">my_design_bibd_<span class="dv">1</span> &lt;-<span class="st"> </span>agricolae<span class="op">::</span><span class="kw">design.bib</span>(LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">k =</span> <span class="dv">3</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a></code></pre></div>
+<pre><code>## 
+## Parameters BIB
+## ==============
+## Lambda     : 2
+## treatmeans : 3
+## Block size : 3
+## Blocks     : 2
+## Replication: 2 
+## 
+## Efficiency factor 1 
+## 
+## &lt;&lt;&lt; Book &gt;&gt;&gt;</code></pre>
+<p>create my_design_bibd_2</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">my_design_bibd_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">design.bib</span>(LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>], <span class="dt">k =</span> <span class="dv">8</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a></code></pre></div>
+<pre><code>## 
+## Parameters BIB
+## ==============
+## Lambda     : 2
+## treatmeans : 8
+## Block size : 8
+## Blocks     : 2
+## Replication: 2 
+## 
+## Efficiency factor 1 
+## 
+## &lt;&lt;&lt; Book &gt;&gt;&gt;</code></pre>
+<p>create my_design_bibd_3:</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">my_design_bibd_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">design.bib</span>(LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">k =</span> <span class="dv">4</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a></code></pre></div>
+<pre><code>## 
+## Parameters BIB
+## ==============
+## Lambda     : 2
+## treatmeans : 4
+## Block size : 4
+## Blocks     : 2
+## Replication: 2 
+## 
+## Efficiency factor 1 
+## 
+## &lt;&lt;&lt; Book &gt;&gt;&gt;</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">my_design_bibd_<span class="dv">3</span><span class="op">$</span>sketch</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,] &quot;C&quot;  &quot;A&quot;  &quot;D&quot;  &quot;B&quot; 
+## [2,] &quot;C&quot;  &quot;D&quot;  &quot;B&quot;  &quot;A&quot;</code></pre>
+<p>Build the data.frame:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">creatinine &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.98</span>, <span class="fl">1.97</span>, <span class="fl">2.35</span>, <span class="fl">2.09</span>, <span class="fl">1.87</span>, <span class="fl">1.95</span>, <span class="fl">2.08</span>, <span class="fl">2.01</span>, <span class="fl">1.84</span>, <span class="fl">2.06</span>, <span class="fl">1.97</span>, <span class="fl">2.22</span>)</a>
+<a class="sourceLine" id="cb93-2" data-line-number="2">food &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;D&quot;</span>))</a>
+<a class="sourceLine" id="cb93-3" data-line-number="3">color &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Black&quot;</span>, <span class="st">&quot;White&quot;</span>, <span class="st">&quot;Orange&quot;</span>, <span class="st">&quot;Spotted&quot;</span>), <span class="dt">each =</span> <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb93-4" data-line-number="4">cat_experiment &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(creatinine, food, color))</a></code></pre></div>
+<p>Create cat_model and examine with summary():</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">cat_model &lt;-<span class="st"> </span><span class="kw">aov</span>(creatinine <span class="op">~</span><span class="st"> </span>food <span class="op">+</span><span class="st"> </span>color, <span class="dt">data =</span> cat_experiment)</a>
+<a class="sourceLine" id="cb94-2" data-line-number="2"><span class="kw">summary</span>(cat_model)</a></code></pre></div>
+<pre><code>##             Df  Sum Sq  Mean Sq F value Pr(&gt;F)
+## food         1 0.01204 0.012042   0.530  0.485
+## color        1 0.00697 0.006971   0.307  0.593
+## Residuals    9 0.20461 0.022735</code></pre>
+<p>Calculate lambda, where lamdba is a measure of proportional reduction in error in cross tabulation analysis:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">DescTools<span class="op">::</span><span class="kw">Lambda</span>(cat_experiment, <span class="dt">direction =</span> <span class="kw">c</span>(<span class="st">&quot;symmetric&quot;</span>, <span class="st">&quot;row&quot;</span>, <span class="st">&quot;column&quot;</span>), <span class="dt">conf.level =</span> <span class="ot">NA</span>)</a></code></pre></div>
+<pre><code>## [1] 0.08636925</code></pre>
+<p>Create weightlift_model &amp; examine results:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">weightlift_model &lt;-<span class="st"> </span><span class="kw">aov</span>(MCQ035 <span class="op">~</span><span class="st"> </span>INDHHIN2 <span class="op">+</span><span class="st"> </span>RIDAGEYR, <span class="dt">data =</span> nhanes_final)</a>
+<a class="sourceLine" id="cb98-2" data-line-number="2"><span class="kw">summary</span>(weightlift_model)</a></code></pre></div>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## INDHHIN2      1    9.6   9.614   8.256 0.00416 **
+## RIDAGEYR      1    3.9   3.868   3.321 0.06872 . 
+## Residuals   903 1051.6   1.165                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 4981 observations deleted due to missingness</code></pre>
+<p>Latin Squares Design
+Key assumption: the treatment and two blocking factors do NOT interact
+Two blocking factors (instead of one)
+Analyze like RCBD</p>
+<p>Mean, var, and median of Math score by Borough:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">sat_scores &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">url</span>(<span class="st">&quot;https://data.ct.gov/api/views/kbxi-4ia7/rows.csv?accessType=DOWNLOAD&quot;</span>))</a>
+<a class="sourceLine" id="cb100-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb100-3" data-line-number="3">sat_scores <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb100-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(District, Test.takers..<span class="dv">2012</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb100-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(Test.takers..<span class="dv">2012</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb100-6" data-line-number="6">            <span class="dt">var =</span> <span class="kw">var</span>(Test.takers..<span class="dv">2012</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb100-7" data-line-number="7">            <span class="dt">median =</span> <span class="kw">median</span>(Test.takers..<span class="dv">2012</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb100-8" data-line-number="8"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+## # Groups:   District [6]
+##   District                 Test.takers..2012  mean   var median
+##   &lt;chr&gt;                                &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Amistad Academy District                34    34    NA     34
+## 2 Ansonia                                118   118    NA    118
+## 3 Avon                                   254   254    NA    254
+## 4 Berlin                                 216   216    NA    216
+## 5 Bethel                                 200   200    NA    200
+## 6 Bloomfield                              14    14    NA     14</code></pre>
+<p>Dealing with Missing Test Scores
+Examine missingness with miss_var_summary() and library(mice):</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1">sat_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">miss_var_summary</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 12 x 3
+##    variable                               n_miss pct_miss
+##    &lt;chr&gt;                                   &lt;int&gt;    &lt;dbl&gt;
+##  1 Test.takers..2013                           9     4.57
+##  2 Test.takers..Change.                        9     4.57
+##  3 Participation.Rate..estimate...Change.      8     4.06
+##  4 Percent.Meeting.Benchmark..Change.          8     4.06
+##  5 Test.takers..2012                           7     3.55
+##  6 Participation.Rate..estimate...2012         7     3.55
+##  7 Participation.Rate..estimate...2013         7     3.55
+##  8 Percent.Meeting.Benchmark..2012             7     3.55
+##  9 Percent.Meeting.Benchmark..2013             7     3.55
+## 10 District.Number                             0     0   
+## 11 District                                    0     0   
+## 12 School                                      0     0</code></pre>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1">sat_scores &lt;-<span class="st"> </span><span class="kw">na.omit</span>(sat_scores)</a>
+<a class="sourceLine" id="cb104-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb104-3" data-line-number="3">mice<span class="op">::</span><span class="kw">md.pattern</span>(sat_scores)</a></code></pre></div>
+<pre><code>##  /\     /\
+## {  `---&#39;  }
+## {  O   O  }
+## ==&gt;  V &lt;==  No need for mice. This data set is completely observed.
+##  \  \|/  /
+##   `-----&#39;</code></pre>
+<p><img src="code4stem_files/figure-html/Examine%20missingness%20with%20md.pattern()-1.png" width="672" /></p>
+<pre><code>##     District.Number District School Test.takers..2012 Test.takers..2013
+## 187               1        1      1                 1                 1
+##                   0        0      0                 0                 0
+##     Test.takers..Change. Participation.Rate..estimate...2012
+## 187                    1                                   1
+##                        0                                   0
+##     Participation.Rate..estimate...2013 Participation.Rate..estimate...Change.
+## 187                                   1                                      1
+##                                       0                                      0
+##     Percent.Meeting.Benchmark..2012 Percent.Meeting.Benchmark..2013
+## 187                               1                               1
+##                                   0                               0
+##     Percent.Meeting.Benchmark..Change.  
+## 187                                  1 0
+##                                      0 0</code></pre>
+<p>Impute the Math score by Borough:</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1">sat_scores_<span class="dv">2</span> &lt;-<span class="st"> </span>simputation<span class="op">::</span><span class="kw">impute_median</span>(sat_scores, Test.takers..<span class="dv">2012</span> <span class="op">~</span><span class="st"> </span>District)</a>
+<a class="sourceLine" id="cb107-2" data-line-number="2"><span class="co">#Convert Math score to numeric</span></a>
+<a class="sourceLine" id="cb107-3" data-line-number="3">sat_scores<span class="op">$</span>Average_testtakers2012 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(sat_scores<span class="op">$</span>Test.takers..<span class="dv">2012</span>)</a></code></pre></div>
+<p>Examine scores by Borough in both datasets, before and after imputation:</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1">sat_scores <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb108-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(District) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb108-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(Test.takers..<span class="dv">2012</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), </a>
+<a class="sourceLine" id="cb108-4" data-line-number="4">            <span class="dt">mean =</span> <span class="kw">mean</span>(Test.takers..<span class="dv">2012</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 129 x 3
+##    District                 median  mean
+##    &lt;chr&gt;                     &lt;dbl&gt; &lt;dbl&gt;
+##  1 Amistad Academy District     34    34
+##  2 Ansonia                     118   118
+##  3 Avon                        254   254
+##  4 Berlin                      216   216
+##  5 Bethel                      200   200
+##  6 Bloomfield                   65    65
+##  7 Bolton                       62    62
+##  8 Branford                    196   196
+##  9 Bridgeport                  155   202
+## 10 Bristol                     211   211
+## # … with 119 more rows</code></pre>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">sat_scores_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb110-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(District) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb110-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(Test.takers..<span class="dv">2012</span>), </a>
+<a class="sourceLine" id="cb110-4" data-line-number="4">            <span class="dt">mean =</span> <span class="kw">mean</span>(Test.takers..<span class="dv">2012</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 129 x 3
+##    District                 median  mean
+##    &lt;chr&gt;                     &lt;dbl&gt; &lt;dbl&gt;
+##  1 Amistad Academy District     34    34
+##  2 Ansonia                     118   118
+##  3 Avon                        254   254
+##  4 Berlin                      216   216
+##  5 Bethel                      200   200
+##  6 Bloomfield                   65    65
+##  7 Bolton                       62    62
+##  8 Branford                    196   196
+##  9 Bridgeport                  155   202
+## 10 Bristol                     211   211
+## # … with 119 more rows</code></pre>
+<p>Drawing Latin Squares with agricolae</p>
+<p>Design a LS with 5 treatments A:E then look at the sketch</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1">my_design_lsd &lt;-<span class="st"> </span><span class="kw">design.lsd</span>(<span class="dt">trt =</span> LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">seed =</span> <span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb112-2" data-line-number="2">my_design_lsd<span class="op">$</span>sketch</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5]
+## [1,] &quot;E&quot;  &quot;D&quot;  &quot;A&quot;  &quot;C&quot;  &quot;B&quot; 
+## [2,] &quot;D&quot;  &quot;C&quot;  &quot;E&quot;  &quot;B&quot;  &quot;A&quot; 
+## [3,] &quot;A&quot;  &quot;E&quot;  &quot;B&quot;  &quot;D&quot;  &quot;C&quot; 
+## [4,] &quot;C&quot;  &quot;B&quot;  &quot;D&quot;  &quot;A&quot;  &quot;E&quot; 
+## [5,] &quot;B&quot;  &quot;A&quot;  &quot;C&quot;  &quot;E&quot;  &quot;D&quot;</code></pre>
+<p>Build nyc_scores_ls_lm:</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1">sat_scores_ls_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(Test.takers..<span class="dv">2012</span> <span class="op">~</span><span class="st"> </span>Test.takers..<span class="dv">2013</span> <span class="op">+</span><span class="st"> </span>District,</a>
+<a class="sourceLine" id="cb114-2" data-line-number="2">                       <span class="dt">data =</span> sat_scores)</a>
+<a class="sourceLine" id="cb114-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb114-4" data-line-number="4"><span class="co"># Tidy the results with broom</span></a>
+<a class="sourceLine" id="cb114-5" data-line-number="5"><span class="kw">tidy</span>(sat_scores_ls_lm) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb114-6" data-line-number="6"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   term              estimate std.error statistic  p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)          3.42    23.7        0.144 8.86e- 1
+## 2 Test.takers..2013    0.987    0.0601    16.4   2.85e-23
+## 3 DistrictAnsonia     12.0     33.8        0.355 7.24e- 1
+## 4 DistrictAvon        10.9     35.8        0.303 7.63e- 1
+## 5 DistrictBerlin      -4.45    35.3       -0.126 9.00e- 1
+## 6 DistrictBethel       9.14    34.8        0.263 7.94e- 1</code></pre>
+<p>Examine the results with anova:</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw">anova</span>(sat_scores_ls_lm)</a></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Test.takers..2012
+##                    Df  Sum Sq Mean Sq   F value Pr(&gt;F)    
+## Test.takers..2013   1 2144936 2144936 3830.0419 &lt;2e-16 ***
+## District          128   46850     366    0.6536 0.9749    
+## Residuals          57   31922     560                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Graeco-Latin Squares
+three blocking factors (when there is treatments)
+Key assumption: the treatment and two blocking factors do NOT interact
+Analyze like RCBD</p>
+<p>Drawing Graeco-Latin Squares with agricolae</p>
+<p>Create trt1 and trt2
+Create my_graeco_design</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">trt1 &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
+<a class="sourceLine" id="cb118-2" data-line-number="2">trt2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb118-3" data-line-number="3">my_graeco_design &lt;-<span class="st"> </span><span class="kw">design.graeco</span>(trt1, trt2, <span class="dt">seed =</span> <span class="dv">42</span>)</a></code></pre></div>
+<p>Examine the parameters and sketch:</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">my_graeco_design<span class="op">$</span>parameters</a></code></pre></div>
+<pre><code>## $design
+## [1] &quot;graeco&quot;
+## 
+## $trt1
+## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;
+## 
+## $trt2
+## [1] 1 2 3 4 5
+## 
+## $r
+## [1] 5
+## 
+## $serie
+## [1] 2
+## 
+## $seed
+## [1] 42
+## 
+## $kinds
+## [1] &quot;Super-Duper&quot;
+## 
+## [[8]]
+## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1">my_graeco_design<span class="op">$</span>sketch</a></code></pre></div>
+<pre><code>##      [,1]  [,2]  [,3]  [,4]  [,5] 
+## [1,] &quot;D 5&quot; &quot;A 1&quot; &quot;C 3&quot; &quot;B 4&quot; &quot;E 2&quot;
+## [2,] &quot;A 3&quot; &quot;C 4&quot; &quot;B 2&quot; &quot;E 5&quot; &quot;D 1&quot;
+## [3,] &quot;C 2&quot; &quot;B 5&quot; &quot;E 1&quot; &quot;D 3&quot; &quot;A 4&quot;
+## [4,] &quot;B 1&quot; &quot;E 3&quot; &quot;D 4&quot; &quot;A 2&quot; &quot;C 5&quot;
+## [5,] &quot;E 4&quot; &quot;D 2&quot; &quot;A 5&quot; &quot;C 1&quot; &quot;B 3&quot;</code></pre>
+<p>Create a boxplot of scores by District, with a title and x/y axis labels:</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1"><span class="kw">ggplot</span>(sat_scores, <span class="kw">aes</span>(District, Test.takers..<span class="dv">2012</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb123-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb123-3" data-line-number="3"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Average SAT Math Scores by District in 2012&quot;</span>,</a>
+<a class="sourceLine" id="cb123-4" data-line-number="4">       <span class="dt">x =</span> <span class="st">&quot;District&quot;</span>,</a>
+<a class="sourceLine" id="cb123-5" data-line-number="5">       <span class="dt">y =</span> <span class="st">&quot;Test Takers in 2012&quot;</span>)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/scores%20and%20titles-1.png" width="672" /></p>
+<p>Build sat_scores_gls_lm:</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1">sat_scores_gls_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(Test.takers..<span class="dv">2012</span> <span class="op">~</span><span class="st"> </span>Test.takers..<span class="dv">2013</span> <span class="op">+</span><span class="st"> </span>District <span class="op">+</span><span class="st"> </span>School,</a>
+<a class="sourceLine" id="cb124-2" data-line-number="2">                        <span class="dt">data =</span> sat_scores)</a>
+<a class="sourceLine" id="cb124-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb124-4" data-line-number="4"><span class="co"># Tidy the results with broom</span></a>
+<a class="sourceLine" id="cb124-5" data-line-number="5"><span class="kw">tidy</span>(sat_scores_gls_lm) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb124-6" data-line-number="6"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   term              estimate std.error statistic p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)          -9.24       NaN       NaN     NaN
+## 2 Test.takers..2013     1.39       NaN       NaN     NaN
+## 3 DistrictAnsonia     -17.8        NaN       NaN     NaN
+## 4 DistrictAvon        -75.7        NaN       NaN     NaN
+## 5 DistrictBerlin      -81.6        NaN       NaN     NaN
+## 6 DistrictBethel      -55.8        NaN       NaN     NaN</code></pre>
+<p>Examine the results with anova</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="kw">anova</span>(sat_scores_gls_lm)</a></code></pre></div>
+<pre><code>## Warning in anova.lm(sat_scores_gls_lm): ANOVA F-tests on an essentially perfect
+## fit are unreliable</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Test.takers..2012
+##                    Df  Sum Sq Mean Sq F value Pr(&gt;F)
+## Test.takers..2013   1 2144936 2144936               
+## District          128   46850     366               
+## School             57   31922     560               
+## Residuals           0       0</code></pre>
+<p>Factorial Experiment Design
+2 or more factor variables are combined and crossed
+All of the possible interactions between factors are considered as effect on outcome
+e.g. high/low water on high/low light</p>
+<p>Build the boxplot for the district vs. test taker score:</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1"><span class="kw">ggplot</span>(sat_scores,</a>
+<a class="sourceLine" id="cb129-2" data-line-number="2">       <span class="kw">aes</span>(District, Test.takers..<span class="dv">2012</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb129-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/boxplot%20with%20scores-1.png" width="672" /></p>
+<p>Create sat_scores_factorial and examine the results:</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">sat_scores_factorial &lt;-<span class="st"> </span><span class="kw">aov</span>(Test.takers..<span class="dv">2012</span> <span class="op">~</span><span class="st"> </span>Test.takers..<span class="dv">2013</span> <span class="op">*</span><span class="st"> </span>District <span class="op">*</span><span class="st"> </span>School, <span class="dt">data =</span> sat_scores)</a>
+<a class="sourceLine" id="cb130-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb130-3" data-line-number="3"><span class="kw">tidy</span>(sat_scores_factorial) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb130-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 3 x 4
+##   term                 df    sumsq   meansq
+##   &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Test.takers..2013     1 2144936. 2144936.
+## 2 District            128   46850.     366.
+## 3 School               57   31922.     560.</code></pre>
+<p>Evaluating the sat_scores Factorial Model</p>
+<p>Use shapiro.test() to test the outcome:</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1"><span class="kw">shapiro.test</span>(sat_scores<span class="op">$</span>Test.takers..<span class="dv">2013</span>)</a></code></pre></div>
+<pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  sat_scores$Test.takers..2013
+## W = 0.91495, p-value = 6.28e-09</code></pre>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="demo-for-data-table.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="demo-for-ab-testing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

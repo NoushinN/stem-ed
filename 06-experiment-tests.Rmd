@@ -15,6 +15,8 @@ library(simputation)
 library(sampling)
 library(agricolae)
 library(naniar)
+library(DescTools)
+library(mice)
 ```
 
 
@@ -41,7 +43,7 @@ ToothGrowth_ttest
 
 
 Tidy ToothGrowth_ttest:
-```{r tidy, message= FALSE}
+```{r tidy visualize, message= FALSE}
 tidy(ToothGrowth_ttest)
 ```
 
@@ -282,10 +284,7 @@ plot(volume_aov)
 
 Bartlett's test for homogeneity of variance
 We can test for homogeneity of variances using bartlett.test(), which takes a formula and a dataset as inputs:
-
-```{r Bartlett test, message= FALSE}
-bartlett.test(volume ~ sales, data = tx_housing)
-```
+- bartlett.test(volume ~ sales, data = tx_housing)
 
 Conduct the Kruskal-Wallis rank sum test:
 kruskal.test() to examine whether volume varies by sales when a non-parametric model is employed
@@ -346,7 +345,8 @@ nhanes_filter <- nhanes_combined %>% filter(RIDAGEYR > 16)
 Load simputation & impute bmxwt by riagendr: library(simputation)
 ```{r use simputation, message= FALSE}
 
-nhanes_final <- impute_median(nhanes_filter, INDHHIN2 ~ RIDAGEYR)
+nhanes_final <- simputation::impute_median(nhanes_filter, INDHHIN2 ~ RIDAGEYR)
+
 ```
 
 Recode mcq365d with recode() & examine with count():
@@ -367,7 +367,7 @@ nhanes_srs <- nhanes_final %>% sample_n(2500)
 ```
 
 Create nhanes_stratified with group_by() and sample_n()
-```{r  sample_n, message= FALSE}
+```{r  sample_n and group_by, message= FALSE}
 
 nhanes_stratified <- nhanes_final %>% group_by(RIDAGEYR) %>% sample_n(2000, replace = TRUE)
 
@@ -397,7 +397,7 @@ print(designs)
 ```
 
 Use str() to view design.rcbd's criteria:
-```{r str to view design, message= FALSE}
+```{r structure of design, message= FALSE}
 
 str(design.rcbd)
 ```
@@ -414,24 +414,24 @@ blocks
 
 NHANES RCBD:
 Build my_design_rcbd and view the sketch
-```{r str to view design, message= FALSE}
+```{r build and view, message= FALSE}
 
 my_design_rcbd <- design.rcbd(treats, r = blocks, seed = 42)
 my_design_rcbd$sketch
 ```
 
 Use aov() to create nhanes_rcbd:
-```{r str to view design, message= FALSE}
+```{r aov for nhanes, message= FALSE}
 
 nhanes_rcbd <- aov(INDHHIN2 ~ MCQ035 + RIDAGEYR, data = nhanes_final)
 ```
 Check results of nhanes_rcbd with summary():
-```{r str to view design, message= FALSE}
+```{r result summary, message= FALSE}
 
 summary(nhanes_rcbd)
 ```
 Print mean weights by mcq365d and riagendr:
-```{r str to view design, message= FALSE}
+```{r mean weights, message= FALSE}
 
 nhanes_final %>% 
   group_by(MCQ035, RIDAGEYR) %>% 
@@ -440,14 +440,14 @@ nhanes_final %>%
 
 RCBD Model Validation
 Set up the 2x2 plotting grid and plot nhanes_rcbd
-```{r str to view design, message= FALSE}
+```{r 2x2 grid, message= FALSE}
 
 par(mfrow = c(2, 2))
 plot(nhanes_rcbd)
 ```
 
 Run the code to view the interaction plots:
-```{r str to view design, message= FALSE}
+```{r view final, message= FALSE}
 
 with(nhanes_final, interaction.plot(MCQ035, RIDAGEYR, INDHHIN2))
 ```
@@ -463,36 +463,27 @@ str(design.bib)
 Columns are a blocking factor
 
 create my_design_bibd_1
-```{r str to view design, message= FALSE}
+```{r design.bib, message= FALSE}
 
-my_design_bibd_1 <- design.bib(LETTERS[1:3], k = 4, seed = 42)
+my_design_bibd_1 <- agricolae::design.bib(LETTERS[1:3], k = 3, seed = 42)
 ```
 
 create my_design_bibd_2
-```{r str to view design, message= FALSE}
+```{r create with k of 3, message= FALSE}
 
-my_design_bibd_2 <- design.bib(LETTERS[1:8], k = 3, seed = 42)
+my_design_bibd_2 <- design.bib(LETTERS[1:8], k = 8, seed = 42)
 ```
 
 
 
 create my_design_bibd_3:
   
-```{r str to view design, message= FALSE}
+```{r create with k of 4, message= FALSE}
 
 my_design_bibd_3 <- design.bib(LETTERS[1:4], k = 4, seed = 42)
 my_design_bibd_3$sketch
 ```
 
-Calculate lambda:
-```{r calculate lambda, message= FALSE}
-
-lambda <- r(k - 1) / (t - 1)
-t = 4
-k = 3
-r = 3
-lambda(4, 3, 3)
-```
 
 Build the data.frame:
 ```{r build data, message= FALSE}
@@ -511,10 +502,10 @@ cat_model <- aov(creatinine ~ food + color, data = cat_experiment)
 summary(cat_model)
 ```
 
-Calculate lambda:
+Calculate lambda, where lamdba is a measure of proportional reduction in error in cross tabulation analysis:
 
 ```{r calculate lambda, message= FALSE}
-lambda(3, 2, 2)
+DescTools::Lambda(cat_experiment, direction = c("symmetric", "row", "column"), conf.level = NA)
 ```
 
 Create weightlift_model & examine results:
@@ -530,36 +521,42 @@ Key assumption: the treatment and two blocking factors do NOT interact
 Two blocking factors (instead of one)
 Analyze like RCBD
 
-sat_scores <- read.csv(url("https://data.ct.gov/api/views/kbxi-4ia7/rows.csv?accessType=DOWNLOAD"))
-
 Mean, var, and median of Math score by Borough:
 
-```{r calculate lambda, message= FALSE}
+```{r calculate mean, var, median, message= FALSE}
+
+sat_scores <- read.csv(url("https://data.ct.gov/api/views/kbxi-4ia7/rows.csv?accessType=DOWNLOAD"))
 
 sat_scores %>%
   group_by(District, Test.takers..2012) %>% 
   summarize(mean = mean(Test.takers..2012, na.rm = TRUE),
             var = var(Test.takers..2012, na.rm = TRUE),
-            median = median(Test.takers..2012, na.rm = TRUE))
+            median = median(Test.takers..2012, na.rm = TRUE)) %>%
+  head()
 ```
 
 Dealing with Missing Test Scores
-Examine missingness with miss_var_summary(): using library(naniar)
+Examine missingness with miss_var_summary() and library(mice):
+```{r Examine missingness with md.pattern(), message= FALSE}
+
 sat_scores %>% miss_var_summary()
 sat_scores <- na.omit(sat_scores)
 
-Examine missingness with md.pattern()
-md.pattern(sat_scores)
-
-Impute the Math score by Borough
-sat_scores_2 <- impute_median(sat_scores, Test.takers..2012 ~ District)
+mice::md.pattern(sat_scores)
+```
 
 
-Convert Math score to numeric
+Impute the Math score by Borough:
+```{r impute median, message= FALSE}
+
+sat_scores_2 <- simputation::impute_median(sat_scores, Test.takers..2012 ~ District)
+#Convert Math score to numeric
 sat_scores$Average_testtakers2012 <- as.numeric(sat_scores$Test.takers..2012)
+```
 
+Examine scores by Borough in both datasets, before and after imputation:
+```{r cexamine scores, message= FALSE}
 
-Examine scores by Borough in both datasets, before and after imputation
 sat_scores %>% 
   group_by(District) %>% 
   summarize(median = median(Test.takers..2012, na.rm = TRUE), 
@@ -568,7 +565,7 @@ sat_scores_2 %>%
   group_by(District) %>% 
   summarize(median = median(Test.takers..2012), 
             mean = mean(Test.takers..2012))
-
+```
 
 Drawing Latin Squares with agricolae
 
@@ -584,8 +581,9 @@ Build nyc_scores_ls_lm:
 sat_scores_ls_lm <- lm(Test.takers..2012 ~ Test.takers..2013 + District,
                        data = sat_scores)
 
-Tidy the results with broom
-tidy(sat_scores_ls_lm)
+# Tidy the results with broom
+tidy(sat_scores_ls_lm) %>%
+  head()
 ```
 
 Examine the results with anova:
@@ -603,11 +601,10 @@ Analyze like RCBD
 Drawing Graeco-Latin Squares with agricolae
 
 Create trt1 and trt2
-trt1 <- LETTERS[1:5]
-trt2 <- 1:5
-
 Create my_graeco_design
 ```{r graeco design, message= FALSE}
+trt1 <- LETTERS[1:5]
+trt2 <- 1:5
 my_graeco_design <- design.graeco(trt1, trt2, seed = 42)
 ```
 
@@ -634,7 +631,8 @@ sat_scores_gls_lm <- lm(Test.takers..2012 ~ Test.takers..2013 + District + Schoo
                         data = sat_scores)
 
 # Tidy the results with broom
-tidy(sat_scores_gls_lm)
+tidy(sat_scores_gls_lm) %>%
+  head()
 ```
 
 Examine the results with anova
@@ -661,7 +659,8 @@ Create sat_scores_factorial and examine the results:
 ```{r aov and tidy, message= FALSE}
 sat_scores_factorial <- aov(Test.takers..2012 ~ Test.takers..2013 * District * School, data = sat_scores)
 
-tidy(sat_scores_factorial)
+tidy(sat_scores_factorial) %>%
+  head()
 ```
 
 Evaluating the sat_scores Factorial Model
@@ -669,11 +668,4 @@ Evaluating the sat_scores Factorial Model
 Use shapiro.test() to test the outcome:
 ```{r shapiro test, message= FALSE}
 shapiro.test(sat_scores$Test.takers..2013)
-```
-
-Plot nyc_scores_factorial to examine residuals:
-
-```{r plot residuals, message= FALSE}
-par(mfrow = c(2,2))
-plot(sat_scores_factorial)
 ```

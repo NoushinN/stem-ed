@@ -1,50 +1,68 @@
 
 # Demo for A/B testing 
 
-load dependencies
+```{r dependencies, message= FALSE}
+# load dependencies
 library(tidyverse)
+library(powerMediation)
+```
 
-Read in data
+Read in data:
+
+```{r read-in the data, message= FALSE}
+
 fileLocation <- "http://stat.columbia.edu/~rachel/datasets/nyt1.csv"
 click_data <- read.csv(url(fileLocation))
+```
 
+Find oldest and most recent age:
 
-Find oldest and most recent age
+```{r check max/min, message= FALSE}
+
 min(click_data$Age)
 max(click_data$Age) 
+```
 
 
+Compute baseline conversion rates:
 
-Compute baseline conversion rates 
+```{r baseline rates, message= FALSE}
 
 click_data %>%
   summarize(impression_rate = mean(Impressions))
+```
 
-determine baseline for genders 
+determine baseline for genders:
+
+```{r baseline genders, message= FALSE}
+
 click_data %>%
   group_by(Gender) %>%
   summarize(impression_rate = mean(Impressions))
+```
 
-click_data %>%
-  group_by(Gender) %>%
-  summarize(impression_rate = mean(Impressions))
 
-determine baseline for clicks 
-click_data %>%
+determine baseline for clicks:
+
+```{r baseline clicks, message= FALSE}
+
+click_data_age<- click_data %>%
   group_by(Clicks, Age) %>%
   summarize(impression_rate = mean(Impressions))
+```
 
-visualize baselines
+visualize baselines:
+
+```{r visualize baselines, message= FALSE}
+
 ggplot(click_data_age, aes(x = Age, y = impression_rate)) +
   geom_point() +
   geom_line() 
+```
 
 
+Experimental design, power analysis, and t-tests"
 
-Experimental design, power analysis, and t-tests
-
-load power analysis library for R
-library(powerMediation)
 
 run power analysis
 learn more here: help(SSizeLogisticBin)
