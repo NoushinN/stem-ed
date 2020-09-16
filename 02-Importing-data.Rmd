@@ -9,6 +9,7 @@ library(data.table)
 library(readxl)
 library(gdata)
 library(XLConnect)
+library(httr)
 ```
 
 Importing csv file: 
@@ -255,47 +256,56 @@ post_result <- POST(url = "http://httpbin.org/post", body = "this is a test")
 post_result
 ```
 
-Make a GET request to url and save the results
+Make a GET request to url and save the results:
+
+```{r get data from url, message= FALSE}
+
 pageview_response <- GET(url)
 
-Call content() to retrieve the data the server sent back
+# Call content() to retrieve the data the server sent back
 pageview_data <- content(pageview_response)
 
-Examine the results with str()
+# Examine the results with str()
 str(pageview_data)
+```
+
 
 Handling http failures
+
+```{r get data using GET, message= FALSE}
+
 fake_url <- "http://google.com/fakepagethatdoesnotexist"
 
-Make the GET request
+# Make the GET request
 request_result <- GET(fake_url)
 
-Check request_result
+# Check request_result
 if(http_error(request_result)){
   warning("The request failed")
 } else {
   content(request_result)
 }
 
+```
 
-example start to finish
-
-Load httr
-library(httr)
-
+Example start to finish using httr package:
 The API url
+```{r get API data, message= FALSE}
 base_url <- "https://en.wikipedia.org/w/api.php"
 
-Set query parameters
+# Set query parameters
 query_params <- list(action = "parse", 
                      page = "Hadley Wickham", 
                      format = "xml")
+```
 
-Get data from API
+Get data from API:
+```{r can also GET api , message= FALSE}
 resp <- GET(url = base_url, query = query_params)
 
-Parse response
+# Parse response
 resp_xml <- content(resp)
+```
 
 Load rvest
 library(rvest)
@@ -350,7 +360,6 @@ get_infobox <- function(title){
 
 
 
----------------------------------------------------------------
 
 Construct a directory-based API URL to `http://swapi.co/api`,
 looking for person `1` in `people`
@@ -369,7 +378,7 @@ parameter_response <- GET("https://httpbin.org/get", query = query_params)
 Print parameter_response
 parameter_response
 
----------------------------------------------------------------
+
 
 Using user agents
 Informative user-agents are a good way of being respectful of the developers running the API you're interacting with. 
@@ -545,7 +554,7 @@ timestamp <- readr::parse_datetime(xml_attr(rev_nodes, "timestamp"))
 Parse out content
 content <- xml_text(rev_nodes)
   
----------------------------------------------------------------
+
   
 web scraping 101
 The first step with web scraping is actually reading the HTML in. 
