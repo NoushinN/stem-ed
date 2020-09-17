@@ -8,8 +8,10 @@ library(readr)
 library(data.table)
 library(readxl)
 library(gdata)
-library(XLConnect)
+# library(XLConnect)
 library(httr)
+library(rvest)
+library(xml2)
 ```
 
 Importing csv file: 
@@ -307,41 +309,49 @@ resp <- GET(url = base_url, query = query_params)
 resp_xml <- content(resp)
 ```
 
-Load rvest
-library(rvest)
+Read page contents as HTML: library(rvest)
 
-Read page contents as HTML
+```{r load rvest and read html, message= FALSE}
+
 page_html <- read_html(xml_text(resp_xml))
 
-Extract infobox element
+# Extract infobox element
 infobox_element <- html_node(x = page_html, css =".infobox")
+```
 
-Extract page name element from infobox
+# Extract page name element from infobox: library(xml2)
+
+```{r load htm_node, message= FALSE}
 page_name <- html_node(x = infobox_element, css = ".fn")
 
-Extract page name as text
+# Extract page name as text
 page_title <- html_text(page_name)
 
 
-Your code from earlier exercises
+# Your code from earlier exercises
 wiki_table <- html_table(infobox_element)
-colnames(wiki_table) <- c("key", "value")
+
+# cleaned table
 cleaned_table <- subset(wiki_table, !key == "")
 
+colnames(wiki_table) <- c("key", "value")
+
+```
+
 Create a dataframe for full name
+
+```{r name data.frame, message= FALSE}
+
 name_df <- data.frame(key = "Full name", value = page_title)
 
-Combine name_df with cleaned_table
+# Combine name_df with cleaned_table
 wiki_table2 <- rbind(name_df, cleaned_table)
 
-Print wiki_table
+# Print wiki_table
 wiki_table2
+```
 
 Reproducibility
-
-library(httr)
-library(rvest)
-library(xml2)
 
 get_infobox <- function(title){
   base_url <- "https://en.wikipedia.org/w/api.php"
