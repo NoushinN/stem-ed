@@ -353,42 +353,47 @@ wiki_table2
 
 Reproducibility
 
+```{r get infobox, message= FALSE}
+
 get_infobox <- function(title){
   base_url <- "https://en.wikipedia.org/w/api.php"
   
-  Change "Hadley Wickham" to title
-  query_params <- list(action = "parse", 
+# Change "Hadley Wickham" to title
+
+query_params <- list(action = "parse", 
                        page = title, 
-                       format = "xml")
+                       format = "xml")}
   
-  resp <- GET(url = base_url, query = query_params)
-  resp_xml <- content(resp)
+resp <- GET(url = base_url, query = query_params)
+resp_xml <- content(resp)
   
-  page_html <- read_html(xml_text(resp_xml))
-  infobox_element <- html_node(x = page_html, css =".infobox")
-  page_name <- html_node(x = infobox_element, css = ".fn")
+page_html <- read_html(xml_text(resp_xml))
+infobox_element <- html_node(x = page_html, css =".infobox")
+page_name <- html_node(x = infobox_element, css = ".fn")
 
-
+```
 
 
 Construct a directory-based API URL to `http://swapi.co/api`,
-looking for person `1` in `people`
+looking for person `1` in `people`:
+```{r directory url, message= FALSE}
+
 directory_url <- paste("http://swapi.co/api", "people", "1", sep = "/")
 
-Make a GET call with it
+# Make a GET call with it
 result <- GET(directory_url)
 
-Create list with nationality and country elements
+# Create list with nationality and country elements
 query_params <- list(nationality = "americans", 
                      country = "antigua")
 
-Make parameter-based call to httpbin, with query_params
+# Make parameter-based call to httpbin, with query_params
 parameter_response <- GET("https://httpbin.org/get", query = query_params)
 
-Print parameter_response
+# Print parameter_response
 parameter_response
 
-
+```
 
 Using user agents
 Informative user-agents are a good way of being respectful of the developers running the API you're interacting with. 
