@@ -12,6 +12,9 @@ library(gdata)
 library(httr)
 library(rvest)
 library(xml2)
+library(rlist)
+library(jsonlite)
+library(dplyr)
 ```
 
 Importing csv file: 
@@ -259,19 +262,6 @@ post_result
 ```
 
 Make a GET request to url and save the results:
-
-```{r get data from url, message= FALSE}
-
-pageview_response <- GET(url)
-
-# Call content() to retrieve the data the server sent back
-pageview_data <- content(pageview_response)
-
-# Examine the results with str()
-str(pageview_data)
-```
-
-
 Handling http failures
 
 ```{r get data using GET, message= FALSE}
@@ -280,18 +270,10 @@ fake_url <- "http://google.com/fakepagethatdoesnotexist"
 
 # Make the GET request
 request_result <- GET(fake_url)
-
-# Check request_result
-if(http_error(request_result)){
-  warning("The request failed")
-} else {
-  content(request_result)
-}
-
 ```
 
-Example start to finish using httr package:
-The API url
+
+Example start to finish using httr package: The API url
 ```{r get API data, message= FALSE}
 base_url <- "https://en.wikipedia.org/w/api.php"
 
@@ -301,56 +283,9 @@ query_params <- list(action = "parse",
                      format = "xml")
 ```
 
-Get data from API:
-```{r can also GET api , message= FALSE}
-resp <- GET(url = base_url, query = query_params)
-
-# Parse response
-resp_xml <- content(resp)
-```
-
 Read page contents as HTML: library(rvest)
-
-```{r load rvest and read html, message= FALSE}
-
-page_html <- read_html(xml_text(resp_xml))
-
-# Extract infobox element
-infobox_element <- html_node(x = page_html, css =".infobox")
-```
-
 # Extract page name element from infobox: library(xml2)
-
-```{r load htm_node, message= FALSE}
-page_name <- html_node(x = infobox_element, css = ".fn")
-
-# Extract page name as text
-page_title <- html_text(page_name)
-
-
-# Your code from earlier exercises
-wiki_table <- html_table(infobox_element)
-
-# cleaned table
-cleaned_table <- subset(wiki_table, !key == "")
-
-colnames(wiki_table) <- c("key", "value")
-
-```
-
 Create a dataframe for full name
-
-```{r name data.frame, message= FALSE}
-
-name_df <- data.frame(key = "Full name", value = page_title)
-
-# Combine name_df with cleaned_table
-wiki_table2 <- rbind(name_df, cleaned_table)
-
-# Print wiki_table
-wiki_table2
-```
-
 Reproducibility
 
 ```{r get infobox, message= FALSE}
@@ -396,13 +331,14 @@ parameter_response
 ```
 
 Using user agents
-Informative user-agents are a good way of being respectful of the developers running the API you're interacting with. 
-They make it easy for them to contact you in the event something goes wrong. I always try to include:
-My email address;
-A URL for the project the code is a part of, if it's got a URL.
+Informative user-agents are a good way of being respectful of the developers running the API you're interacting with. They make it easy for them to contact you in the event something goes wrong. I always try to include:
+My email address; A URL for the project the code is a part of, if it's got a URL.
 
-Do not change the url
+Do not change the url:
+```{r get halfaker, message= FALSE}
+
 url <- "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Aaron_Halfaker/daily/2015100100/2015103100"
+```
 
 Add the email address and the test sentence inside user_agent()
 server_response <- GET(url, user_agent("my@email.address this is a test"))
@@ -413,19 +349,22 @@ Your limit will vary from server to server, but the implementation is always pre
 This function takes one argument, a number, which represents the number of seconds to "sleep" (pause) the R session for. 
 So if you call Sys.sleep(15), it'll pause for 15 seconds before allowing further code to run.
 
-
-Construct a vector of 2 URLs
-urls <- c("http://httpbin.org/status/404",
-          "http://httpbin.org/status/301")
-
+Construct a vector of 2 URLs:
 for(url in urls){
   Send a GET request to url
   result <- GET(url)
   Delay for 5 seconds between requests
   Sys.sleep(5)
 }
+```{r vector urls, message= FALSE}
 
-Tying it all together
+urls <- c("http://httpbin.org/status/404",
+          "http://httpbin.org/status/301")
+```
+
+Tying it all together:
+```{r pageview url, message= FALSE}
+
 get_pageviews <- function(article_title){
   url <- paste(
     "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents", 
@@ -433,234 +372,66 @@ get_pageviews <- function(article_title){
     "daily/2015100100/2015103100", 
     sep = "/"
   )   
-  response <- GET(url, user_agent("my@email.com this is a test")) 
-  Is there an HTTP error?
+
+response <- GET(url, user_agent("my@email.com this is a test")) 
+  # Is there an HTTP error?
   if(http_error(response)){ 
-    Throw an R error
+    # Throw an R error
     stop("the request failed") 
   }
-  Return the response's content
+  # Return the response's content
   content(response)
 }
 
-
+```
 working with JSON files (for more information see: www.json.org)
 While JSON is a useful format for sharing data, your first step will often be to parse it into an R object, so you can manipulate it with R.
 
-Get revision history for "Hadley Wickham"
-resp_json <- rev_history("Hadley Wickham")
-
-Check http_type() of resp_json
-http_type(resp_json) confirm the API returned a JSON object
-
-Examine returned text with content()
-content(resp_json, as = "text")
-
-Parse response with content()
-content(resp_json, as = "parsed")
-
-Parse returned text with fromJSON()
-library(jsonlite)
-fromJSON(content(resp_json, as = "text"))
-
-Manipulating parsed JSON
-Load rlist
-library(rlist)
-
-Examine output of this code
-str(content(resp_json), max.level = 4)
-
-Store revision list
-revs <- content(resp_json)$query$pages$`41916270`$revisions
-
-Extract the user element
-user_time <- list.select(revs, user, timestamp)
-
-Print user_time
-user_time 
-
-Stack to turn into a data frame
-list.stack(user_time)
-
-Load dplyr
-library(dplyr)
-
-Pull out revision list
-revs <- content(resp_json)$query$pages$`41916270`$revisions
-
-Extract user and timestamp
-revs %>%
-  bind_rows() %>%
-  select(user, timestamp)
-
-
-working with XML files
-Just like JSON, you should first verify the response is indeed XML with http_type() 
-and by examining the result of content(r, as = "text"). 
-Then you can turn the response into an XML document object with read_xml()
-
-Load xml2
-library(xml2)
-
-Get XML revision history
-resp_xml <- rev_history("Hadley Wickham", format = "xml")
-
-Check response is XML
-http_type(resp_xml)
-
-Examine returned text with content()
-rev_text <- content(resp_xml, as = "text")
-rev_text
-
-Turn rev_text into an XML document
-rev_xml <- read_xml(rev_text)
-
-Examine the structure of rev_xml
-xml_structure(rev_xml)
-
-
-
-Extracting XML data
-Find all nodes using XPATH "/api/query/pages/page/revisions/rev"
-xml_find_all(rev_xml, "/api/query/pages/page/revisions/rev")
-
-Find all rev nodes anywhere in document
-rev_nodes <- xml_find_all(rev_xml, "//rev")
-
-Use xml_text() to get text from rev_nodes
-xml_text(rev_nodes)
-
-Extracting XML attributes
-All rev nodes
-rev_nodes <- xml_find_all(rev_xml, "//rev")
-
-The first rev node
-first_rev_node <- xml_find_first(rev_xml, "//rev")
-
-Find all attributes with xml_attrs()
-xml_attrs(first_rev_node)
-
-Find user attribute with xml_attr()
-xml_attr(first_rev_node, "user")
-
-Find user attribute for all rev nodes
-xml_attr(rev_nodes, "user")
-
-Find anon attribute for all rev nodes
-xml_attr(rev_nodes, "anon")
-
-returning nice API output
-get_revision_history <- function(article_title){
-Get raw revision response
-rev_resp <- rev_history(article_title, format = "xml") }
-  
-Turn the content() of rev_resp into XML
-rev_xml <- read_xml(content(rev_resp, "text"))
-  
-Find revision nodes
-rev_nodes <- xml_find_all(rev_xml, "//rev")
-  
-Parse out usernames
-user <- xml_attr(rev_nodes, "user")
-  
-Parse out timestamps
-timestamp <- readr::parse_datetime(xml_attr(rev_nodes, "timestamp"))
-  
-Parse out content
-content <- xml_text(rev_nodes)
-  
-
-  
 web scraping 101
 The first step with web scraping is actually reading the HTML in. 
 This can be done with a function from xml2, which is imported by rvest - read_html(). 
 This accepts a single URL, and returns a big blob of XML that we can use further on.
+
   
-Load rvest
-library(rvest)
-  
-Hadley Wickham's Wikipedia page
+Hadley Wickham's Wikipedia page:
+
+```{r test url, message= FALSE}
+
 test_url <- "https://en.wikipedia.org/wiki/Hadley_Wickham"
   
-Read the URL stored as "test_url" with read_html()
+# Read the URL stored as "test_url" with read_html()
 test_xml <- read_html(test_url)
   
-Print test_xml
+# Print test_xml
 test_xml
+```
 
 html_node(), which extracts individual chunks of HTML from a HTML document. 
 There are a couple of ways of identifying and filtering nodes, and for now we're going to use XPATHs: 
 unique identifiers for individual pieces of a HTML document.
 
-Use html_node() to grab the node with the XPATH stored as `test_node_xpath`
-node <- html_node(x = test_xml, xpath = test_node_xpath)
-
-Print the first element of the result
-node[[1]]
-
-Extract the name of table_element
-element_name <- html_name(table_element)
-
-Print the name
-element_name
-
 Extract the element of table_element referred to by second_xpath_val and store it as page_name
 page_name <- html_node(x = table_element, xpath = second_xpath_val)
 
-Extract the text from page_name
+Extract the text from page_name:
+
+```{r html title , message= FALSE}
+
 page_title <- html_text(page_name)
 
-Print page_title
+# Print page_title
 page_title
 
+# Turn table_element into a data frame and assign it to wiki_table
+# wiki_table <- rvest::html_table(table_element)
 
-Turn table_element into a data frame and assign it to wiki_table
-wiki_table <- html_table(table_element)
-
-Print wiki_table
-wiki_table
+# Print wiki_table
+# wiki_table
+```
 
 Cleaning a data frame
-Rename the columns of wiki_table
-colnames(wiki_table) <- c("key", "value")
-
-Remove the empty row from wiki_table
-cleaned_table <- subset(wiki_table, !key == "")
-
-Print cleaned_table
-cleaned_table
-
----------------------------------------------------------------
+Rename the columns of wiki_table:
 
 CSS web scraping 
-CSS is a way to add design information to HTML, that instructs the browser on how to display the content. 
-You can leverage these design instructions to identify content on the page.
+CSS is a way to add design information to HTML, that instructs the browser on how to display the content. You can leverage these design instructions to identify content on the page.
 
-
-Select the table elements
-html_nodes(test_xml, css = "table")
-
-Select elements with class = "infobox"
-html_nodes(test_xml, css = ".infobox")
-
-Select elements with id = "firstHeading"
-html_nodes(test_xml, css = "firstHeading")
-
-Extract element with class infobox
-infobox_element <- html_nodes(test_xml, css = ".infobox")
-
-Get tag name of infobox_element
-element_name <- html_name(infobox_element)
-
-Print element_name
-element_name
-
-Extract element with class fn
-page_name <- html_node(x = infobox_element, css = ".fn")
-
-Get contents of page_name
-page_title <- html_text(page_name)
-
-Print page_title
-page_title
-  

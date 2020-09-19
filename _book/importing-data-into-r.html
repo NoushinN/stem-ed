@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 9 Importing data into R | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 9 Importing data into R | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 9 Importing data into R | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-19" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="resources.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>3</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="3.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>3.1</b> Contents</a></li>
+<li class="chapter" data-level="3.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>3.2</b> R Syntax</a></li>
+<li class="chapter" data-level="3.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>3.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="demo-for-dplyr.html"><a href="demo-for-dplyr.html"><i class="fa fa-check"></i><b>4</b> Demo for dplyr</a></li>
+<li class="chapter" data-level="5" data-path="demo-for-data-table.html"><a href="demo-for-data-table.html"><i class="fa fa-check"></i><b>5</b> Demo for Data.table</a></li>
+<li class="chapter" data-level="6" data-path="tests-for-experiments.html"><a href="tests-for-experiments.html"><i class="fa fa-check"></i><b>6</b> Tests for experiments</a></li>
+<li class="chapter" data-level="7" data-path="demo-for-ab-testing.html"><a href="demo-for-ab-testing.html"><i class="fa fa-check"></i><b>7</b> Demo for A/B testing</a></li>
+<li class="chapter" data-level="8" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>8</b> R for Reporting</a><ul>
+<li class="chapter" data-level="8.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>8.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>8.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="8.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>8.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>8.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="8.3" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>8.3</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>8.3.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="8.3.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>8.3.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="8.3.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>8.3.3</b> Operational Basics</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="resources.html"><a href="resources.html#getting-your-data-into-r"><i class="fa fa-check"></i><b>8.4</b> Getting Your Data into R</a></li>
+<li class="chapter" data-level="8.5" data-path="resources.html"><a href="resources.html#getting-your-data-out-of-r"><i class="fa fa-check"></i><b>8.5</b> Getting Your Data out of R</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="importing-data-into-r.html"><a href="importing-data-into-r.html"><i class="fa fa-check"></i><b>9</b> Importing data into R</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="importing-data-into-r" class="section level1">
+<h1><span class="header-section-number">Chapter 9</span> Importing data into R</h1>
+<p>working with excel, csv, and tsv files in R</p>
+<p>Import swimming_pools.csv correctly: pools
+pools &lt;- read.csv(“swimming_pools.csv”, stringsAsFactors = FALSE)
+#With stringsAsFactors, you can tell R whether it should convert strings in the flat file to factors.
+Check the structure of pools
+str(pools)</p>
+<p>Import hotdogs.txt: hotdogs
+hotdogs &lt;- read.delim(“hotdogs.txt”, header = FALSE)</p>
+<p>Summarize hotdogs
+summary(hotdogs)</p>
+<p>Path to the hotdogs.txt file: path
+path &lt;- file.path(“data”, “hotdogs.txt”)</p>
+<p>Import the hotdogs.txt file: hotdogs
+hotdogs &lt;- read.table(path,
+sep = “,
+col.names = c(”type“,”calories“,”sodium&quot;))</p>
+<p>Call head() on hotdogs
+head(hotdogs)</p>
+<p>#—————————————————————</p>
+<p>Load the readr package
+library(readr) #read_csv, read_tsv, and read_delim are part of this package</p>
+<p>Import potatoes.csv with read_csv(): potatoes
+potatoes &lt;- read_csv(“potatoes.csv”)</p>
+<p>Column names
+properties &lt;- c(“area”, “temp”, “size”, “storage”, “method”,
+“texture”, “flavor”, “moistness”)</p>
+<p>Import potatoes.txt: potatoes
+potatoes &lt;- read_tsv(“potatoes.txt”, col_names = properties)</p>
+<p>Call head() on potatoes
+head(potatoes)</p>
+<p>Import potatoes.txt using read_delim(): potatoes
+potatoes &lt;- read_delim(“potatoes.txt”, delim = &quot;, col_names = properties)</p>
+<p>Print out potatoes
+potatoes</p>
+<p>Import 5 observations from potatoes.txt: potatoes_fragment
+potatoes_fragment &lt;- read_tsv(“potatoes.txt”, skip = 6, n_max = 5, col_names = properties)</p>
+<p>Import all data, but force all columns to be character: potatoes_char
+potatoes_char &lt;- read_tsv(“potatoes.txt”, col_types = “cccccccc”, col_names = properties)</p>
+<p>Print out structure of potatoes_char
+str(potatoes_char)</p>
+<p>Import without col_types
+hotdogs &lt;- read_tsv(“hotdogs.txt”, col_names = c(“type”, “calories”, “sodium”))</p>
+<p>Display the summary of hotdogs
+summary(hotdogs)</p>
+<p>The collectors you will need to import the data
+fac &lt;- col_factor(levels = c(“Beef”, “Meat”, “Poultry”))
+int &lt;- col_integer()</p>
+<p>Edit the col_types argument to import the data correctly: hotdogs_factor
+hotdogs_factor &lt;- read_tsv(“hotdogs.txt”,
+col_names = c(“type”, “calories”, “sodium”),
+col_types = list(fac, int, int))</p>
+<p>#—————————————————————</p>
+<p>load the data.table package
+library(data.table)</p>
+<p>Import potatoes.csv with fread(): potatoes
+potatoes &lt;- fread(“potatoes.csv”)</p>
+<p>Print out potatoes
+potatoes</p>
+<p>Import columns 6 and 8 of potatoes.csv: potatoes
+potatoes &lt;- fread(“potatoes.csv”, select = c(6, 8))</p>
+<p>Plot texture (x) and moistness (y) of potatoes
+plot(potatoes<span class="math inline">\(texture, potatoes\)</span>moistness)</p>
+<p>#—————————————————————</p>
+<p>Load the readxl package
+library(readxl)</p>
+<p>Print the names of all worksheets
+excel_sheets(“urbanpop.xlsx”)</p>
+<p>Read the sheets, one by one
+pop_1 &lt;- read_excel(“urbanpop.xlsx”, sheet = 1)
+pop_2 &lt;- read_excel(“urbanpop.xlsx”, sheet = 2)
+pop_3 &lt;- read_excel(“urbanpop.xlsx”, sheet = 3)</p>
+<p>Put pop_1, pop_2 and pop_3 in a list: pop_list
+pop_list &lt;- list(pop_1, pop_2, pop_3)</p>
+<p>Display the structure of pop_list
+str(pop_list)</p>
+<p>Read all Excel sheets with lapply(): pop_list
+pop_list &lt;- lapply(excel_sheets(“urbanpop.xlsx”), read_excel, path = “urbanpop.xlsx”)</p>
+<p>Import the first Excel sheet of urbanpop_nonames.xlsx (R gives names): pop_a
+pop_a &lt;- read_excel(“urbanpop_nonames.xlsx”, col_names = FALSE)</p>
+<p>Import the first Excel sheet of urbanpop_nonames.xlsx (specify col_names): pop_b
+cols &lt;- c(“country”, paste0(“year_”, 1960:1966))
+pop_b &lt;- read_excel(“urbanpop_nonames.xlsx”, col_names = cols)</p>
+<p>Import the second sheet of urbanpop.xlsx, skipping the first 21 rows: urbanpop_sel
+urbanpop_sel &lt;- read_excel(“urbanpop.xlsx”, sheet = 2, col_names = FALSE, skip = 21)</p>
+<p>Print out the first observation from urbanpop_sel
+urbanpop_sel[1,]</p>
+<p>#—————————————————————</p>
+<p>Import a local file
+Similar to the readxl package, you can import single Excel sheets from Excel sheets to start your analysis in R.
+Load the gdata package
+library(gdata)</p>
+<p>Import the second sheet of urbanpop.xls: urban_pop
+urban_pop &lt;- read.xls(“urbanpop.xls”, sheet = “1967-1974”)</p>
+<p>Print the first 11 observations using head()
+head(urban_pop, n = 11)</p>
+<p>Column names for urban_pop
+columns &lt;- c(“country”, paste0(“year_”, 1967:1974))</p>
+<p>Finish the read.xls call
+urban_pop &lt;- read.xls(“urbanpop.xls”, sheet = 2,
+skip = 50, header = FALSE, stringsAsFactors = FALSE,
+col.names = columns)</p>
+<p>Print first 10 observation of urban_pop
+head(urban_pop, n = 10)</p>
+<p>Import all sheets from urbanpop.xls
+path &lt;- “urbanpop.xls”
+urban_sheet1 &lt;- read.xls(path, sheet = 1, stringsAsFactors = FALSE)
+urban_sheet2 &lt;- read.xls(path, sheet = 2, stringsAsFactors = FALSE)
+urban_sheet3 &lt;- read.xls(path, sheet = 3, stringsAsFactors = FALSE)</p>
+<p>Extend the cbind() call to include urban_sheet3: urban_all
+urban &lt;- cbind(urban_sheet1, urban_sheet2[-1], urban_sheet3[-1])</p>
+<p>Remove all rows with NAs from urban: urban_clean
+urban_clean &lt;- na.omit(urban)</p>
+<p>Print out a summary of urban_clean
+summary(urban_clean)</p>
+<p>#—————————————————————</p>
+<p>When working with XLConnect, the first step will be to load a workbook in your R session with loadWorkbook(); this function will build a “bridge” between your Excel file and your R session.</p>
+<p>Load the XLConnect package
+library(XLConnect)</p>
+<p>Build connection to urbanpop.xlsx: my_book
+my_book &lt;- loadWorkbook(“urbanpop.xlsx”)</p>
+<p>Print out the class of my_book
+class(my_book)</p>
+<p>List the sheets in my_book
+getSheets(my_book)</p>
+<p>Import the second sheet in my_book
+readWorksheet(my_book, sheet = 2)</p>
+<p>Import columns 3, 4, and 5 from second sheet in my_book: urbanpop_sel
+urbanpop_sel &lt;- readWorksheet(my_book, sheet = 2, startCol = 3, endCol = 5)</p>
+<p>Import first column from second sheet in my_book: countries
+countries &lt;- readWorksheet(my_book, sheet = 2, startCol = 1, endCol = 1)</p>
+<p>cbind() urbanpop_sel and countries together: selection
+selection &lt;- cbind(countries, urbanpop_sel)</p>
+<p>Add a worksheet to my_book, named “data_summary”
+createSheet(my_book, “data_summary”)</p>
+<p>Use getSheets() on my_book
+getSheets(my_book)</p>
+<p>Create data frame: summ
+sheets &lt;- getSheets(my_book)[1:3]
+dims &lt;- sapply(sheets, function(x) dim(readWorksheet(my_book, sheet = x)), USE.NAMES = FALSE)
+summ &lt;- data.frame(sheets = sheets,
+nrows = dims[1, ],
+ncols = dims[2, ])</p>
+<p>Add data in summ to “data_summary” sheet
+writeWorksheet(my_book, summ, “data_summary”)</p>
+<p>Rename “data_summary” sheet to “summary”
+renameSheet(my_book, “data_summary”, “summary”)</p>
+<p>Remove the fourth sheet
+removeSheet(my_book, 4)</p>
+<p>Save workbook to “renamed.xlsx”
+saveWorkbook(my_book, file = “renamed.xlsx”)</p>
+<p>#—————————————————————</p>
+<p>Download various files with download.file()
+Here are the URLs! As you can see they’re just normal strings
+csv_url &lt;- “<a href="http://s3.amazonaws.com/assets.datacamp.com/production/course_1561/datasets/chickwts.csv" class="uri">http://s3.amazonaws.com/assets.datacamp.com/production/course_1561/datasets/chickwts.csv</a>”
+tsv_url &lt;- “<a href="http://s3.amazonaws.com/assets.datacamp.com/production/course_3026/datasets/tsv_data.tsv" class="uri">http://s3.amazonaws.com/assets.datacamp.com/production/course_3026/datasets/tsv_data.tsv</a>”</p>
+<p>Read a file in from the CSV URL and assign it to csv_data
+csv_data &lt;- read.csv(file = csv_url)</p>
+<p>Read a file in from the TSV URL and assign it to tsv_data
+tsv_data &lt;- read.delim(file = tsv_url)</p>
+<p>Examine the objects with head()
+head(csv_data)
+head(tsv_data)</p>
+<p>Download the file with download.file()
+download.file(url = csv_url, destfile = “feed_data.csv”)</p>
+<p>Read it in with read.csv()
+csv_data &lt;- read.csv(file = “feed_data.csv”)</p>
+<p>Add a new column: square_weight
+csv_data<span class="math inline">\(square_weight &lt;- (csv_data\)</span>weight ^ 2)</p>
+<p>Save it to disk with saveRDS()
+saveRDS(object = csv_data, file = “modified_feed_data.RDS”)</p>
+<p>Read it back in with readRDS()
+modified_feed_data &lt;- readRDS(file = “modified_feed_data.RDS”)</p>
+<p>Examine modified_feed_data
+str(modified_feed_data)</p>
+<p>#—————————————————————</p>
+<p>Using data from API clients</p>
+<p>#example 1
+Load pageviews library for wikipedia
+library(pageviews)</p>
+<p>Get the pageviews for “Hadley Wickham”
+hadley_pageviews &lt;- article_pageviews(project = “en.wikipedia”, article = “Hadley Wickham”)</p>
+<p>Examine the resulting object
+str(hadley_pageviews)</p>
+<p>#example 2
+Load birdnik
+library(birdnik)</p>
+<p>Get the word frequency for “vector”, using api_key to access it
+vector_frequency &lt;- word_frequency(key = api_key, words = “vector”)</p>
+<p>#—————————————————————</p>
+<p>Load the httr package
+library(httr)</p>
+<p>Make a GET request to <a href="http://httpbin.org/get" class="uri">http://httpbin.org/get</a>
+get_result &lt;- GET(url = “<a href="http://httpbin.org/get" class="uri">http://httpbin.org/get</a>”)</p>
+<p>Print it to inspect it
+get_result</p>
+<p>Make a POST request to <a href="http://httpbin.org/post" class="uri">http://httpbin.org/post</a> with the body “this is a test”
+post_result &lt;- POST(url = “<a href="http://httpbin.org/post" class="uri">http://httpbin.org/post</a>”, body = “this is a test”)</p>
+<p>Print it to inspect it
+post_result</p>
+<p>Make a GET request to url and save the results
+pageview_response &lt;- GET(url)</p>
+<p>Call content() to retrieve the data the server sent back
+pageview_data &lt;- content(pageview_response)</p>
+<p>Examine the results with str()
+str(pageview_data)</p>
+<p>Handling http failures
+fake_url &lt;- “<a href="http://google.com/fakepagethatdoesnotexist" class="uri">http://google.com/fakepagethatdoesnotexist</a>”</p>
+<p>Make the GET request
+request_result &lt;- GET(fake_url)</p>
+<p>Check request_result
+if(http_error(request_result)){
+warning(“The request failed”)
+} else {
+content(request_result)
+}
+#—————————————————————</p>
+<p>example start to finish</p>
+<p>Load httr
+library(httr)</p>
+<p>The API url
+base_url &lt;- “<a href="https://en.wikipedia.org/w/api.php" class="uri">https://en.wikipedia.org/w/api.php</a>”</p>
+<p>Set query parameters
+query_params &lt;- list(action = “parse”,
+page = “Hadley Wickham”,
+format = “xml”)</p>
+<p>Get data from API
+resp &lt;- GET(url = base_url, query = query_params)</p>
+<p>Parse response
+resp_xml &lt;- content(resp)</p>
+<p>Load rvest
+library(rvest)</p>
+<p>Read page contents as HTML
+page_html &lt;- read_html(xml_text(resp_xml))</p>
+<p>Extract infobox element
+infobox_element &lt;- html_node(x = page_html, css =“.infobox”)</p>
+<p>Extract page name element from infobox
+page_name &lt;- html_node(x = infobox_element, css = “.fn”)</p>
+<p>Extract page name as text
+page_title &lt;- html_text(page_name)</p>
+<p>Your code from earlier exercises
+wiki_table &lt;- html_table(infobox_element)
+colnames(wiki_table) &lt;- c(“key”, “value”)
+cleaned_table &lt;- subset(wiki_table, !key == &quot;&quot;)</p>
+<p>Create a dataframe for full name
+name_df &lt;- data.frame(key = “Full name”, value = page_title)</p>
+<p>Combine name_df with cleaned_table
+wiki_table2 &lt;- rbind(name_df, cleaned_table)</p>
+<p>Print wiki_table
+wiki_table2</p>
+<p>Reproducibility</p>
+<p>library(httr)
+library(rvest)
+library(xml2)</p>
+<p>get_infobox &lt;- function(title){
+base_url &lt;- “<a href="https://en.wikipedia.org/w/api.php" class="uri">https://en.wikipedia.org/w/api.php</a>”</p>
+<p>Change “Hadley Wickham” to title
+query_params &lt;- list(action = “parse”,
+page = title,
+format = “xml”)</p>
+<p>resp &lt;- GET(url = base_url, query = query_params)
+resp_xml &lt;- content(resp)</p>
+<p>page_html &lt;- read_html(xml_text(resp_xml))
+infobox_element &lt;- html_node(x = page_html, css =“.infobox”)
+page_name &lt;- html_node(x = infobox_element, css = “.fn”)</p>
+<p>#—————————————————————</p>
+<p>Construct a directory-based API URL to <code>http://swapi.co/api</code>,
+looking for person <code>1</code> in <code>people</code>
+directory_url &lt;- paste(“<a href="http://swapi.co/api" class="uri">http://swapi.co/api</a>”, “people”, “1”, sep = “/”)</p>
+<p>Make a GET call with it
+result &lt;- GET(directory_url)</p>
+<p>Create list with nationality and country elements
+query_params &lt;- list(nationality = “americans”,
+country = “antigua”)</p>
+<p>Make parameter-based call to httpbin, with query_params
+parameter_response &lt;- GET(“<a href="https://httpbin.org/get" class="uri">https://httpbin.org/get</a>”, query = query_params)</p>
+<p>Print parameter_response
+parameter_response</p>
+<p>#—————————————————————</p>
+<p>Using user agents
+Informative user-agents are a good way of being respectful of the developers running the API you’re interacting with.
+They make it easy for them to contact you in the event something goes wrong. I always try to include:
+#My email address;
+#A URL for the project the code is a part of, if it’s got a URL.</p>
+<p>Do not change the url
+url &lt;- “<a href="https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Aaron_Halfaker/daily/2015100100/2015103100" class="uri">https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Aaron_Halfaker/daily/2015100100/2015103100</a>”</p>
+<p>Add the email address and the test sentence inside user_agent()
+server_response &lt;- GET(url, user_agent(“<a href="mailto:my@email.address" class="email">my@email.address</a> this is a test”))</p>
+<p>Rate-limiting
+The next stage of respectful API usage is rate-limiting: making sure you only make a certain number of requests to the server in a given time period.
+Your limit will vary from server to server, but the implementation is always pretty much the same and involves a call to Sys.sleep().
+This function takes one argument, a number, which represents the number of seconds to “sleep” (pause) the R session for.
+So if you call Sys.sleep(15), it’ll pause for 15 seconds before allowing further code to run.</p>
+<p>Construct a vector of 2 URLs
+urls &lt;- c(“<a href="http://httpbin.org/status/404" class="uri">http://httpbin.org/status/404</a>”,
+“<a href="http://httpbin.org/status/301" class="uri">http://httpbin.org/status/301</a>”)</p>
+<p>for(url in urls){
+Send a GET request to url
+result &lt;- GET(url)
+Delay for 5 seconds between requests
+Sys.sleep(5)
+}</p>
+<p>Tying it all together
+get_pageviews &lt;- function(article_title){
+url &lt;- paste(
+“<a href="https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents" class="uri">https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents</a>”,
+article_title,
+“daily/2015100100/2015103100”,
+sep = “/”
+)<br />
+response &lt;- GET(url, user_agent(“<a href="mailto:my@email.com" class="email">my@email.com</a> this is a test”))
+Is there an HTTP error?
+if(http_error(response)){
+Throw an R error
+stop(“the request failed”)
+}
+Return the response’s content
+content(response)
+}
+#—————————————————————</p>
+<p>working with JSON files (for more information see: www.json.org)
+While JSON is a useful format for sharing data, your first step will often be to parse it into an R object, so you can manipulate it with R.</p>
+<p>Get revision history for “Hadley Wickham”
+resp_json &lt;- rev_history(“Hadley Wickham”)</p>
+<p>Check http_type() of resp_json
+http_type(resp_json) confirm the API returned a JSON object</p>
+<p>Examine returned text with content()
+content(resp_json, as = “text”)</p>
+<p>Parse response with content()
+content(resp_json, as = “parsed”)</p>
+<p>Parse returned text with fromJSON()
+library(jsonlite)
+fromJSON(content(resp_json, as = “text”))</p>
+<p>Manipulating parsed JSON
+Load rlist
+library(rlist)</p>
+<p>Examine output of this code
+str(content(resp_json), max.level = 4)</p>
+<p>Store revision list
+revs &lt;- content(resp_json)<span class="math inline">\(query\)</span>pages<span class="math inline">\(`41916270`\)</span>revisions</p>
+<p>Extract the user element
+user_time &lt;- list.select(revs, user, timestamp)</p>
+<p>Print user_time
+user_time</p>
+<p>Stack to turn into a data frame
+list.stack(user_time)</p>
+<p>Load dplyr
+library(dplyr)</p>
+<p>Pull out revision list
+revs &lt;- content(resp_json)<span class="math inline">\(query\)</span>pages<span class="math inline">\(`41916270`\)</span>revisions</p>
+<p>Extract user and timestamp
+revs %&gt;%
+bind_rows() %&gt;%
+select(user, timestamp)</p>
+<p>#—————————————————————
+working with XML files
+Just like JSON, you should first verify the response is indeed XML with http_type()
+and by examining the result of content(r, as = “text”).
+Then you can turn the response into an XML document object with read_xml()</p>
+<p>Load xml2
+library(xml2)</p>
+<p>Get XML revision history
+resp_xml &lt;- rev_history(“Hadley Wickham”, format = “xml”)</p>
+<p>Check response is XML
+http_type(resp_xml)</p>
+<p>Examine returned text with content()
+rev_text &lt;- content(resp_xml, as = “text”)
+rev_text</p>
+<p>Turn rev_text into an XML document
+rev_xml &lt;- read_xml(rev_text)</p>
+<p>Examine the structure of rev_xml
+xml_structure(rev_xml)</p>
+<p>Extracting XML data
+Find all nodes using XPATH “/api/query/pages/page/revisions/rev”
+xml_find_all(rev_xml, “/api/query/pages/page/revisions/rev”)</p>
+<p>Find all rev nodes anywhere in document
+rev_nodes &lt;- xml_find_all(rev_xml, “//rev”)</p>
+<p>Use xml_text() to get text from rev_nodes
+xml_text(rev_nodes)</p>
+<p>Extracting XML attributes
+All rev nodes
+rev_nodes &lt;- xml_find_all(rev_xml, “//rev”)</p>
+<p>The first rev node
+first_rev_node &lt;- xml_find_first(rev_xml, “//rev”)</p>
+<p>Find all attributes with xml_attrs()
+xml_attrs(first_rev_node)</p>
+<p>Find user attribute with xml_attr()
+xml_attr(first_rev_node, “user”)</p>
+<p>Find user attribute for all rev nodes
+xml_attr(rev_nodes, “user”)</p>
+<p>Find anon attribute for all rev nodes
+xml_attr(rev_nodes, “anon”)</p>
+<p>returning nice API output
+get_revision_history &lt;- function(article_title){
+Get raw revision response
+rev_resp &lt;- rev_history(article_title, format = “xml”) }</p>
+<p>Turn the content() of rev_resp into XML
+rev_xml &lt;- read_xml(content(rev_resp, “text”))</p>
+<p>Find revision nodes
+rev_nodes &lt;- xml_find_all(rev_xml, “//rev”)</p>
+<p>Parse out usernames
+user &lt;- xml_attr(rev_nodes, “user”)</p>
+<p>Parse out timestamps
+timestamp &lt;- readr::parse_datetime(xml_attr(rev_nodes, “timestamp”))</p>
+<p>Parse out content
+content &lt;- xml_text(rev_nodes)</p>
+<p>#—————————————————————</p>
+<p>web scraping 101
+The first step with web scraping is actually reading the HTML in.
+This can be done with a function from xml2, which is imported by rvest - read_html().
+This accepts a single URL, and returns a big blob of XML that we can use further on.</p>
+<p>Load rvest
+library(rvest)</p>
+<p>Hadley Wickham’s Wikipedia page
+test_url &lt;- “<a href="https://en.wikipedia.org/wiki/Hadley_Wickham" class="uri">https://en.wikipedia.org/wiki/Hadley_Wickham</a>”</p>
+<p>Read the URL stored as “test_url” with read_html()
+test_xml &lt;- read_html(test_url)</p>
+<p>Print test_xml
+test_xml</p>
+<p>#html_node(), which extracts individual chunks of HTML from a HTML document.
+There are a couple of ways of identifying and filtering nodes, and for now we’re going to use XPATHs:
+unique identifiers for individual pieces of a HTML document.</p>
+<p>Use html_node() to grab the node with the XPATH stored as <code>test_node_xpath</code>
+node &lt;- html_node(x = test_xml, xpath = test_node_xpath)</p>
+<p>Print the first element of the result
+node[[1]]</p>
+<p>Extract the name of table_element
+element_name &lt;- html_name(table_element)</p>
+<p>Print the name
+element_name</p>
+<p>Extract the element of table_element referred to by second_xpath_val and store it as page_name
+page_name &lt;- html_node(x = table_element, xpath = second_xpath_val)</p>
+<p>Extract the text from page_name
+page_title &lt;- html_text(page_name)</p>
+<p>Print page_title
+page_title</p>
+<p>Turn table_element into a data frame and assign it to wiki_table
+wiki_table &lt;- html_table(table_element)</p>
+<p>Print wiki_table
+wiki_table</p>
+<p>Cleaning a data frame
+Rename the columns of wiki_table
+colnames(wiki_table) &lt;- c(“key”, “value”)</p>
+<p>Remove the empty row from wiki_table
+cleaned_table &lt;- subset(wiki_table, !key == &quot;&quot;)</p>
+<p>Print cleaned_table
+cleaned_table</p>
+<p>#—————————————————————</p>
+<p>CSS web scraping
+CSS is a way to add design information to HTML, that instructs the browser on how to display the content.
+You can leverage these design instructions to identify content on the page.</p>
+<p>Select the table elements
+html_nodes(test_xml, css = “table”)</p>
+<p>Select elements with class = “infobox”
+html_nodes(test_xml, css = “.infobox”)</p>
+<p>Select elements with id = “firstHeading”
+html_nodes(test_xml, css = “#firstHeading”)</p>
+<p>Extract element with class infobox
+infobox_element &lt;- html_nodes(test_xml, css = “.infobox”)</p>
+<p>Get tag name of infobox_element
+element_name &lt;- html_name(infobox_element)</p>
+<p>Print element_name
+element_name</p>
+<p>Extract element with class fn
+page_name &lt;- html_node(x = infobox_element, css = “.fn”)</p>
+<p>Get contents of page_name
+page_title &lt;- html_text(page_name)</p>
+<p>Print page_title
+page_title</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="resources.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
