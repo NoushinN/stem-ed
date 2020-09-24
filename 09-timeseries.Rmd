@@ -12,26 +12,26 @@ xts objects are simple. Think of them as a matrix of observations combined with 
 ```{r xts objects, message= FALSE}
 
 data <- rnorm(5)
-print(data)
+head(data, 3)
 
 # Create dates as a Date class object starting from 2016-01-01
 dates <- seq(as.Date("2016-01-01"), length = 5, by = "days")
-print(dates)
+head(dates, 3)
 
 # Use xts() to create data_dates
 xts <- dates + data 
 
 #xts takes two arguments: x for the data and order.by for the index
 data_dates <- xts(x = data, order.by = dates)
-print(data_dates)
+head(data_dates, 3)
 
 # Create one_date (1899-05-08) using a POSIXct date class object
 one_date <- as.POSIXct("1899-05-08")
-print(one_date)
+head(one_date, 3)
 
 # Create some_dates and add a new attribute called one_date
 some_dates <- xts(x = data, order.by = dates, born = one_date)
-print(some_dates)
+head(some_dates, 3)
 
 ```
 
@@ -40,7 +40,6 @@ Extract the core data of some_dates
 ```{r deconstruct xts, message= FALSE}
 
 some_dates_core <- coredata(some_dates)
-print(some_dates_core)
 
 # View the class of some_dates_core
 class(some_dates_core)
@@ -57,11 +56,11 @@ dates <- as.Date("2016-01-01") + 0:4
 
 # Create ts_a
 ts_a <- xts(x = 1:5, order.by = dates)
-head(ts_a)
+head(ts_a, 3)
 
 # Create ts_b
 ts_b <- xts(x = 1:5, order.by = as.POSIXct(dates))
-head(ts_b)
+head(ts_b, 3)
 
 # Extract the rows of ts_a using the index of ts_b
 ts_a[index(ts_b)]
@@ -81,18 +80,16 @@ data(austres)
 # Convert austres to an xts object called au and inspect
 au <- as.xts(austres)
 class(au)
-print(au)
-head(au)
+head(au, 3)
 
 # Then convert your xts object (au) into a matrix am and inspect
 am <- as.matrix(au)
 class(am)
-print(am)
-head(am)
+head(am, 3)
 
 # Convert the original austres into a matrix am2
 am2 <- as.matrix(austres)
-head(am2)
+head(am2, 3)
 ```
 
 Create dat by reading tmp_file:
@@ -130,21 +127,12 @@ Read the tmp file. FUN = as.yearmon converts strings such as Jan 1749 into a pro
 
 ```{r read zoo file, message= FALSE}
 sun <- read.zoo(tmp, sep = ",", FUN = as.yearmon)
-head(sun)
+head(sun, 3)
 
 # Convert sun into xts. Save this as sun_xts
 sun_xts <- as.xts(sun)
-head(sun_xts)
+head(sun_xts, 3)
 
-
-# time based queries
-##A["20090825"]       #Aug 25, 2009
-##A["201203/201212"]  #Mar to Dec 2012
-##A["/201601"]        #Up to and including January 2016
-path <- set_here("~/STEM_Education/Data Analysis Lessons/8. DATA PREP")
-x <- readxl::read_excel("data_1.xls", sheet = 1)
-x[,"DATE"] <- as.Date('Jun-15',format = '%m %Y, %d')
-x <- as.xts(x)
 
 # Select all of 2016 from x
 x_2016 <- x["2010"]
@@ -156,19 +144,9 @@ jan_march <- x["2016/2016-03-22"]
 # Verify that jan_march contains 82 rows
 82 == length(jan_march)
 
-# Extracting recurring intraday intervals
-# Intraday times for all days
-NYSE["T09:30/T16:00"] 
-Extract all data between 8AM and 10AM
-morn_2010 <- irreg["T08:00/T10:00"]
-
-# Extract the observations for January 13th, 2010
-morn_2010["2010-01-13"]
-
-
 # Row selection with time objects
 # Subset x using the vector dates
-x[dates]
+jan_march[dates]
 
 # Subset x using dates as POSIXct
 x[as.POSIXct(dates)]
@@ -189,23 +167,27 @@ Additional Methods To Find Periods in Your Data
 #Using the first() and last() functions
 
 Create lastweek using the last 1 week of temps
-lastweek <- last(temps, "1 week")
+```{r last with R, message= FALSE}
 
-Print the last 2 observations in lastweek
+lastweek <- last(sun, "1 week")
+
+# Print the last 2 observations in lastweek
 last(lastweek, 2)
 
-Extract all but the first two days of lastweek
-first(lastweek, "-2 days")
+# Extract all but the first two days of lastweek
+first(lastweek, "2 days")
 
-Extract the first three days of the second week of temps
-first(last(first(temps, "2 weeks"), "1 week"), "3 days")
-
+# Extract the first three days of the second week of temps
+first(last(first(sun, "2 weeks"), "1 week"), "3 days")
+```
 
 Math operations in xts
 Matrix arithmetic - add, subtract, multiply, and divide in time!
-#Use coredata() or as.numeric() (drop one to a matrix or vector).
-#Manually shift index values - i.e. use lag().
-#Reindex your data (before or after the calculation).
+Use coredata() or as.numeric() (drop one to a matrix or vector).
+Manually shift index values - i.e. use lag().
+Reindex your data (before or after the calculation).
+
+```{r last with R, message= FALSE}
 
 a <- xts(x = 1:2, as.Date("2012-01-01") + 0:1)
 a[index(a)]
@@ -218,32 +200,32 @@ b <- xts(x = 1:2, as.Date("2013-01-01") + 0:1)
 b[index(b)]
 
 
-Add a and b
+# Add a and b
 a + b
 
-Add a with the numeric value of b
+# Add a with the numeric value of b
 a + as.numeric(b)
 
 
-Add a to b, and fill all missing rows of b with 0
+# Add a to b, and fill all missing rows of b with 0
 a + merge(b, index(a), fill = 0)
 
-Add a to b and fill NAs with the last observation
+# Add a to b and fill NAs with the last observation
 a + merge(b, index(a), fill = na.locf)
 
-Merging time series
-Perform an inner join of a and b
+# Merging time series
+## Perform an inner join of a and b
 merge(a, b, join = "inner")
 
-Perform a left-join of a and b, fill missing values with 0
+# Perform a left-join of a and b, fill missing values with 0
 merge(a, b, join = "left", fill = 0)
 
-Combining xts by row with rbind
-Row bind a and b, assign this to temps2
+# Combining xts by row with rbind
+## Row bind a and b, assign this to temps2
 temps2 <- rbind(a, b)
 temps_2
 
-
+```
 
 Handling missingness in your data
 
