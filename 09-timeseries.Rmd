@@ -223,230 +223,190 @@ merge(a, b, join = "left", fill = 0)
 # Combining xts by row with rbind
 ## Row bind a and b, assign this to temps2
 temps2 <- rbind(a, b)
-temps_2
+head(temps2,4)
 
 ```
 
 Handling missingness in your data
 
 #Airpass data: install.packages("TSA") and library(TSA)
+```{r load data from TSA package, message= FALSE}
+library(TSA)
 data("airpass")
-head(airpass)
+head(airpass, 3)
+```
 
 Fill missing values in temps using the last observation
+```{r fill values of airpass, message= FALSE}
 temps_last <- na.locf(airpass)
-print(temps_last)
+head(temps_last, 4)
 
+```
 Fill missing values in temps using the next observation
 Fill missing values using last or previous observation
-Last obs. carried forward
-#na.locf(x)                
+Last obs. carried forward: na.locf(x)                
 
 Next obs. carried backward
-#na.locf(x, fromLast = TRUE)
-#locf = last object carried forward
+na.locf(x, fromLast = TRUE)
+locf = last object carried forward
+
+```{r na.locf for airpass, message= FALSE}
 
 temps_next <- na.locf(airpass, fromLast = TRUE)
-print(temps_next)
+head(temps_next, 4)
 
-NA interpolation using na.approx()
-Interpolate NAs using linear approximation
+# NA interpolation using na.approx()
+## Interpolate NAs using linear approximation
 
 na.approx(airpass)
-
+```
 
 
 Lag operators and difference operations
 Combine a leading and lagging time series
-#Your final object
-#cbind(lead_x, x, lag_x)
 
-Create a leading object called lead_x
-lead_x <- lag(airpass, k = -1)
-print(lead_x)
+```{r lag airpass, message= FALSE}
 
-Create a lagging object called lag_x
+# Create a lagging object called lag_x
 #The k argument in zoo uses positive values for shifting past observations forward and negative values for shifting them backwards
-lag_x  <- lag(airpass, k = 1)
-print(lag_x)
-
+x <- stats::lag(airpass, k = 1)
+head(x, 5)
+```
 Merge your three series together and assign to z
-z <- merge(lead_x, x, lag_x)
 
-#Calculate a difference of a series using diff()
+Calculate a difference of a series using diff()
 Calculate the first difference of AirPass using lag and subtraction
 
-#These are the same
-##diff(x, differences = 2)
-##diff(diff(x))
+```{r diff in airpass, message= FALSE}
 
-diff_by_hand <- airpass - lag(airpass)
-print(diff_by_hand)
+diff(x, differences = 2)
+diff(diff(x))
 
+diff_by_hand <- x - stats::lag(x)
+head(diff_by_hand, 5)
+```
 Use merge to compare the first parts of diff_by_hand and diff(AirPass)
-merge(head(diff_by_hand), head(diff(airpass)))
+```{r diff in airpass, message= FALSE}
 
-Calculate the first order 12 month difference of AirPass
-diff(airpass, lag = 12, differences = 1)
+head(diff(airpass))
 
-
+```
 
 One of the benefits to working with time series objects is how easy it is to apply functions by time.
 Apply by Time
 
 Locate the years
+```{r locate years in airpass, message= FALSE}
+
 endpoints(airpass, on = "years")
 
-Locate every two years
-#In order to find the end of the second year, you should set k = 2 in your second endpoints() call.
+# Locate every two years
+# In order to find the end of the second year, you should set k = 2 in your second endpoints() call.
 endpoints(airpass, on = "years", k = 2)
 
-Calculate the yearly endpoints
+# Calculate the yearly endpoints
 ep <- endpoints(airpass, on = "years")
 
-Now calculate the weekly mean and display the results
-period.apply(airpass[, "Temp.Mean"], INDEX = ep, FUN = mean)
-
 #Using lapply() and split() to apply functions on intervals
-Split temps by years
-temps_yearly <- split(airpass, f = "years") could also split by "months" etc.
+# Split temps by years
+temps_yearly <- split(airpass, f = "years") # could also split by "months" etc.
 
-Create a list of weekly means, temps_avg, and print this list
+# Create a list of weekly means, temps_avg, and print this list
 temps_avg <- lapply(X = temps_yearly, FUN = mean)
 temps_avg
 
 #Selection by endpoints vs. split-lapply-rbind
-Use the proper combination of split, lapply and rbind
+# Use the proper combination of split, lapply and rbind
 temps_1 <- do.call(rbind, lapply(split(airpass, "years"), function(w) last(w)))
 temps_1
 
-Create last_day_of_weeks using endpoints()
+# Create last_day_of_weeks using endpoints()
 last_year_of_data <- endpoints(airpass, "years")
 last_year_of_data
 
-Subset airpass using last_year_of_data 
+# Subset airpass using last_year_of_data 
 temps_2 <- airpass[last_year_of_data]
 temps_2
-
+```
 
 
 Convert univariate series to OHLC data
-#Aggregating time series
-#in financial series it is common to find Open-High-Low-Close data (or OHLC) calculated over some repeating and regular interval.
-path <- set_here("~/STEM_Education/Data Analysis Lessons/8. DATA PREP")
-usd_eur <- readxl::read_excel("data_1.xls", sheet = 2)
+Aggregating time series
+In financial series it is common to find Open-High-Low-Close data (or OHLC) calculated over some repeating and regular interval.
+
+```{r xts data, message= FALSE}
 
 ts_b <- xts(x = 1:5, order.by = as.POSIXct(dates))
 
 
-Convert usd_eur to weekly and assign to usd_eur_weekly
-usd_eur_weekly <- to.period(usd_eur, period = "weeks")
+# Convert usd_eur to weekly and assign to usd_eur_weekly
+usd_eur_weekly <- to.period(x, period = "weeks")
 
-Convert usd_eur to monthly and assign to usd_eur_monthly
-usd_eur_monthly <- to.period(usd_eur, period = "months")
+# Convert usd_eur to monthly and assign to usd_eur_monthly
+usd_eur_monthly <- to.period(x, period = "months")
 
-Convert usd_eur to yearly univariate and assign to usd_eur_yearly
-usd_eur_yearly <- to.period(usd_eur, period = "years", OHLC = FALSE)
+# Convert eq_mkt to quarterly using shortcut function
+mkt_quarterly2 <- to.monthly(x, name = "edhec_equity", indexAt = "firstof")
 
-
-Convert eq_mkt to quarterly OHLC
-mkt_quarterly <- to.period(usd_eur, period = "quarters")
-
-Convert eq_mkt to quarterly using shortcut function
-mkt_quarterly2 <- to.quarterly(usd_eur, name = "edhec_equity", indexAt = "firstof")
-
-
-
-Rolling functions - apply windowing functions to time series data
-
-path <- set_here("~/STEM_Education/Data Analysis Lessons/8. DATA PREP")
-edhec <- readxl::read_excel("data_1.xls", sheet = 3)
-
-edhec <- xts(edhec, order.by = as.Date(rownames(edhec), "%Y/%m/%d"))
-dat_zoo <- read.zoo(edhec, index.column = 0, sep = ",", format = "%Y/%m/%d")
-dat_xts <- as.xts(dat_zoo)
-
-
-Split edhec into years
-edhec_years <- split(edhec, f = "years")
-
-Use lapply to calculate the cumsum for each year in edhec_years
-edhec_ytd <- lapply(edhec_years, FUN = cumsum)
-
-Use do.call to rbind the results
-edhec_xts <- do.call(rbind, edhec_ytd)
-
-Calculate the rolling standard deviation of a time series
-Use rollapply to calculate the rolling 3 period sd of edhec
-eq_sd <- rollapply(edhec, 3, sd)
-eq_sd
-
+```
 
 
 Index, Attributes, and Timezones
 
 View the first three indexes of temps
-index(edhec)[1:3]
+```{r index data, message= FALSE}
 
-Get the index class of temps
-indexClass(edhec)
+index(x)[1:3]
 
-Get the timezone of temps
-indexTZ(edhec)
+# Get the index class of temps
+indexClass(x)
 
-Change the format of the time display
-indexFormat(edhec) <- "%Y-%m-%d"
+# Get the timezone of temps
+indexTZ(x)
 
-View the new format
-head(edhec)
 
-Construct times_xts with tzone set to America/Chicago
-times_xts <- xts(1:10, order.by = times, tzone = "America/Chicago")
+# Change the time zone of times_xts to Asia/Hong_Kong
+tzone(x) <- "Asia/Hong_Kong"
 
-Change the time zone of times_xts to Asia/Hong_Kong
-tzone(times_xts) <- "Asia/Hong_Kong"
-
-Extract the current time zone of times_xts
-tzone(times_xts)
-
+# Extract the current time zone of times_xts
+tzone(x)
+```
 
 Periods, Periodicity and Timestamps
 
 Calculate the periodicity of edhec
-periodicity(edhec)
 
-Convert edhec to yearly
-edhec_yearly <- to.yearly(edhec)
+```{r periodicity of data, message= FALSE}
 
-Calculate the periodicity of edhec_yearly
-periodicity(edhec_yearly)
+periodicity(x)
 
-Count the months
-nmonths(edhec)
+# Calculate the periodicity of edhec_yearly
+periodicity(x)
 
-Count the quarters
-nquarters(edhec)
+# Count the months
+nmonths(x)
 
-Count the years
-nyears(edhec)
+# Count the quarters
+nquarters(x)
 
+```
 
 Explore underlying units of temps in two commands: .index() and .indexwday()
-.index(edhec)
-.indexwday(edhec)
+.index(ts_b)
+.indexwday(ts_b)
 
-Create an index of weekend days using which()
-index <- which(.indexwday(edhec) == 0 | .indexwday(edhec) == 6)
+Create an index of weekend days using which():
+```{r temps and index, message= FALSE}
 
-Select the index
-edhec[index]
+# Make ts_b have unique timestamps
+z_unique <- make.index.unique(ts_b, eps = 1e-4)
+head(z_unique, 3)
 
+# Remove duplicate times in ts_b
+z_dup <- make.index.unique(ts_b, drop = TRUE)
+head(z_dup, 3)
 
-Make edhec have unique timestamps
-z_unique <- make.index.unique(edhec, eps = 1e-4)
-
-Remove duplicate times in edhec
-z_dup <- make.index.unique(edhec, drop = TRUE)
-
-Round observations in edhec to the next hour
-z_round <- align.time(edhec, n = 3600)
+# Round observations in ts_b to the next hour
+z_round <- align.time(ts_b, n = 3600)
+head(z_round, 3)
+```
