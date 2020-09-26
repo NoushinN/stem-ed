@@ -1,6 +1,6 @@
 # Impute missingness
 
-```{r load missingness libraries, message= FALSE}
+```{r load naniar, message= FALSE}
 
 # load libraries
 library(tidyverse)
@@ -8,26 +8,35 @@ library(naniar)
 ```
 
 Create x, a vector, with values NA, NaN, Inf, ".", and "missing"
+
+```{r make missing data, message= FALSE}
+
 x <- c(NA, NaN, Inf, ".", "missing")
 
-Use any_na() and are_na() on to explore the missings
+# Use any_na() and are_na() on to explore the missings
 any_na(x)
 are_na(x)
 
-Use n_miss() to count the total number of missing values in x
+# Use n_miss() to count the total number of missing values in x
 n_miss(x)
 
-Use n_complete() on dat_hw to count the total number of complete values
+# Use n_complete() on dat_hw to count the total number of complete values
 n_complete(x)
+```
 
+Use prop_miss() and prop_complete on dat_hw to count the total number of missing values in each of the variables:
+```{r proportion of missingness, message= FALSE}
 
-Use prop_miss() and prop_complete on dat_hw to count the total number of missing values in each of the variables
 prop_miss(x)
 prop_complete(x)
+```
 
-starwars data to use to find missing values
 
+Use tarwars data to use to find missing values
 summarizing missingness
+
+```{r load starwars, message= FALSE}
+
 starwars %>%
   miss_var_summary()
 
@@ -35,128 +44,147 @@ starwars %>%
   group_by(birth_year) %>%
   miss_var_summary()
 
-Return the summary of missingness in each case, by group
+# Return the summary of missingness in each case, by group
 starwars %>%
-  miss_case_summary()
+  miss_case_summary() %>%
+  head()
 
 starwars %>%
   group_by(birth_year) %>%
-  miss_case_summary()
+  miss_case_summary() %>%
+  head()
 
-Tabulate missingness in each variable and case of the dataset
+# Tabulate missingness in each variable and case of the dataset
 starwars %>%
-  miss_var_table()
+  miss_var_table() %>%
+  head()
 
-Tabulate the missingness in each variable and in grouped_by
+# Tabulate the missingness in each variable and in grouped_by
 starwars %>%
-  miss_case_table()
-
-starwars %>%
-  group_by(birth_year) %>%
-  miss_var_table()
-
-Tabulate the missingness in each variable and in grouped_by
-starwars %>%
-  miss_case_table()
+  miss_case_table() %>%
+  head()
 
 starwars %>%
   group_by(birth_year) %>%
-  miss_case_table()
+  miss_var_table() %>%
+  head()
+
+# Tabulate the missingness in each variable and in grouped_by
+starwars %>%
+  miss_case_table() %>%
+  head()
+
+starwars %>%
+  group_by(birth_year) %>%
+  miss_case_table() %>%
+  head()
+```
 
 Other summaries of missingness
 Calculate the summaries for each span of missingness
 
-For each `birth_year` variable, calculate the run of missingness
+For each `birth_year` variable, calculate the run of missingness:
+
+```{r calculate missing summaries, message= FALSE}
+
 starwars %>%
   miss_var_run(var = birth_year)
 
-For each `birth_year` variable, calculate the run of missingness every 2 years
+# For each `birth_year` variable, calculate the run of missingness every 2 years
 starwars %>%
   miss_var_span(var = birth_year, span_every = 2)
 
-
-
-Visualize missing values
+# Visualize missing values
 vis_miss(starwars)
 
-Visualize and cluster all of the missingness 
+# Visualize and cluster all of the missingness 
 vis_miss(starwars, cluster = TRUE)
 
-Visualize and sort the columns by missingness
+# Visualize and sort the columns by missingness
 vis_miss(starwars, sort_miss = TRUE)
+```
 
 Visualizing missing cases and variables
-Visualize the number of missings in variables using `gg_miss_var()`
+Visualize the number of missings in variables using `gg_miss_var()`:
+
+```{r visualize missing data, message= FALSE}
+
 gg_miss_var(starwars)
 gg_miss_var(starwars, facet = birth_year)
 
-Explore the number of missings in cases using `gg_miss_case()` and facet by the variable `birth_year`
+# Explore the number of missings in cases using `gg_miss_case()` and facet by the variable `birth_year`
 gg_miss_var(starwars)
 gg_miss_case(starwars, facet = birth_year)
 
-Explore the missingness pattern using gg_miss_upset()
+# Explore the missingness pattern using gg_miss_upset()
 gg_miss_upset(starwars)
 
-Explore how the missingness changes across the birth_year variable using gg_miss_fct()
+# Explore how the missingness changes across the birth_year variable using gg_miss_fct()
 gg_miss_fct(starwars, fct = birth_year)
 
-and explore how missingness changes for a span of 2 years 
-gg_miss_span(starwars, var =birth_year, span_every = 100, facet = mass) also possible to facet
-
+# and explore how missingness changes for a span of 2 years 
+gg_miss_span(starwars, var =birth_year, span_every = 100, facet = mass) # also possible to facet
+```
 
 
 
 Explicitly missing values
 Searching for and replacing missing values
+
+```{r search and replace missing data, message= FALSE}
+
 df <- tibble::tribble(
   ~name,           ~x,  ~y,              ~z,  
-  "N/A",           1,   "N/A",           -100, 
-  "N/A",           3,   "Not Available", -99,
-  "N/A",         NA,  29,              -98,
-  "Not Available", -99, 25,              -101,
-  "John Smith",    -98, 28,              -1)
+  "N/A",           "1",   "N/A",           "-100", 
+  "N/A",           "3",   "Not Available", "-99",
+  "N/A",         "NA",  "29",              "-98",
+  "Not Available", "-99", "25",              "-101",
+  "John Smith",    "-98", "28",              "-1")
 
 
-Explore the strange missing values "N/A"
+# Explore the strange missing values "N/A"
 miss_scan_count(data = df, search = list("N/A"))
 
-Explore the strange missing values "missing"
+# Explore the strange missing values "missing"
 miss_scan_count(data = df, search = list("missing"))
 
-Explore the strange missing values "na"
+# Explore the strange missing values "na"
 miss_scan_count(data = df, search = list("na"))
 
-Explore the strange missing values "Not Available"
+# Explore the strange missing values "Not Available"
 miss_scan_count(data = df, search = list("Not Available"))
 
-Explore the strange missing values " " (a single space)
+# Explore the strange missing values " " (a single space)
 miss_scan_count(data = df, search = list(" "))
 
-Explore all of the strange missing values, "N/A", "missing", "na", " "
+# Explore all of the strange missing values, "N/A", "missing", "na", " "
 miss_scan_count(data = df, search = list("N/A", "missing","na", " ", "Not Available"))
 
-
-Replace the strange missing values "N/A", "na", and "missing" with `NA` for the variables x and y
+# Replace the strange missing values "N/A", "na", and "missing" with `NA` for the variables x and y
 df_clean <- replace_with_na(df, replace = list(x = c("N/A", "missing","na", " ", "Not Available"),
                                                        y = c("N/A", "missing","na", " ", "Not Available")))
+```
 
 Test if `df_clean` still has these values in it?
+
+```{r df clean, message= FALSE}
+
 miss_scan_count(df_clean, search = list("N/A", "missing","na", " ", "Not Available"))
 
-Use `replace_with_na_at()` to replace with NA
+# Use `replace_with_na_at()` to replace with NA
 replace_with_na_at(df,
                    .vars = c("x", "y", "name"), 
                    ~.x %in% c("N/A", "missing","na", " ", "Not Available"))
 
-Use `replace_with_na_if()` to replace with NA the character values using `is.character`
+# Use `replace_with_na_if()` to replace with NA the character values using `is.character`
 replace_with_na_if(df,
                    .predicate = is.character, 
                    ~.x %in% c("N/A", "missing","na", " ", "Not Available"))
 
-Use `replace_with_na_all()` to replace with NA
+# Use `replace_with_na_all()` to replace with NA
 replace_with_na_all(df, ~.x %in% c("N/A", "missing","na", " ", "Not Available"))
 
-
+```
 
 
 Implicitly missing values
@@ -165,27 +193,30 @@ Print the frogger data to have a look at it
 starwars
 
 Use `complete()` on the `time` variable to make implicit missing values explicit
+
+```{r implicit NA, message= FALSE}
+
 starwars_tidy <- starwars %>% complete(name, hair_color)
 
-Use `fill()` to fill down the name variable in the starwars dataset
+# Use `fill()` to fill down the name variable in the starwars dataset
 starwars %>% fill(name)
 
-Correctly fill() and complete() missing values so that our dataset becomes sensible
+# Correctly fill() and complete() missing values so that our dataset becomes sensible
 starwars %>%
   fill(name) %>%
   complete(name, hair_color)
 
-Missing Data dependence
-Exploring missingness dependence
-Arrange by birth_year
-starwars %>% arrange(birth_year) %>% vis_miss() this variable is important for missingness
+# Missing Data dependence
+# Exploring missingness dependence
+# Arrange by birth_year
+starwars %>% arrange(birth_year) %>% vis_miss() # this variable is important for missingness
 
-Arrange by mass
-starwars %>% arrange(mass) %>% vis_miss() this variable is important for missingness
+# Arrange by mass
+starwars %>% arrange(mass) %>% vis_miss() # this variable is important for missingness
 
-Arrange by height 
-starwars %>% arrange(height) %>% vis_miss() this variable is important for missingness
-
+# Arrange by height 
+starwars %>% arrange(height) %>% vis_miss() # this variable is important for missingness
+```
 
 
 Tools to explore missing data dependence
@@ -193,23 +224,33 @@ data to use
 airquality
 
 Create shadow matrix data with `as_shadow()`
-as_shadow(airquality)
 
-Create nabular data by binding the shadow to the data with `bind_shadow()`
-bind_shadow(airquality)
+```{r tools for missing data, message= FALSE}
 
-Bind only the variables with missing values by using bind_shadow(only_miss = TRUE)
-bind_shadow(airquality, only_miss = TRUE)
+as_shadow(airquality) %>%
+  head()
+
+# Create nabular data by binding the shadow to the data with `bind_shadow()`
+bind_shadow(airquality) %>%
+  head()
+
+# Bind only the variables with missing values by using bind_shadow(only_miss = TRUE)
+bind_shadow(airquality, only_miss = TRUE) %>%
+  head()
+```
 
 performing group summaries
 `bind_shadow()` and `group_by()` humidity missingness (`Ozone_NA`)
+
+```{r group summaries, message= FALSE}
+
 airquality %>%
   bind_shadow() %>%
   group_by(Ozone_NA) %>%
-  summarise(Wind_mean = mean(Wind), calculate mean of Wind
-            Wind_sd = sd(Wind)) calculate standard deviation of Wind
+  summarise(Wind_mean = mean(Wind), # calculate mean of Wind
+            Wind_sd = sd(Wind)) # calculate standard deviation of Wind
 
-Repeat this, but calculating summaries for Temp
+# Repeat this, but calculating summaries for Temp
 airquality %>%
   bind_shadow() %>%
   group_by(Ozone_NA) %>%
@@ -217,15 +258,15 @@ airquality %>%
             Temp_sd = sd(Temp))
 
 
-Summarise wind by the missingness of `Solar.R_NA`
+# Summarise wind by the missingness of `Solar.R_NA`
 airquality %>% 
   bind_shadow() %>%
   group_by(Solar.R_NA) %>%
-  summarise(Wind_mean = mean(Wind), calculate mean of Wind
-            Wind_sd = sd(Wind), calculate standard deviation of Wind
+  summarise(Wind_mean = mean(Wind), # calculate mean of Wind
+            Wind_sd = sd(Wind), # calculate standard deviation of Wind
             n_obs = n())
 
-Summarise wind by missingness of `Solar.R_NA` and `Ozone_NA`
+# Summarise wind by missingness of `Solar.R_NA` and `Ozone_NA`
 airquality %>%
   bind_shadow() %>%
   group_by(Solar.R_NA, Ozone_NA) %>%
@@ -233,32 +274,35 @@ airquality %>%
             Temp_sd = sd(Temp),
             n_obs = n())
 
-
+```
 
 Visualizing missingness across one variable
 First explore the missingness structure of `airquality` using `vis_miss()`
+
+```{r visualize across variables, message= FALSE}
+
 vis_miss(airquality)
 
-Explore the distribution of `Temp` for the missingness of `Ozone_NA` using  `geom_density()`
+# Explore the distribution of `Temp` for the missingness of `Ozone_NA` using  `geom_density()`
 bind_shadow(airquality) %>%
   ggplot(aes(x = Temp, 
              color = Ozone_NA)) + 
   geom_density()
 
-Explore the distribution of Temp for the missingness of humidity (Solar.R_NA) using  `geom_density()`
+# Explore the distribution of Temp for the missingness of humidity (Solar.R_NA) using  `geom_density()`
 bind_shadow(airquality) %>%
   ggplot(aes(x = Temp,
              color = Solar.R_NA)) + 
   geom_density()
 
-Explore the distribution of Wind for the missingness of Solar.R_NA using  `geom_density()` and facetting by the missingness of (`Solar.R_NA`).
+# Explore the distribution of Wind for the missingness of Solar.R_NA using  `geom_density()` and facetting by the missingness of (`Solar.R_NA`).
 airquality %>%
   bind_shadow() %>%
   ggplot(aes(x = Wind)) + 
   geom_density() + 
   facet_wrap(~Solar.R_NA)
 
-Build upon this visualisation by filling by the missingness of (`Solar.R_NA`).
+# Build upon this visualisation by filling by the missingness of (`Solar.R_NA`).
 airquality %>%
   bind_shadow() %>%
   ggplot(aes(x = Wind,
@@ -267,152 +311,169 @@ airquality %>%
   facet_wrap(~Solar.R_NA)
 
 
-Explore the distribution of wind for the missingness of air temperature using  `geom_boxplot()`
+# Explore the distribution of wind for the missingness of air temperature using  `geom_boxplot()`
 airquality %>%
   bind_shadow() %>%
   ggplot(aes(x = Ozone_NA,
              y = Wind)) + 
   geom_boxplot()
 
-Build upon this visualisation by facetting by the missingness of Ozone_NA 
+# Build upon this visualisation by facetting by the missingness of Ozone_NA 
 airquality %>%
   bind_shadow() %>%
   ggplot(aes(x = Ozone_NA,
              y = Wind)) + 
   geom_boxplot() + 
   facet_wrap(~Ozone_NA)
-
+```
 
 
 Visualizing missingness across two variables
 
-Explore the missingness in wind and air temperature, and display the missingness using `geom_miss_point()`
+Explore the missingness in wind and air temperature, and display the missingness using `geom_miss_point()`:
+
+```{r visualize 2 missing vars, message= FALSE}
+
 ggplot(airquality,
        aes(x = Wind,
            y = Temp)) + 
   geom_miss_point()
 
-Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`
+# Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`
 ggplot(airquality,
        aes(x = Ozone,
            y = Solar.R)) + 
   geom_miss_point()
 
 
-Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`. Facet by Temp to explore this further.
+# Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`. Facet by Temp to explore this further.
 ggplot(airquality,
        aes(x = Ozone,
            y = Solar.R)) + 
   geom_miss_point() + 
   facet_wrap(~Temp)
 
-Use geom_miss_point() and facet_wrap to explore how the missingness in Ozone  is different for missingness of Solar.R
+# Use geom_miss_point() and facet_wrap to explore how the missingness in Ozone  is different for missingness of Solar.R
 bind_shadow(airquality) %>%
   ggplot(aes(x = Ozone,
              y = Solar.R)) + 
   geom_miss_point() + 
   facet_wrap(~Temp)
 
-Use airquality() and facet_grid to explore how the missingness in wind_ew and air_temp_c is different for missingness of Temp AND by Month- by using `facet_grid(Temp ~ Month)`
+# Use airquality() and facet_grid to explore how the missingness in wind_ew and air_temp_c is different for missingness of Temp AND by Month- by using `facet_grid(Temp ~ Month)`
 bind_shadow(airquality) %>%
   ggplot(aes(x = Ozone,
              y = Solar.R)) + 
   geom_miss_point() + 
   facet_grid(Temp ~ Month)
-
+```
 
 
 Filling in the blanks
 Impute the data below the range using `impute_below`.
+
+```{r fill in blanks, message= FALSE}
+
 airquality_imp <- impute_below_all(airquality)
 
-Visualise the new missing values
+# Visualise the new missing values
 ggplot(airquality_imp,
        aes(x = Wind, y = Temp)) + 
   geom_point()
 
-Impute and track data with `bind_shadow`, `impute_below`, and `add_label_shadow`
+# Impute and track data with `bind_shadow`, `impute_below`, and `add_label_shadow`
 airquality_imp_track <- bind_shadow(airquality) %>% 
   impute_below_all() %>%
   add_label_shadow()
 
-Look at the imputed values
+# Look at the imputed values
 airquality_imp_track
-
+```
 
 Visualise imputed values in a scatterplot
-Visualise the missingness in wind and air temperature, coloring missing values with Ozone_NA
+Visualise the missingness in wind and air temperature, coloring missing values with Ozone_NA:
+
+```{r scatterplot of missings, message= FALSE}
+
 ggplot(airquality_imp_track,
        aes(x = Wind, y = Temp, color = Ozone_NA)) + 
   geom_point()
 
-Visualise humidity and air temp, coloring any missing cases using the variable any_missing
+# Visualise humidity and air temp, coloring any missing cases using the variable any_missing
 ggplot(airquality_imp_track,
        aes(x = Wind, y = Temp, color = any_missing)) + 
   geom_point()
-
+```
 
 Create histogram of imputed data
 Explore the values of air_temp_c, visualising the amount of missings with `air_temp_c_NA`.
+
+```{r histogram of missings, message= FALSE}
+
 p <- ggplot(airquality_imp_track, aes(x = Ozone, fill = Ozone_NA)) + geom_histogram()
 
-Expore the missings in humidity using humidity_NA
+# Expore the missings in humidity using humidity_NA
 p2 <- ggplot(airquality_imp_track, aes(x = Solar.R, fill = Solar.R_NA)) + geom_histogram()
 
-Explore the missings in airquality_imp_track according to Month, using `facet_wrap(~Month)`.
+# Explore the missings in airquality_imp_track according to Month, using `facet_wrap(~Month)`.
 p + facet_wrap(~Month)
 
-Explore the missings in humidity according to Month, using `facet_wrap(~Month)`.
+# Explore the missings in humidity according to Month, using `facet_wrap(~Month)`.
 p2 + facet_wrap(~Month)
-
+```
 
 
 What makes a good imputation
 Impute the mean value and track the imputations 
+
+```{r impute, message= FALSE}
+
 airquality_imp_mean <- bind_shadow(airquality) %>% 
   impute_mean_all() %>% 
   add_label_shadow()
 
-Explore the mean values in wind in the imputed dataset
+# Explore the mean values in wind in the imputed dataset
 ggplot(airquality_imp_mean, 
        aes(x = Ozone_NA, y = Wind)) + 
   geom_boxplot()
 
-Explore the values in air wind in the imputed dataset
+# Explore the values in air wind in the imputed dataset
 ggplot(airquality_imp_mean, 
        aes(x = Solar.R_NA, y = Wind)) + 
   geom_boxplot()
 
-Explore imputations in air temperature and wind, coloring by the variable, any_missing
+# Explore imputations in air temperature and wind, coloring by the variable, any_missing
 ggplot(airquality_imp_mean, 
        aes(x = Wind, y = Temp, color = any_missing)) + 
   geom_point()
 
-Explore imputations in air temperature and wind, coloring by the variable, any_missing, and faceting by Month
+# Explore imputations in air temperature and wind, coloring by the variable, any_missing, and faceting by Month
 ggplot(airquality_imp_mean, 
        aes(x = Wind, y = Temp, color = any_missing)) +
   geom_point() + 
   facet_wrap(~ Month)
 
 
-Gather the imputed data 
+# Gather the imputed data 
 airquality_imp_mean_gather <- shadow_long(airquality_imp_mean,
                                      Temp,
                                      Wind)
-Inspect the data
+# Inspect the data
 airquality_imp_mean_gather
 
-Explore the imputations in a histogram 
+# Explore the imputations in a histogram 
 ggplot(airquality_imp_mean_gather, 
        aes(x = as.numeric(value), fill = value_NA)) + 
   geom_histogram() + 
   facet_wrap(~ variable) 
-
+```
 
 
 Performing imputations
-
 Impute Temp and Wind, and track missing values
+
+```{r simputation library, message= FALSE}
+
 library(simputation)
 
 airquality_imp_lm_wind <- airquality %>% 
@@ -421,18 +482,18 @@ airquality_imp_lm_wind <- airquality %>%
   impute_lm(Temp ~ Wind + Day) %>%
   add_label_shadow()
 
-Plot the imputed values for Temp and Wind, colored by missingness
+# Plot the imputed values for Temp and Wind, colored by missingness
 ggplot(airquality_imp_lm_wind, 
        aes(x = Temp, y = Wind, color = any_missing)) +
   geom_point()
 
-Evaluating and comparing imputations
-Bind the models together 
+# Evaluating and comparing imputations
+## Bind the models together 
 bound_models <- bind_rows(mean = airquality_imp_mean,
                           lm_wind = airquality_imp_lm_wind,
                           .id = "imp_model")
 
-Inspect the values of air_temp and humidity as a scatterplot
+# Inspect the values of air_temp and humidity as a scatterplot
 ggplot(bound_models,
        aes(x = Wind,
            y = Temp,
@@ -441,58 +502,70 @@ ggplot(bound_models,
   facet_wrap(~imp_model)
 
 
-Build a model adding Month to the outcome
+# Build a model adding Month to the outcome
 airquality_imp_lm_wind_month <- bind_shadow(airquality) %>%
   impute_lm(Temp ~ Wind + Day + Month) %>%
   impute_lm(Temp ~ Wind + Ozone + Month) %>%
   add_label_shadow()
 
-Bind the mean, lm_wind, and lm_wind_year models together
+# Bind the mean, lm_wind, and lm_wind_year models together
 bound_models <- bind_rows(mean = airquality_imp_mean,
                           lm_wind = airquality_imp_lm_wind,
                           lm_wind_year = airquality_imp_lm_wind_month,
                           .id = "imp_model")
 
-Explore air_temp and humidity, coloring by any missings, and faceting by imputation model
+# Explore air_temp and humidity, coloring by any missings, and faceting by imputation model
 ggplot(bound_models, aes(x = Wind, y = Temp, color = any_missing)) +
   geom_point() + facet_wrap(~imp_model)
 
 
-Gather the data and inspect the distributions of the values
+# Gather the data and inspect the distributions of the values
 bound_models_gather <- bound_models %>%
   select(Temp, Wind, any_missing, imp_model) %>%
   gather(key = "key", value = "value", -any_missing, -imp_model)
 
-Inspect the distribution for each variable, for each model
+# Inspect the distribution for each variable, for each model
 ggplot(bound_models_gather,
        aes(x = imp_model, y = value, color = imp_model)) +
   geom_boxplot() + facet_wrap(~key, scales = "free_y")
 
-Inspect the imputed values
+# Inspect the imputed values
 bound_models_gather %>%
   filter(any_missing == "Missing") %>%
   ggplot(aes(x = imp_model, y = value, color = imp_model)) +
   geom_boxplot() + facet_wrap(~key, scales = "free_y")
-
+```
 
 
 Combining and comparing many imputation models
 Create an imputed dataset using a linear models
+
+```{r compare imputation models, message= FALSE}
+
 airquality_imp_lm_all <- bind_shadow(airquality) %>%
   add_label_shadow() %>%
   impute_lm(Temp ~ Wind + Day + Month) %>%
   impute_lm(Temp ~ Wind + Ozone + Month) 
 
-Bind the datasets
-bound_models <- bind_rows(cc = airquality,
-                          imp_lm_wind = airquality_imp_lm_wind,
-                          imp_lm_all = airquality_imp_lm_all,
+# Bind the datasets
+cc = airquality
+imp_lm_wind = as.data.frame(airquality_imp_lm_wind) %>%
+  mutate_if(is.factor, ~ as.numeric(levels(.x))[.x])
+
+imp_lm_all = as.data.frame(airquality_imp_lm_all) %>%
+  mutate_if(is.factor, ~ as.numeric(levels(.x))[.x])
+
+bound_models <- bind_rows(airquality,
+                          imp_lm_wind,
+                          imp_lm_all,
                           .id = "imp_model")
 
-Look at the models
-bound_models
+# Look at the models
+head(bound_models,4)
 
-Create the model summary for each dataset
+# Create the model summary for each dataset
+library(broom)
+library(tidyr)
 model_summary <- bound_models %>% 
   group_by(imp_model) %>%
   nest() %>%
@@ -501,9 +574,10 @@ model_summary <- bound_models %>%
          pred = map(mod, predict),
          tidy = map(mod, tidy))
 
-Explore the coefficients in the model
+# Explore the coefficients in the model
 model_summary %>% 
   select(imp_model,tidy) %>%
   unnest()
-best_model <- "imp_lm_all"
 
+best_model <- "imp_lm_all"
+```
