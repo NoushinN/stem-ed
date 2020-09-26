@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 11 Impute missingness | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 11 Impute missingness | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 11 Impute missingness | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="feature-engineering-in-r.html"/>
+<link rel="next" href="r-for-reporting.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>3</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="3.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>3.1</b> Contents</a></li>
+<li class="chapter" data-level="3.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>3.2</b> R Syntax</a></li>
+<li class="chapter" data-level="3.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>3.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="demo-for-dplyr.html"><a href="demo-for-dplyr.html"><i class="fa fa-check"></i><b>4</b> Demo for dplyr</a></li>
+<li class="chapter" data-level="5" data-path="working-with-dates-in-r.html"><a href="working-with-dates-in-r.html"><i class="fa fa-check"></i><b>5</b> Working with dates in R</a></li>
+<li class="chapter" data-level="6" data-path="demo-for-data-table.html"><a href="demo-for-data-table.html"><i class="fa fa-check"></i><b>6</b> Demo for Data.table</a></li>
+<li class="chapter" data-level="7" data-path="tests-for-experiments.html"><a href="tests-for-experiments.html"><i class="fa fa-check"></i><b>7</b> Tests for experiments</a></li>
+<li class="chapter" data-level="8" data-path="demo-for-ab-testing.html"><a href="demo-for-ab-testing.html"><i class="fa fa-check"></i><b>8</b> Demo for A/B testing</a></li>
+<li class="chapter" data-level="9" data-path="working-with-time-series-in-r.html"><a href="working-with-time-series-in-r.html"><i class="fa fa-check"></i><b>9</b> Working with time-series in R</a></li>
+<li class="chapter" data-level="10" data-path="feature-engineering-in-r.html"><a href="feature-engineering-in-r.html"><i class="fa fa-check"></i><b>10</b> Feature engineering in R</a></li>
+<li class="chapter" data-level="11" data-path="impute-missingness.html"><a href="impute-missingness.html"><i class="fa fa-check"></i><b>11</b> Impute missingness</a></li>
+<li class="chapter" data-level="12" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>12</b> R for Reporting</a><ul>
+<li class="chapter" data-level="12.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>12.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>12.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="12.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>12.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>12.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="12.3" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>12.3</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>12.3.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="12.3.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>12.3.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="12.3.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>12.3.3</b> Operational Basics</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="impute-missingness" class="section level1">
+<h1><span class="header-section-number">Chapter 11</span> Impute missingness</h1>
+<div class="sourceCode" id="cb699"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb699-1" data-line-number="1"><span class="co"># load libraries</span></a>
+<a class="sourceLine" id="cb699-2" data-line-number="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb699-3" data-line-number="3"><span class="kw">library</span>(naniar)</a></code></pre></div>
+<p>Create x, a vector, with values NA, NaN, Inf, “.”, and “missing”</p>
+<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb700-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="ot">NaN</span>, <span class="ot">Inf</span>, <span class="st">&quot;.&quot;</span>, <span class="st">&quot;missing&quot;</span>)</a>
+<a class="sourceLine" id="cb700-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb700-3" data-line-number="3"><span class="co"># Use any_na() and are_na() on to explore the missings</span></a>
+<a class="sourceLine" id="cb700-4" data-line-number="4"><span class="kw">any_na</span>(x)</a></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb702"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb702-1" data-line-number="1"><span class="kw">are_na</span>(x)</a></code></pre></div>
+<pre><code>## [1]  TRUE FALSE FALSE FALSE FALSE</code></pre>
+<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb704-1" data-line-number="1"><span class="co"># Use n_miss() to count the total number of missing values in x</span></a>
+<a class="sourceLine" id="cb704-2" data-line-number="2"><span class="kw">n_miss</span>(x)</a></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb706"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb706-1" data-line-number="1"><span class="co"># Use n_complete() on dat_hw to count the total number of complete values</span></a>
+<a class="sourceLine" id="cb706-2" data-line-number="2"><span class="kw">n_complete</span>(x)</a></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p>Use prop_miss() and prop_complete on dat_hw to count the total number of missing values in each of the variables:</p>
+<div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb708-1" data-line-number="1"><span class="kw">prop_miss</span>(x)</a></code></pre></div>
+<pre><code>## [1] 0.2</code></pre>
+<div class="sourceCode" id="cb710"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb710-1" data-line-number="1"><span class="kw">prop_complete</span>(x)</a></code></pre></div>
+<pre><code>## [1] 0.8</code></pre>
+<p>Use tarwars data to use to find missing values
+summarizing missingness</p>
+<div class="sourceCode" id="cb712"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb712-1" data-line-number="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb712-2" data-line-number="2"><span class="st">  </span><span class="kw">miss_var_summary</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 14 x 3
+##    variable   n_miss pct_miss
+##    &lt;chr&gt;       &lt;int&gt;    &lt;dbl&gt;
+##  1 birth_year     44    50.6 
+##  2 mass           28    32.2 
+##  3 homeworld      10    11.5 
+##  4 height          6     6.90
+##  5 hair_color      5     5.75
+##  6 sex             4     4.60
+##  7 gender          4     4.60
+##  8 species         4     4.60
+##  9 name            0     0   
+## 10 skin_color      0     0   
+## 11 eye_color       0     0   
+## 12 films           0     0   
+## 13 vehicles        0     0   
+## 14 starships       0     0</code></pre>
+<div class="sourceCode" id="cb714"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb714-1" data-line-number="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb714-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(birth_year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb714-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_var_summary</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 481 x 4
+## # Groups:   birth_year [37]
+##    birth_year variable   n_miss pct_miss
+##         &lt;dbl&gt; &lt;chr&gt;       &lt;int&gt;    &lt;dbl&gt;
+##  1         19 name            0        0
+##  2         19 height          0        0
+##  3         19 mass            0        0
+##  4         19 hair_color      0        0
+##  5         19 skin_color      0        0
+##  6         19 eye_color       0        0
+##  7         19 sex             0        0
+##  8         19 gender          0        0
+##  9         19 homeworld       0        0
+## 10         19 species         0        0
+## # … with 471 more rows</code></pre>
+<div class="sourceCode" id="cb716"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb716-1" data-line-number="1"><span class="co"># Return the summary of missingness in each case, by group</span></a>
+<a class="sourceLine" id="cb716-2" data-line-number="2">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb716-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_case_summary</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb716-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##    case n_miss pct_miss
+##   &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;
+## 1    86      7     50  
+## 2    37      5     35.7
+## 3    28      4     28.6
+## 4    40      4     28.6
+## 5    80      4     28.6
+## 6    82      4     28.6</code></pre>
+<div class="sourceCode" id="cb718"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb718-1" data-line-number="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb718-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(birth_year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb718-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_case_summary</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb718-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+## # Groups:   birth_year [4]
+##   birth_year  case n_miss pct_miss
+##        &lt;dbl&gt; &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;
+## 1       19       1      0     0   
+## 2       19       2      0     0   
+## 3      112       1      1     7.69
+## 4       33       1      1     7.69
+## 5       41.9     1      0     0   
+## 6       41.9     2      0     0</code></pre>
+<div class="sourceCode" id="cb720"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb720-1" data-line-number="1"><span class="co"># Tabulate missingness in each variable and case of the dataset</span></a>
+<a class="sourceLine" id="cb720-2" data-line-number="2">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb720-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_var_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb720-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   n_miss_in_var n_vars pct_vars
+##           &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;
+## 1             0      6    42.9 
+## 2             4      3    21.4 
+## 3             5      1     7.14
+## 4             6      1     7.14
+## 5            10      1     7.14
+## 6            28      1     7.14</code></pre>
+<div class="sourceCode" id="cb722"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb722-1" data-line-number="1"><span class="co"># Tabulate the missingness in each variable and in grouped_by</span></a>
+<a class="sourceLine" id="cb722-2" data-line-number="2">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb722-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_case_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb722-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   n_miss_in_case n_cases pct_cases
+##            &lt;int&gt;   &lt;int&gt;     &lt;dbl&gt;
+## 1              0      29     33.3 
+## 2              1      34     39.1 
+## 3              2      14     16.1 
+## 4              3       1      1.15
+## 5              4       7      8.05
+## 6              5       1      1.15</code></pre>
+<div class="sourceCode" id="cb724"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb724-1" data-line-number="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb724-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(birth_year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb724-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_var_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb724-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+## # Groups:   birth_year [4]
+##   birth_year n_miss_in_var n_vars pct_vars
+##        &lt;dbl&gt;         &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;
+## 1       19               0     13   100   
+## 2      112               0     12    92.3 
+## 3      112               1      1     7.69
+## 4       33               0     12    92.3 
+## 5       33               1      1     7.69
+## 6       41.9             0     13   100</code></pre>
+<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb726-1" data-line-number="1"><span class="co"># Tabulate the missingness in each variable and in grouped_by</span></a>
+<a class="sourceLine" id="cb726-2" data-line-number="2">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb726-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_case_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb726-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   n_miss_in_case n_cases pct_cases
+##            &lt;int&gt;   &lt;int&gt;     &lt;dbl&gt;
+## 1              0      29     33.3 
+## 2              1      34     39.1 
+## 3              2      14     16.1 
+## 4              3       1      1.15
+## 5              4       7      8.05
+## 6              5       1      1.15</code></pre>
+<div class="sourceCode" id="cb728"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb728-1" data-line-number="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb728-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(birth_year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb728-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_case_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb728-4" data-line-number="4"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+## # Groups:   birth_year [6]
+##   birth_year n_miss_in_case n_cases pct_cases
+##        &lt;dbl&gt;          &lt;int&gt;   &lt;int&gt;     &lt;dbl&gt;
+## 1       19                0       2       100
+## 2      112                1       1       100
+## 3       33                1       1       100
+## 4       41.9              0       2       100
+## 5       52                0       2       100
+## 6       47                0       1       100</code></pre>
+<p>Other summaries of missingness
+Calculate the summaries for each span of missingness</p>
+<p>For each <code>birth_year</code> variable, calculate the run of missingness:</p>
+<div class="sourceCode" id="cb730"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb730-1" data-line-number="1">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb730-2" data-line-number="2"><span class="st">  </span><span class="kw">miss_var_run</span>(<span class="dt">var =</span> birth_year)</a></code></pre></div>
+<pre><code>## # A tibble: 27 x 2
+##    run_length is_na   
+##         &lt;int&gt; &lt;chr&gt;   
+##  1          7 complete
+##  2          1 missing 
+##  3          9 complete
+##  4          1 missing 
+##  5          9 complete
+##  6          1 missing 
+##  7          1 complete
+##  8          1 missing 
+##  9          1 complete
+## 10          1 missing 
+## # … with 17 more rows</code></pre>
+<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb732-1" data-line-number="1"><span class="co"># For each `birth_year` variable, calculate the run of missingness every 2 years</span></a>
+<a class="sourceLine" id="cb732-2" data-line-number="2">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb732-3" data-line-number="3"><span class="st">  </span><span class="kw">miss_var_span</span>(<span class="dt">var =</span> birth_year, <span class="dt">span_every =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 44 x 5
+##    span_counter n_miss n_complete prop_miss prop_complete
+##           &lt;int&gt;  &lt;int&gt;      &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+##  1            1      0          2       0             1  
+##  2            2      0          2       0             1  
+##  3            3      0          2       0             1  
+##  4            4      1          1       0.5           0.5
+##  5            5      0          2       0             1  
+##  6            6      0          2       0             1  
+##  7            7      0          2       0             1  
+##  8            8      0          2       0             1  
+##  9            9      1          1       0.5           0.5
+## 10           10      0          2       0             1  
+## # … with 34 more rows</code></pre>
+<div class="sourceCode" id="cb734"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb734-1" data-line-number="1"><span class="co"># Visualize missing values</span></a>
+<a class="sourceLine" id="cb734-2" data-line-number="2"><span class="kw">vis_miss</span>(starwars)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/calculate%20missing%20summaries-1.png" width="672" /></p>
+<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb735-1" data-line-number="1"><span class="co"># Visualize and cluster all of the missingness </span></a>
+<a class="sourceLine" id="cb735-2" data-line-number="2"><span class="kw">vis_miss</span>(starwars, <span class="dt">cluster =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/calculate%20missing%20summaries-2.png" width="672" /></p>
+<div class="sourceCode" id="cb736"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb736-1" data-line-number="1"><span class="co"># Visualize and sort the columns by missingness</span></a>
+<a class="sourceLine" id="cb736-2" data-line-number="2"><span class="kw">vis_miss</span>(starwars, <span class="dt">sort_miss =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/calculate%20missing%20summaries-3.png" width="672" /></p>
+<p>Visualizing missing cases and variables
+Visualize the number of missings in variables using <code>gg_miss_var()</code>:</p>
+<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb737-1" data-line-number="1"><span class="kw">gg_miss_var</span>(starwars)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-1.png" width="672" /></p>
+<div class="sourceCode" id="cb738"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb738-1" data-line-number="1"><span class="kw">gg_miss_var</span>(starwars, <span class="dt">facet =</span> birth_year)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-2.png" width="672" /></p>
+<div class="sourceCode" id="cb739"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb739-1" data-line-number="1"><span class="co"># Explore the number of missings in cases using `gg_miss_case()` and facet by the variable `birth_year`</span></a>
+<a class="sourceLine" id="cb739-2" data-line-number="2"><span class="kw">gg_miss_var</span>(starwars)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-3.png" width="672" /></p>
+<div class="sourceCode" id="cb740"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb740-1" data-line-number="1"><span class="kw">gg_miss_case</span>(starwars, <span class="dt">facet =</span> birth_year)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-4.png" width="672" /></p>
+<div class="sourceCode" id="cb741"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb741-1" data-line-number="1"><span class="co"># Explore the missingness pattern using gg_miss_upset()</span></a>
+<a class="sourceLine" id="cb741-2" data-line-number="2"><span class="kw">gg_miss_upset</span>(starwars)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-5.png" width="672" /></p>
+<div class="sourceCode" id="cb742"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb742-1" data-line-number="1"><span class="co"># Explore how the missingness changes across the birth_year variable using gg_miss_fct()</span></a>
+<a class="sourceLine" id="cb742-2" data-line-number="2"><span class="kw">gg_miss_fct</span>(starwars, <span class="dt">fct =</span> birth_year)</a></code></pre></div>
+<pre><code>## Warning: Removed 13 rows containing missing values (geom_tile).</code></pre>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-6.png" width="672" /></p>
+<div class="sourceCode" id="cb744"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb744-1" data-line-number="1"><span class="co"># and explore how missingness changes for a span of 2 years </span></a>
+<a class="sourceLine" id="cb744-2" data-line-number="2"><span class="kw">gg_miss_span</span>(starwars, <span class="dt">var =</span>birth_year, <span class="dt">span_every =</span> <span class="dv">100</span>, <span class="dt">facet =</span> mass) <span class="co"># also possible to facet</span></a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20missing%20data-7.png" width="672" /></p>
+<p>Explicitly missing values
+Searching for and replacing missing values</p>
+<div class="sourceCode" id="cb745"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb745-1" data-line-number="1">df &lt;-<span class="st"> </span>tibble<span class="op">::</span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb745-2" data-line-number="2">  <span class="op">~</span>name,           <span class="op">~</span>x,  <span class="op">~</span>y,              <span class="op">~</span>z,  </a>
+<a class="sourceLine" id="cb745-3" data-line-number="3">  <span class="st">&quot;N/A&quot;</span>,           <span class="st">&quot;1&quot;</span>,   <span class="st">&quot;N/A&quot;</span>,           <span class="st">&quot;-100&quot;</span>, </a>
+<a class="sourceLine" id="cb745-4" data-line-number="4">  <span class="st">&quot;N/A&quot;</span>,           <span class="st">&quot;3&quot;</span>,   <span class="st">&quot;Not Available&quot;</span>, <span class="st">&quot;-99&quot;</span>,</a>
+<a class="sourceLine" id="cb745-5" data-line-number="5">  <span class="st">&quot;N/A&quot;</span>,         <span class="st">&quot;NA&quot;</span>,  <span class="st">&quot;29&quot;</span>,              <span class="st">&quot;-98&quot;</span>,</a>
+<a class="sourceLine" id="cb745-6" data-line-number="6">  <span class="st">&quot;Not Available&quot;</span>, <span class="st">&quot;-99&quot;</span>, <span class="st">&quot;25&quot;</span>,              <span class="st">&quot;-101&quot;</span>,</a>
+<a class="sourceLine" id="cb745-7" data-line-number="7">  <span class="st">&quot;John Smith&quot;</span>,    <span class="st">&quot;-98&quot;</span>, <span class="st">&quot;28&quot;</span>,              <span class="st">&quot;-1&quot;</span>)</a>
+<a class="sourceLine" id="cb745-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb745-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb745-10" data-line-number="10"><span class="co"># Explore the strange missing values &quot;N/A&quot;</span></a>
+<a class="sourceLine" id="cb745-11" data-line-number="11"><span class="kw">miss_scan_count</span>(<span class="dt">data =</span> df, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot;N/A&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         3
+## 2 x            0
+## 3 y            1
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb747"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb747-1" data-line-number="1"><span class="co"># Explore the strange missing values &quot;missing&quot;</span></a>
+<a class="sourceLine" id="cb747-2" data-line-number="2"><span class="kw">miss_scan_count</span>(<span class="dt">data =</span> df, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot;missing&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         0
+## 2 x            0
+## 3 y            0
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb749"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb749-1" data-line-number="1"><span class="co"># Explore the strange missing values &quot;na&quot;</span></a>
+<a class="sourceLine" id="cb749-2" data-line-number="2"><span class="kw">miss_scan_count</span>(<span class="dt">data =</span> df, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot;na&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         0
+## 2 x            0
+## 3 y            0
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb751-1" data-line-number="1"><span class="co"># Explore the strange missing values &quot;Not Available&quot;</span></a>
+<a class="sourceLine" id="cb751-2" data-line-number="2"><span class="kw">miss_scan_count</span>(<span class="dt">data =</span> df, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot;Not Available&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         1
+## 2 x            0
+## 3 y            1
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb753-1" data-line-number="1"><span class="co"># Explore the strange missing values &quot; &quot; (a single space)</span></a>
+<a class="sourceLine" id="cb753-2" data-line-number="2"><span class="kw">miss_scan_count</span>(<span class="dt">data =</span> df, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot; &quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         2
+## 2 x            0
+## 3 y            1
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb755"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb755-1" data-line-number="1"><span class="co"># Explore all of the strange missing values, &quot;N/A&quot;, &quot;missing&quot;, &quot;na&quot;, &quot; &quot;</span></a>
+<a class="sourceLine" id="cb755-2" data-line-number="2"><span class="kw">miss_scan_count</span>(<span class="dt">data =</span> df, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         5
+## 2 x            0
+## 3 y            2
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb757-1" data-line-number="1"><span class="co"># Replace the strange missing values &quot;N/A&quot;, &quot;na&quot;, and &quot;missing&quot; with `NA` for the variables x and y</span></a>
+<a class="sourceLine" id="cb757-2" data-line-number="2">df_clean &lt;-<span class="st"> </span><span class="kw">replace_with_na</span>(df, <span class="dt">replace =</span> <span class="kw">list</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>),</a>
+<a class="sourceLine" id="cb757-3" data-line-number="3">                                                       <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>)))</a></code></pre></div>
+<p>Test if <code>df_clean</code> still has these values in it?</p>
+<div class="sourceCode" id="cb758"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb758-1" data-line-number="1"><span class="kw">miss_scan_count</span>(df_clean, <span class="dt">search =</span> <span class="kw">list</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   Variable     n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 name         5
+## 2 x            0
+## 3 y            0
+## 4 z            0</code></pre>
+<div class="sourceCode" id="cb760"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb760-1" data-line-number="1"><span class="co"># Use `replace_with_na_at()` to replace with NA</span></a>
+<a class="sourceLine" id="cb760-2" data-line-number="2"><span class="kw">replace_with_na_at</span>(df,</a>
+<a class="sourceLine" id="cb760-3" data-line-number="3">                   <span class="dt">.vars =</span> <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="st">&quot;name&quot;</span>), </a>
+<a class="sourceLine" id="cb760-4" data-line-number="4">                   <span class="op">~</span>.x <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 5 x 4
+##   name       x     y     z    
+##   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 &lt;NA&gt;       1     &lt;NA&gt;  -100 
+## 2 &lt;NA&gt;       3     &lt;NA&gt;  -99  
+## 3 &lt;NA&gt;       NA    29    -98  
+## 4 &lt;NA&gt;       -99   25    -101 
+## 5 John Smith -98   28    -1</code></pre>
+<div class="sourceCode" id="cb762"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb762-1" data-line-number="1"><span class="co"># Use `replace_with_na_if()` to replace with NA the character values using `is.character`</span></a>
+<a class="sourceLine" id="cb762-2" data-line-number="2"><span class="kw">replace_with_na_if</span>(df,</a>
+<a class="sourceLine" id="cb762-3" data-line-number="3">                   <span class="dt">.predicate =</span> is.character, </a>
+<a class="sourceLine" id="cb762-4" data-line-number="4">                   <span class="op">~</span>.x <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 5 x 4
+##   name       x     y     z    
+##   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 &lt;NA&gt;       1     &lt;NA&gt;  -100 
+## 2 &lt;NA&gt;       3     &lt;NA&gt;  -99  
+## 3 &lt;NA&gt;       NA    29    -98  
+## 4 &lt;NA&gt;       -99   25    -101 
+## 5 John Smith -98   28    -1</code></pre>
+<div class="sourceCode" id="cb764"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb764-1" data-line-number="1"><span class="co"># Use `replace_with_na_all()` to replace with NA</span></a>
+<a class="sourceLine" id="cb764-2" data-line-number="2"><span class="kw">replace_with_na_all</span>(df, <span class="op">~</span>.x <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;missing&quot;</span>,<span class="st">&quot;na&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="st">&quot;Not Available&quot;</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 5 x 4
+##   name       x     y     z    
+##   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 &lt;NA&gt;       1     &lt;NA&gt;  -100 
+## 2 &lt;NA&gt;       3     &lt;NA&gt;  -99  
+## 3 &lt;NA&gt;       NA    29    -98  
+## 4 &lt;NA&gt;       -99   25    -101 
+## 5 John Smith -98   28    -1</code></pre>
+<p>Implicitly missing values</p>
+<p>Print the frogger data to have a look at it
+starwars</p>
+<p>Use <code>complete()</code> on the <code>time</code> variable to make implicit missing values explicit</p>
+<div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb766-1" data-line-number="1">starwars_tidy &lt;-<span class="st"> </span>starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">complete</span>(name, hair_color)</a>
+<a class="sourceLine" id="cb766-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb766-3" data-line-number="3"><span class="co"># Use `fill()` to fill down the name variable in the starwars dataset</span></a>
+<a class="sourceLine" id="cb766-4" data-line-number="4">starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fill</span>(name)</a></code></pre></div>
+<pre><code>## # A tibble: 87 x 14
+##    name  height  mass hair_color skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Luke…    172    77 blond      fair       blue            19   male  mascu…
+##  2 C-3PO    167    75 &lt;NA&gt;       gold       yellow         112   none  mascu…
+##  3 R2-D2     96    32 &lt;NA&gt;       white, bl… red             33   none  mascu…
+##  4 Dart…    202   136 none       white      yellow          41.9 male  mascu…
+##  5 Leia…    150    49 brown      light      brown           19   fema… femin…
+##  6 Owen…    178   120 brown, gr… light      blue            52   male  mascu…
+##  7 Beru…    165    75 brown      light      blue            47   fema… femin…
+##  8 R5-D4     97    32 &lt;NA&gt;       white, red red             NA   none  mascu…
+##  9 Bigg…    183    84 black      light      brown           24   male  mascu…
+## 10 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
+## # … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
+## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
+<div class="sourceCode" id="cb768"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb768-1" data-line-number="1"><span class="co"># Correctly fill() and complete() missing values so that our dataset becomes sensible</span></a>
+<a class="sourceLine" id="cb768-2" data-line-number="2">starwars <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb768-3" data-line-number="3"><span class="st">  </span><span class="kw">fill</span>(name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb768-4" data-line-number="4"><span class="st">  </span><span class="kw">complete</span>(name, hair_color)</a></code></pre></div>
+<pre><code>## # A tibble: 1,131 x 14
+##    name  hair_color height  mass skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt; &lt;chr&gt;       &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Ackb… auburn         NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  2 Ackb… auburn, g…     NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  3 Ackb… auburn, w…     NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  4 Ackb… black          NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  5 Ackb… blond          NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  6 Ackb… blonde         NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  7 Ackb… brown          NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  8 Ackb… brown, gr…     NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+##  9 Ackb… grey           NA    NA &lt;NA&gt;       &lt;NA&gt;              NA &lt;NA&gt;  &lt;NA&gt;  
+## 10 Ackb… none          180    83 brown mot… orange            41 male  mascu…
+## # … with 1,121 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
+## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
+<div class="sourceCode" id="cb770"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb770-1" data-line-number="1"><span class="co"># Missing Data dependence</span></a>
+<a class="sourceLine" id="cb770-2" data-line-number="2"><span class="co"># Exploring missingness dependence</span></a>
+<a class="sourceLine" id="cb770-3" data-line-number="3"><span class="co"># Arrange by birth_year</span></a>
+<a class="sourceLine" id="cb770-4" data-line-number="4">starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(birth_year) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vis_miss</span>() <span class="co"># this variable is important for missingness</span></a></code></pre></div>
+<p><img src="code4stem_files/figure-html/implicit%20NA-1.png" width="672" /></p>
+<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb771-1" data-line-number="1"><span class="co"># Arrange by mass</span></a>
+<a class="sourceLine" id="cb771-2" data-line-number="2">starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(mass) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vis_miss</span>() <span class="co"># this variable is important for missingness</span></a></code></pre></div>
+<p><img src="code4stem_files/figure-html/implicit%20NA-2.png" width="672" /></p>
+<div class="sourceCode" id="cb772"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb772-1" data-line-number="1"><span class="co"># Arrange by height </span></a>
+<a class="sourceLine" id="cb772-2" data-line-number="2">starwars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(height) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">vis_miss</span>() <span class="co"># this variable is important for missingness</span></a></code></pre></div>
+<p><img src="code4stem_files/figure-html/implicit%20NA-3.png" width="672" /></p>
+<p>Tools to explore missing data dependence
+data to use
+airquality</p>
+<p>Create shadow matrix data with <code>as_shadow()</code></p>
+<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb773-1" data-line-number="1"><span class="kw">as_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb773-2" data-line-number="2"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 6
+##   Ozone_NA Solar.R_NA Wind_NA Temp_NA Month_NA Day_NA
+##   &lt;fct&gt;    &lt;fct&gt;      &lt;fct&gt;   &lt;fct&gt;   &lt;fct&gt;    &lt;fct&gt; 
+## 1 !NA      !NA        !NA     !NA     !NA      !NA   
+## 2 !NA      !NA        !NA     !NA     !NA      !NA   
+## 3 !NA      !NA        !NA     !NA     !NA      !NA   
+## 4 !NA      !NA        !NA     !NA     !NA      !NA   
+## 5 NA       NA         !NA     !NA     !NA      !NA   
+## 6 !NA      NA         !NA     !NA     !NA      !NA</code></pre>
+<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb775-1" data-line-number="1"><span class="co"># Create nabular data by binding the shadow to the data with `bind_shadow()`</span></a>
+<a class="sourceLine" id="cb775-2" data-line-number="2"><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb775-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 12
+##   Ozone Solar.R  Wind  Temp Month   Day Ozone_NA Solar.R_NA Wind_NA Temp_NA
+##   &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt;      &lt;fct&gt;   &lt;fct&gt;  
+## 1    41     190   7.4    67     5     1 !NA      !NA        !NA     !NA    
+## 2    36     118   8      72     5     2 !NA      !NA        !NA     !NA    
+## 3    12     149  12.6    74     5     3 !NA      !NA        !NA     !NA    
+## 4    18     313  11.5    62     5     4 !NA      !NA        !NA     !NA    
+## 5    NA      NA  14.3    56     5     5 NA       NA         !NA     !NA    
+## 6    28      NA  14.9    66     5     6 !NA      NA         !NA     !NA    
+## # … with 2 more variables: Month_NA &lt;fct&gt;, Day_NA &lt;fct&gt;</code></pre>
+<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb777-1" data-line-number="1"><span class="co"># Bind only the variables with missing values by using bind_shadow(only_miss = TRUE)</span></a>
+<a class="sourceLine" id="cb777-2" data-line-number="2"><span class="kw">bind_shadow</span>(airquality, <span class="dt">only_miss =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb777-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 8
+##   Ozone Solar.R  Wind  Temp Month   Day Ozone_NA Solar.R_NA
+##   &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt;     
+## 1    41     190   7.4    67     5     1 !NA      !NA       
+## 2    36     118   8      72     5     2 !NA      !NA       
+## 3    12     149  12.6    74     5     3 !NA      !NA       
+## 4    18     313  11.5    62     5     4 !NA      !NA       
+## 5    NA      NA  14.3    56     5     5 NA       NA        
+## 6    28      NA  14.9    66     5     6 !NA      NA</code></pre>
+<p>performing group summaries
+<code>bind_shadow()</code> and <code>group_by()</code> humidity missingness (<code>Ozone_NA</code>)</p>
+<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb779-1" data-line-number="1">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-2" data-line-number="2"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(Ozone_NA) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-4" data-line-number="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Wind_mean =</span> <span class="kw">mean</span>(Wind), <span class="co"># calculate mean of Wind</span></a>
+<a class="sourceLine" id="cb779-5" data-line-number="5">            <span class="dt">Wind_sd =</span> <span class="kw">sd</span>(Wind)) <span class="co"># calculate standard deviation of Wind</span></a></code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   Ozone_NA Wind_mean Wind_sd
+##   &lt;fct&gt;        &lt;dbl&gt;   &lt;dbl&gt;
+## 1 !NA           9.86    3.57
+## 2 NA           10.3     3.39</code></pre>
+<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb781-1" data-line-number="1"><span class="co"># Repeat this, but calculating summaries for Temp</span></a>
+<a class="sourceLine" id="cb781-2" data-line-number="2">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb781-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb781-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(Ozone_NA) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb781-5" data-line-number="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Temp_mean =</span> <span class="kw">mean</span>(Temp),</a>
+<a class="sourceLine" id="cb781-6" data-line-number="6">            <span class="dt">Temp_sd =</span> <span class="kw">sd</span>(Temp))</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   Ozone_NA Temp_mean Temp_sd
+##   &lt;fct&gt;        &lt;dbl&gt;   &lt;dbl&gt;
+## 1 !NA           77.9    9.49
+## 2 NA            77.9    9.53</code></pre>
+<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb783-1" data-line-number="1"><span class="co"># Summarise wind by the missingness of `Solar.R_NA`</span></a>
+<a class="sourceLine" id="cb783-2" data-line-number="2">airquality <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb783-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb783-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(Solar.R_NA) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb783-5" data-line-number="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Wind_mean =</span> <span class="kw">mean</span>(Wind), <span class="co"># calculate mean of Wind</span></a>
+<a class="sourceLine" id="cb783-6" data-line-number="6">            <span class="dt">Wind_sd =</span> <span class="kw">sd</span>(Wind), <span class="co"># calculate standard deviation of Wind</span></a>
+<a class="sourceLine" id="cb783-7" data-line-number="7">            <span class="dt">n_obs =</span> <span class="kw">n</span>())</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 4
+##   Solar.R_NA Wind_mean Wind_sd n_obs
+##   &lt;fct&gt;          &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;
+## 1 !NA             10.0    3.51   146
+## 2 NA               9      3.97     7</code></pre>
+<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb785-1" data-line-number="1"><span class="co"># Summarise wind by missingness of `Solar.R_NA` and `Ozone_NA`</span></a>
+<a class="sourceLine" id="cb785-2" data-line-number="2">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb785-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb785-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(Solar.R_NA, Ozone_NA) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb785-5" data-line-number="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Temp_mean =</span> <span class="kw">mean</span>(Temp),</a>
+<a class="sourceLine" id="cb785-6" data-line-number="6">            <span class="dt">Temp_sd =</span> <span class="kw">sd</span>(Temp),</a>
+<a class="sourceLine" id="cb785-7" data-line-number="7">            <span class="dt">n_obs =</span> <span class="kw">n</span>())</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 5
+## # Groups:   Solar.R_NA [2]
+##   Solar.R_NA Ozone_NA Temp_mean Temp_sd n_obs
+##   &lt;fct&gt;      &lt;fct&gt;        &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;
+## 1 !NA        !NA           77.8   9.53    111
+## 2 !NA        NA            79.1   8.23     35
+## 3 NA         !NA           79.6   9.24      5
+## 4 NA         NA            56.5   0.707     2</code></pre>
+<p>Visualizing missingness across one variable
+First explore the missingness structure of <code>airquality</code> using <code>vis_miss()</code></p>
+<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb787-1" data-line-number="1"><span class="kw">vis_miss</span>(airquality)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-1.png" width="672" /></p>
+<div class="sourceCode" id="cb788"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb788-1" data-line-number="1"><span class="co"># Explore the distribution of `Temp` for the missingness of `Ozone_NA` using  `geom_density()`</span></a>
+<a class="sourceLine" id="cb788-2" data-line-number="2"><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb788-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Temp, </a>
+<a class="sourceLine" id="cb788-4" data-line-number="4">             <span class="dt">color =</span> Ozone_NA)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb788-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_density</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-2.png" width="672" /></p>
+<div class="sourceCode" id="cb789"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb789-1" data-line-number="1"><span class="co"># Explore the distribution of Temp for the missingness of humidity (Solar.R_NA) using  `geom_density()`</span></a>
+<a class="sourceLine" id="cb789-2" data-line-number="2"><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb789-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Temp,</a>
+<a class="sourceLine" id="cb789-4" data-line-number="4">             <span class="dt">color =</span> Solar.R_NA)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb789-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_density</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-3.png" width="672" /></p>
+<div class="sourceCode" id="cb790"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb790-1" data-line-number="1"><span class="co"># Explore the distribution of Wind for the missingness of Solar.R_NA using  `geom_density()` and facetting by the missingness of (`Solar.R_NA`).</span></a>
+<a class="sourceLine" id="cb790-2" data-line-number="2">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb790-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb790-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Wind)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb790-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb790-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Solar.R_NA)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-4.png" width="672" /></p>
+<div class="sourceCode" id="cb791"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb791-1" data-line-number="1"><span class="co"># Build upon this visualisation by filling by the missingness of (`Solar.R_NA`).</span></a>
+<a class="sourceLine" id="cb791-2" data-line-number="2">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb791-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb791-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Wind,</a>
+<a class="sourceLine" id="cb791-5" data-line-number="5">             <span class="dt">color =</span> Solar.R_NA)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb791-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb791-7" data-line-number="7"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Solar.R_NA)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-5.png" width="672" /></p>
+<div class="sourceCode" id="cb792"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb792-1" data-line-number="1"><span class="co"># Explore the distribution of wind for the missingness of air temperature using  `geom_boxplot()`</span></a>
+<a class="sourceLine" id="cb792-2" data-line-number="2">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb792-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb792-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Ozone_NA,</a>
+<a class="sourceLine" id="cb792-5" data-line-number="5">             <span class="dt">y =</span> Wind)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb792-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-6.png" width="672" /></p>
+<div class="sourceCode" id="cb793"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb793-1" data-line-number="1"><span class="co"># Build upon this visualisation by facetting by the missingness of Ozone_NA </span></a>
+<a class="sourceLine" id="cb793-2" data-line-number="2">airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb793-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb793-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Ozone_NA,</a>
+<a class="sourceLine" id="cb793-5" data-line-number="5">             <span class="dt">y =</span> Wind)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb793-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb793-7" data-line-number="7"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Ozone_NA)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%20across%20variables-7.png" width="672" /></p>
+<p>Visualizing missingness across two variables</p>
+<p>Explore the missingness in wind and air temperature, and display the missingness using <code>geom_miss_point()</code>:</p>
+<div class="sourceCode" id="cb794"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb794-1" data-line-number="1"><span class="kw">ggplot</span>(airquality,</a>
+<a class="sourceLine" id="cb794-2" data-line-number="2">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind,</a>
+<a class="sourceLine" id="cb794-3" data-line-number="3">           <span class="dt">y =</span> Temp)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb794-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_miss_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%202%20missing%20vars-1.png" width="672" /></p>
+<div class="sourceCode" id="cb795"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb795-1" data-line-number="1"><span class="co"># Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`</span></a>
+<a class="sourceLine" id="cb795-2" data-line-number="2"><span class="kw">ggplot</span>(airquality,</a>
+<a class="sourceLine" id="cb795-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> Ozone,</a>
+<a class="sourceLine" id="cb795-4" data-line-number="4">           <span class="dt">y =</span> Solar.R)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb795-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_miss_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%202%20missing%20vars-2.png" width="672" /></p>
+<div class="sourceCode" id="cb796"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb796-1" data-line-number="1"><span class="co"># Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`. Facet by Temp to explore this further.</span></a>
+<a class="sourceLine" id="cb796-2" data-line-number="2"><span class="kw">ggplot</span>(airquality,</a>
+<a class="sourceLine" id="cb796-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> Ozone,</a>
+<a class="sourceLine" id="cb796-4" data-line-number="4">           <span class="dt">y =</span> Solar.R)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb796-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_miss_point</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb796-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Temp)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%202%20missing%20vars-3.png" width="672" /></p>
+<div class="sourceCode" id="cb797"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb797-1" data-line-number="1"><span class="co"># Use geom_miss_point() and facet_wrap to explore how the missingness in Ozone  is different for missingness of Solar.R</span></a>
+<a class="sourceLine" id="cb797-2" data-line-number="2"><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb797-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Ozone,</a>
+<a class="sourceLine" id="cb797-4" data-line-number="4">             <span class="dt">y =</span> Solar.R)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb797-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_miss_point</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb797-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Temp)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%202%20missing%20vars-4.png" width="672" /></p>
+<div class="sourceCode" id="cb798"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb798-1" data-line-number="1"><span class="co"># Use airquality() and facet_grid to explore how the missingness in wind_ew and air_temp_c is different for missingness of Temp AND by Month- by using `facet_grid(Temp ~ Month)`</span></a>
+<a class="sourceLine" id="cb798-2" data-line-number="2"><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb798-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Ozone,</a>
+<a class="sourceLine" id="cb798-4" data-line-number="4">             <span class="dt">y =</span> Solar.R)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb798-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_miss_point</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb798-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_grid</span>(Temp <span class="op">~</span><span class="st"> </span>Month)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/visualize%202%20missing%20vars-5.png" width="672" /></p>
+<p>Filling in the blanks
+Impute the data below the range using <code>impute_below</code>.</p>
+<div class="sourceCode" id="cb799"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb799-1" data-line-number="1">airquality_imp &lt;-<span class="st"> </span><span class="kw">impute_below_all</span>(airquality)</a>
+<a class="sourceLine" id="cb799-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb799-3" data-line-number="3"><span class="co"># Visualise the new missing values</span></a>
+<a class="sourceLine" id="cb799-4" data-line-number="4"><span class="kw">ggplot</span>(airquality_imp,</a>
+<a class="sourceLine" id="cb799-5" data-line-number="5">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind, <span class="dt">y =</span> Temp)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb799-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/fill%20in%20blanks-1.png" width="672" /></p>
+<div class="sourceCode" id="cb800"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb800-1" data-line-number="1"><span class="co"># Impute and track data with `bind_shadow`, `impute_below`, and `add_label_shadow`</span></a>
+<a class="sourceLine" id="cb800-2" data-line-number="2">airquality_imp_track &lt;-<span class="st"> </span><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb800-3" data-line-number="3"><span class="st">  </span><span class="kw">impute_below_all</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb800-4" data-line-number="4"><span class="st">  </span><span class="kw">add_label_shadow</span>()</a>
+<a class="sourceLine" id="cb800-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb800-6" data-line-number="6"><span class="co"># Look at the imputed values</span></a>
+<a class="sourceLine" id="cb800-7" data-line-number="7">airquality_imp_track</a></code></pre></div>
+<pre><code>## # A tibble: 153 x 13
+##    Ozone Solar.R  Wind  Temp Month   Day Ozone_NA Solar.R_NA Wind_NA Temp_NA
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt;      &lt;fct&gt;   &lt;fct&gt;  
+##  1  41     190     7.4    67     5     1 !NA      !NA        !NA     !NA    
+##  2  36     118     8      72     5     2 !NA      !NA        !NA     !NA    
+##  3  12     149    12.6    74     5     3 !NA      !NA        !NA     !NA    
+##  4  18     313    11.5    62     5     4 !NA      !NA        !NA     !NA    
+##  5 -15.4   -25.1  14.3    56     5     5 NA       NA         !NA     !NA    
+##  6  28     -26.7  14.9    66     5     6 !NA      NA         !NA     !NA    
+##  7  23     299     8.6    65     5     7 !NA      !NA        !NA     !NA    
+##  8  19      99    13.8    59     5     8 !NA      !NA        !NA     !NA    
+##  9   8      19    20.1    61     5     9 !NA      !NA        !NA     !NA    
+## 10 -14.2   194     8.6    69     5    10 NA       !NA        !NA     !NA    
+## # … with 143 more rows, and 3 more variables: Month_NA &lt;fct&gt;, Day_NA &lt;fct&gt;,
+## #   any_missing &lt;chr&gt;</code></pre>
+<p>Visualise imputed values in a scatterplot
+Visualise the missingness in wind and air temperature, coloring missing values with Ozone_NA:</p>
+<div class="sourceCode" id="cb802"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb802-1" data-line-number="1"><span class="kw">ggplot</span>(airquality_imp_track,</a>
+<a class="sourceLine" id="cb802-2" data-line-number="2">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind, <span class="dt">y =</span> Temp, <span class="dt">color =</span> Ozone_NA)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb802-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/scatterplot%20of%20missings-1.png" width="672" /></p>
+<div class="sourceCode" id="cb803"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb803-1" data-line-number="1"><span class="co"># Visualise humidity and air temp, coloring any missing cases using the variable any_missing</span></a>
+<a class="sourceLine" id="cb803-2" data-line-number="2"><span class="kw">ggplot</span>(airquality_imp_track,</a>
+<a class="sourceLine" id="cb803-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind, <span class="dt">y =</span> Temp, <span class="dt">color =</span> any_missing)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb803-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/scatterplot%20of%20missings-2.png" width="672" /></p>
+<p>Create histogram of imputed data
+Explore the values of air_temp_c, visualising the amount of missings with <code>air_temp_c_NA</code>.</p>
+<div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb804-1" data-line-number="1">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(airquality_imp_track, <span class="kw">aes</span>(<span class="dt">x =</span> Ozone, <span class="dt">fill =</span> Ozone_NA)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</a>
+<a class="sourceLine" id="cb804-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb804-3" data-line-number="3"><span class="co"># Expore the missings in humidity using humidity_NA</span></a>
+<a class="sourceLine" id="cb804-4" data-line-number="4">p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(airquality_imp_track, <span class="kw">aes</span>(<span class="dt">x =</span> Solar.R, <span class="dt">fill =</span> Solar.R_NA)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</a>
+<a class="sourceLine" id="cb804-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb804-6" data-line-number="6"><span class="co"># Explore the missings in airquality_imp_track according to Month, using `facet_wrap(~Month)`.</span></a>
+<a class="sourceLine" id="cb804-7" data-line-number="7">p <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Month)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/histogram%20of%20missings-1.png" width="672" /></p>
+<div class="sourceCode" id="cb805"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb805-1" data-line-number="1"><span class="co"># Explore the missings in humidity according to Month, using `facet_wrap(~Month)`.</span></a>
+<a class="sourceLine" id="cb805-2" data-line-number="2">p2 <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Month)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/histogram%20of%20missings-2.png" width="672" /></p>
+<p>What makes a good imputation
+Impute the mean value and track the imputations</p>
+<div class="sourceCode" id="cb806"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb806-1" data-line-number="1">airquality_imp_mean &lt;-<span class="st"> </span><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb806-2" data-line-number="2"><span class="st">  </span><span class="kw">impute_mean_all</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb806-3" data-line-number="3"><span class="st">  </span><span class="kw">add_label_shadow</span>()</a>
+<a class="sourceLine" id="cb806-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb806-5" data-line-number="5"><span class="co"># Explore the mean values in wind in the imputed dataset</span></a>
+<a class="sourceLine" id="cb806-6" data-line-number="6"><span class="kw">ggplot</span>(airquality_imp_mean, </a>
+<a class="sourceLine" id="cb806-7" data-line-number="7">       <span class="kw">aes</span>(<span class="dt">x =</span> Ozone_NA, <span class="dt">y =</span> Wind)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb806-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/impute-1.png" width="672" /></p>
+<div class="sourceCode" id="cb807"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb807-1" data-line-number="1"><span class="co"># Explore the values in air wind in the imputed dataset</span></a>
+<a class="sourceLine" id="cb807-2" data-line-number="2"><span class="kw">ggplot</span>(airquality_imp_mean, </a>
+<a class="sourceLine" id="cb807-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> Solar.R_NA, <span class="dt">y =</span> Wind)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb807-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/impute-2.png" width="672" /></p>
+<div class="sourceCode" id="cb808"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb808-1" data-line-number="1"><span class="co"># Explore imputations in air temperature and wind, coloring by the variable, any_missing</span></a>
+<a class="sourceLine" id="cb808-2" data-line-number="2"><span class="kw">ggplot</span>(airquality_imp_mean, </a>
+<a class="sourceLine" id="cb808-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind, <span class="dt">y =</span> Temp, <span class="dt">color =</span> any_missing)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb808-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/impute-3.png" width="672" /></p>
+<div class="sourceCode" id="cb809"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb809-1" data-line-number="1"><span class="co"># Explore imputations in air temperature and wind, coloring by the variable, any_missing, and faceting by Month</span></a>
+<a class="sourceLine" id="cb809-2" data-line-number="2"><span class="kw">ggplot</span>(airquality_imp_mean, </a>
+<a class="sourceLine" id="cb809-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind, <span class="dt">y =</span> Temp, <span class="dt">color =</span> any_missing)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb809-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb809-5" data-line-number="5"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>Month)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/impute-4.png" width="672" /></p>
+<div class="sourceCode" id="cb810"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb810-1" data-line-number="1"><span class="co"># Gather the imputed data </span></a>
+<a class="sourceLine" id="cb810-2" data-line-number="2">airquality_imp_mean_gather &lt;-<span class="st"> </span><span class="kw">shadow_long</span>(airquality_imp_mean,</a>
+<a class="sourceLine" id="cb810-3" data-line-number="3">                                     Temp,</a>
+<a class="sourceLine" id="cb810-4" data-line-number="4">                                     Wind)</a>
+<a class="sourceLine" id="cb810-5" data-line-number="5"><span class="co"># Inspect the data</span></a>
+<a class="sourceLine" id="cb810-6" data-line-number="6">airquality_imp_mean_gather</a></code></pre></div>
+<pre><code>## # A tibble: 306 x 4
+##    variable value variable_NA value_NA
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;   
+##  1 Wind     7.4   Wind_NA     !NA     
+##  2 Wind     8     Wind_NA     !NA     
+##  3 Wind     12.6  Wind_NA     !NA     
+##  4 Wind     11.5  Wind_NA     !NA     
+##  5 Wind     14.3  Wind_NA     !NA     
+##  6 Wind     14.9  Wind_NA     !NA     
+##  7 Wind     8.6   Wind_NA     !NA     
+##  8 Wind     13.8  Wind_NA     !NA     
+##  9 Wind     20.1  Wind_NA     !NA     
+## 10 Wind     8.6   Wind_NA     !NA     
+## # … with 296 more rows</code></pre>
+<div class="sourceCode" id="cb812"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb812-1" data-line-number="1"><span class="co"># Explore the imputations in a histogram </span></a>
+<a class="sourceLine" id="cb812-2" data-line-number="2"><span class="kw">ggplot</span>(airquality_imp_mean_gather, </a>
+<a class="sourceLine" id="cb812-3" data-line-number="3">       <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.numeric</span>(value), <span class="dt">fill =</span> value_NA)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb812-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb812-5" data-line-number="5"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>variable) </a></code></pre></div>
+<p><img src="code4stem_files/figure-html/impute-5.png" width="672" /></p>
+<p>Performing imputations
+Impute Temp and Wind, and track missing values</p>
+<div class="sourceCode" id="cb813"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb813-1" data-line-number="1"><span class="kw">library</span>(simputation)</a>
+<a class="sourceLine" id="cb813-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb813-3" data-line-number="3">airquality_imp_lm_wind &lt;-<span class="st"> </span>airquality <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb813-4" data-line-number="4"><span class="st">  </span><span class="kw">bind_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb813-5" data-line-number="5"><span class="st">  </span><span class="kw">impute_lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb813-6" data-line-number="6"><span class="st">  </span><span class="kw">impute_lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Day) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb813-7" data-line-number="7"><span class="st">  </span><span class="kw">add_label_shadow</span>()</a>
+<a class="sourceLine" id="cb813-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb813-9" data-line-number="9"><span class="co"># Plot the imputed values for Temp and Wind, colored by missingness</span></a>
+<a class="sourceLine" id="cb813-10" data-line-number="10"><span class="kw">ggplot</span>(airquality_imp_lm_wind, </a>
+<a class="sourceLine" id="cb813-11" data-line-number="11">       <span class="kw">aes</span>(<span class="dt">x =</span> Temp, <span class="dt">y =</span> Wind, <span class="dt">color =</span> any_missing)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb813-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/simputation%20library-1.png" width="672" /></p>
+<div class="sourceCode" id="cb814"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb814-1" data-line-number="1"><span class="co"># Evaluating and comparing imputations</span></a>
+<a class="sourceLine" id="cb814-2" data-line-number="2"><span class="co">## Bind the models together </span></a>
+<a class="sourceLine" id="cb814-3" data-line-number="3">bound_models &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="dt">mean =</span> airquality_imp_mean,</a>
+<a class="sourceLine" id="cb814-4" data-line-number="4">                          <span class="dt">lm_wind =</span> airquality_imp_lm_wind,</a>
+<a class="sourceLine" id="cb814-5" data-line-number="5">                          <span class="dt">.id =</span> <span class="st">&quot;imp_model&quot;</span>)</a>
+<a class="sourceLine" id="cb814-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb814-7" data-line-number="7"><span class="co"># Inspect the values of air_temp and humidity as a scatterplot</span></a>
+<a class="sourceLine" id="cb814-8" data-line-number="8"><span class="kw">ggplot</span>(bound_models,</a>
+<a class="sourceLine" id="cb814-9" data-line-number="9">       <span class="kw">aes</span>(<span class="dt">x =</span> Wind,</a>
+<a class="sourceLine" id="cb814-10" data-line-number="10">           <span class="dt">y =</span> Temp,</a>
+<a class="sourceLine" id="cb814-11" data-line-number="11">           <span class="dt">color =</span> any_missing)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb814-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb814-13" data-line-number="13"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>imp_model)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/simputation%20library-2.png" width="672" /></p>
+<div class="sourceCode" id="cb815"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb815-1" data-line-number="1"><span class="co"># Build a model adding Month to the outcome</span></a>
+<a class="sourceLine" id="cb815-2" data-line-number="2">airquality_imp_lm_wind_month &lt;-<span class="st"> </span><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb815-3" data-line-number="3"><span class="st">  </span><span class="kw">impute_lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Day <span class="op">+</span><span class="st"> </span>Month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb815-4" data-line-number="4"><span class="st">  </span><span class="kw">impute_lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Ozone <span class="op">+</span><span class="st"> </span>Month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb815-5" data-line-number="5"><span class="st">  </span><span class="kw">add_label_shadow</span>()</a>
+<a class="sourceLine" id="cb815-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb815-7" data-line-number="7"><span class="co"># Bind the mean, lm_wind, and lm_wind_year models together</span></a>
+<a class="sourceLine" id="cb815-8" data-line-number="8">bound_models &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="dt">mean =</span> airquality_imp_mean,</a>
+<a class="sourceLine" id="cb815-9" data-line-number="9">                          <span class="dt">lm_wind =</span> airquality_imp_lm_wind,</a>
+<a class="sourceLine" id="cb815-10" data-line-number="10">                          <span class="dt">lm_wind_year =</span> airquality_imp_lm_wind_month,</a>
+<a class="sourceLine" id="cb815-11" data-line-number="11">                          <span class="dt">.id =</span> <span class="st">&quot;imp_model&quot;</span>)</a>
+<a class="sourceLine" id="cb815-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb815-13" data-line-number="13"><span class="co"># Explore air_temp and humidity, coloring by any missings, and faceting by imputation model</span></a>
+<a class="sourceLine" id="cb815-14" data-line-number="14"><span class="kw">ggplot</span>(bound_models, <span class="kw">aes</span>(<span class="dt">x =</span> Wind, <span class="dt">y =</span> Temp, <span class="dt">color =</span> any_missing)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb815-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>imp_model)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/simputation%20library-3.png" width="672" /></p>
+<div class="sourceCode" id="cb816"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb816-1" data-line-number="1"><span class="co"># Gather the data and inspect the distributions of the values</span></a>
+<a class="sourceLine" id="cb816-2" data-line-number="2">bound_models_gather &lt;-<span class="st"> </span>bound_models <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb816-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(Temp, Wind, any_missing, imp_model) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb816-4" data-line-number="4"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;key&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>, <span class="op">-</span>any_missing, <span class="op">-</span>imp_model)</a>
+<a class="sourceLine" id="cb816-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb816-6" data-line-number="6"><span class="co"># Inspect the distribution for each variable, for each model</span></a>
+<a class="sourceLine" id="cb816-7" data-line-number="7"><span class="kw">ggplot</span>(bound_models_gather,</a>
+<a class="sourceLine" id="cb816-8" data-line-number="8">       <span class="kw">aes</span>(<span class="dt">x =</span> imp_model, <span class="dt">y =</span> value, <span class="dt">color =</span> imp_model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb816-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>key, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/simputation%20library-4.png" width="672" /></p>
+<div class="sourceCode" id="cb817"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb817-1" data-line-number="1"><span class="co"># Inspect the imputed values</span></a>
+<a class="sourceLine" id="cb817-2" data-line-number="2">bound_models_gather <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb817-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(any_missing <span class="op">==</span><span class="st"> &quot;Missing&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb817-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> imp_model, <span class="dt">y =</span> value, <span class="dt">color =</span> imp_model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb817-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>key, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</a></code></pre></div>
+<p><img src="code4stem_files/figure-html/simputation%20library-5.png" width="672" /></p>
+<p>Combining and comparing many imputation models
+Create an imputed dataset using a linear models</p>
+<div class="sourceCode" id="cb818"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb818-1" data-line-number="1">airquality_imp_lm_all &lt;-<span class="st"> </span><span class="kw">bind_shadow</span>(airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb818-2" data-line-number="2"><span class="st">  </span><span class="kw">add_label_shadow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb818-3" data-line-number="3"><span class="st">  </span><span class="kw">impute_lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Day <span class="op">+</span><span class="st"> </span>Month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb818-4" data-line-number="4"><span class="st">  </span><span class="kw">impute_lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Ozone <span class="op">+</span><span class="st"> </span>Month) </a>
+<a class="sourceLine" id="cb818-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb818-6" data-line-number="6"><span class="co"># Bind the datasets</span></a>
+<a class="sourceLine" id="cb818-7" data-line-number="7">cc =<span class="st"> </span>airquality</a>
+<a class="sourceLine" id="cb818-8" data-line-number="8">imp_lm_wind =<span class="st"> </span><span class="kw">as.data.frame</span>(airquality_imp_lm_wind) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb818-9" data-line-number="9"><span class="st">  </span><span class="kw">mutate_if</span>(is.factor, <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">levels</span>(.x))[.x])</a></code></pre></div>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<div class="sourceCode" id="cb825"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb825-1" data-line-number="1">imp_lm_all =<span class="st"> </span><span class="kw">as.data.frame</span>(airquality_imp_lm_all) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb825-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate_if</span>(is.factor, <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">levels</span>(.x))[.x])</a></code></pre></div>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<pre><code>## Warning in ~as.numeric(levels(.x))[.x]: NAs introduced by coercion</code></pre>
+<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb832-1" data-line-number="1">bound_models &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(airquality,</a>
+<a class="sourceLine" id="cb832-2" data-line-number="2">                          imp_lm_wind,</a>
+<a class="sourceLine" id="cb832-3" data-line-number="3">                          imp_lm_all,</a>
+<a class="sourceLine" id="cb832-4" data-line-number="4">                          <span class="dt">.id =</span> <span class="st">&quot;imp_model&quot;</span>)</a>
+<a class="sourceLine" id="cb832-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb832-6" data-line-number="6"><span class="co"># Look at the models</span></a>
+<a class="sourceLine" id="cb832-7" data-line-number="7"><span class="kw">head</span>(bound_models,<span class="dv">4</span>)</a></code></pre></div>
+<pre><code>##   imp_model Ozone Solar.R Wind Temp Month Day Ozone_NA Solar.R_NA Wind_NA
+## 1         1    41     190  7.4   67     5   1       NA         NA      NA
+## 2         1    36     118  8.0   72     5   2       NA         NA      NA
+## 3         1    12     149 12.6   74     5   3       NA         NA      NA
+## 4         1    18     313 11.5   62     5   4       NA         NA      NA
+##   Temp_NA Month_NA Day_NA any_missing
+## 1      NA       NA     NA        &lt;NA&gt;
+## 2      NA       NA     NA        &lt;NA&gt;
+## 3      NA       NA     NA        &lt;NA&gt;
+## 4      NA       NA     NA        &lt;NA&gt;</code></pre>
+<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb834-1" data-line-number="1"><span class="co"># Create the model summary for each dataset</span></a>
+<a class="sourceLine" id="cb834-2" data-line-number="2"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb834-3" data-line-number="3"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb834-4" data-line-number="4">model_summary &lt;-<span class="st"> </span>bound_models <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb834-5" data-line-number="5"><span class="st">  </span><span class="kw">group_by</span>(imp_model) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb834-6" data-line-number="6"><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb834-7" data-line-number="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mod =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">lm</span>(Temp <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Ozone <span class="op">+</span><span class="st"> </span>Month, <span class="dt">data =</span> .)),</a>
+<a class="sourceLine" id="cb834-8" data-line-number="8">         <span class="dt">res =</span> <span class="kw">map</span>(mod, residuals),</a>
+<a class="sourceLine" id="cb834-9" data-line-number="9">         <span class="dt">pred =</span> <span class="kw">map</span>(mod, predict),</a>
+<a class="sourceLine" id="cb834-10" data-line-number="10">         <span class="dt">tidy =</span> <span class="kw">map</span>(mod, tidy))</a>
+<a class="sourceLine" id="cb834-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb834-12" data-line-number="12"><span class="co"># Explore the coefficients in the model</span></a>
+<a class="sourceLine" id="cb834-13" data-line-number="13">model_summary <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb834-14" data-line-number="14"><span class="st">  </span><span class="kw">select</span>(imp_model,tidy) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb834-15" data-line-number="15"><span class="st">  </span><span class="kw">unnest</span>()</a></code></pre></div>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(tidy)`</code></pre>
+<pre><code>## # A tibble: 12 x 6
+## # Groups:   imp_model [3]
+##    imp_model term        estimate std.error statistic  p.value
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 1         (Intercept)   59.0      4.11       14.4  3.66e-27
+##  2 1         Wind          -0.242    0.203      -1.19 2.35e- 1
+##  3 1         Ozone          0.171    0.0218      7.82 3.22e-12
+##  4 1         Month          1.96     0.398       4.92 3.03e- 6
+##  5 2         (Intercept)   59.0      4.11       14.4  3.66e-27
+##  6 2         Wind          -0.242    0.203      -1.19 2.35e- 1
+##  7 2         Ozone          0.171    0.0218      7.82 3.22e-12
+##  8 2         Month          1.96     0.398       4.92 3.03e- 6
+##  9 3         (Intercept)   59.0      4.11       14.4  3.66e-27
+## 10 3         Wind          -0.242    0.203      -1.19 2.35e- 1
+## 11 3         Ozone          0.171    0.0218      7.82 3.22e-12
+## 12 3         Month          1.96     0.398       4.92 3.03e- 6</code></pre>
+<div class="sourceCode" id="cb837"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb837-1" data-line-number="1">best_model &lt;-<span class="st"> &quot;imp_lm_all&quot;</span></a></code></pre></div>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="feature-engineering-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="r-for-reporting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

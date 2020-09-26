@@ -1,7 +1,6 @@
 # Working with time-series in R
 
-```{r load xts and zoo objects, message= FALSE}
-
+```{r load xts and zoo, message= FALSE}
 # load dependencies
 library(xts)
 library(zoo)
@@ -167,7 +166,7 @@ Additional Methods To Find Periods in Your Data
 #Using the first() and last() functions
 
 Create lastweek using the last 1 week of temps
-```{r last with R, message= FALSE}
+```{r last, message= FALSE}
 
 lastweek <- last(sun, "1 week")
 
@@ -277,7 +276,7 @@ Merge your three series together and assign to z
 Calculate a difference of a series using diff()
 Calculate the first difference of AirPass using lag and subtraction
 
-```{r diff in airpass, message= FALSE}
+```{r diff, message= FALSE}
 
 diff(x, differences = 2)
 diff(diff(x))

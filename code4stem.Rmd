@@ -1,0 +1,4818 @@
+--- 
+title: "Codes for STEM"
+author: "Noushin Nabavi"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+always_allow_html: yes
+description: "This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting"
+---
+
+# Coding for STEM 
+> Tools and capabilities of data science is changing everyday!    
+
+This is how I understand it today: 
+
+**Data can:** 
+* Describe the current state of an organization or process   
+* Detec anomalous events  
+* Diagnose the causes of events and behaviors  
+* Predict future events  
+
+**Data Science workflows can be developed for: **  
+* Data collection and management  
+* Exploration and visualization  
+* Experimentation and prediction  
+
+**Applications of data science can include: **  
+* Traditional machine learning: e.g. finding probabilities of events, labeled data, and algorithms    
+* Deep learning: neurons work together for image and natural language recognition but requires more training data  
+* Internet of things (IOT): e.g. smart watch algorithms to detect and analyze motion sensors  
+
+**Data science teams can consist of:**
+* Data engineers: SQL, Java, Scala, Python  
+* Data analysts: Dashboards, hypothesis tests and visualization using spreadsheets, SQL, BI (Tableau, power BI, looker)  
+* Machine learning scientists: predictions and extrapolations, classification, etc. and use R or python  * Data employees can be isolated, embedded, or hybrid   
+
+Data use can come with risks of identification of personal information. Policies for personally identifiable information may need to consider:  
+* sensitivity and caution    
+* pseudonymization and anonymization    
+
+Preferences can be stated or revealed through the data so questions need to be specific, avoid loaded language, calibrate, require actionable results.   
+
+**Data storage and retrieval may include:    **
+* parallel storage solutions (e.g. cluster or server)  
+* cloud storage (google, amazon, azure)  
+* types of data: 1) unstructured (email, text, video, audio, web, and social media = document database); 2) structured = relational databases  
+* Data querying: NoSQL and SQL  
+
+**Communication of data can include: **  
+* Dashboards  
+* Markdowns  
+* BI tools  
+* rshiny or d3.js  
+
+**Team management around data can use:   **
+* Trello, slack, rocket chat, or JIRA to communicate due data and priority  
+
+**A/B Testing:   **
+* Control and Variation in samples  
+* 4 steps in A/B testing: pick metric to track, calculate sample size, run the experiment, and check significance 
+
+Machine learning (ML) can be used for time series forecasting (investigate seasonality on any time scale), natural language processing (word count, word embeddings to create features that group similar words), neural networks, deep learning, and AI.    
+**Learning can be classified into:  ** 
+_Supervised_: labels and features/ Model evaluation on test and train data  with applications in:
+* recommendation systems  
+* subscription predictions  
+* email subject optimization  
+_Unsupervised_: unlabeled data with only features  
+* clustering  
+
+**Deep learning and AI requirements:   **
+* prediction is more feasible than explanations  
+* lots of very large amount of training data  
+
+
+
+
+
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction 
+
+<!--chapter:end:01-intro.Rmd-->
+
+ Importing data into R
+
+working with excel, csv, txt, and tsv files in R
+
+
+```{r load dependencies, message= FALSE}
+library(readr) 
+library(data.table)
+library(readxl)
+library(gdata)
+library(httr)
+library(rvest)
+library(xml2)
+library(rlist)
+library(jsonlite)
+library(dplyr)
+```
+
+Importing csv file: 
+pools <- read.csv("swimming_pools.csv", stringsAsFactors = FALSE)
+
+With stringsAsFactors, you can tell R whether it should convert strings in the flat file to factors.
+
+Import txt file with read.delim: 
+hotdogs <- read.delim("hotdogs.txt", header = FALSE)
+
+
+Import txt file with read.table: 
+hotdogs <- read.table(path, 
+                      sep = "\t", 
+                      col.names = c("type", "calories", "sodium"))
+
+Import with readr functions: 
+- read_csv, read_tsv, and read_delim are part of this package
+
+Can specify column names before import:
+properties <- c("area", "temp", "size", "storage", "method",
+                "texture", "flavor", "moistness")
+
+Import potatoes.txt: 
+potatoes <- read_tsv("potatoes.txt", col_names = properties)
+
+Import potatoes.txt using read_delim(): 
+potatoes <- read_delim("potatoes.txt", delim = "\t", col_names = properties)
+
+
+Import 5 observations from potatoes.txt: 
+potatoes_fragment <- read_tsv("potatoes.txt", skip = 6, n_max = 5, col_names = properties)
+
+Import all data, but force all columns to be character: potatoes_char
+potatoes_char <- read_tsv("potatoes.txt", col_types = "cccccccc", col_names = properties)
+
+Import without col_types
+hotdogs <- read_tsv("hotdogs.txt", col_names = c("type", "calories", "sodium"))
+
+The collectors you will need to import the data
+fac <- col_factor(levels = c("Beef", "Meat", "Poultry"))
+int <- col_integer()
+
+Edit the col_types argument to import the data correctly: 
+hotdogs_factor <- read_tsv("hotdogs.txt",
+                           col_names = c("type", "calories", "sodium"),
+                           col_types = list(fac, int, int))
+
+
+
+Import potatoes.csv with fread() from data.table: 
+potatoes <- fread("potatoes.csv")
+
+Import columns 6 and 8 of potatoes.csv: 
+potatoes <- fread("potatoes.csv", select = c(6, 8))
+
+Plot texture (x) and moistness (y) of potatoes:
+plot(potatoes$texture, potatoes$moistness)
+
+
+Print the names of all worksheets using readxl library:
+excel_sheets("urbanpop.xlsx")
+
+Read the sheets, one by one
+pop_1 <- read_excel("urbanpop.xlsx", sheet = 1)
+pop_2 <- read_excel("urbanpop.xlsx", sheet = 2)
+pop_3 <- read_excel("urbanpop.xlsx", sheet = 3)
+
+Put pop_1, pop_2 and pop_3 in a list: 
+pop_list <- list(pop_1, pop_2, pop_3)
+
+
+Read all Excel sheets with lapply(): 
+pop_list <- lapply(excel_sheets("urbanpop.xlsx"), read_excel, path = "urbanpop.xlsx")
+
+Import the first Excel sheet of urbanpop_nonames.xlsx (R gives names): 
+pop_a <- read_excel("urbanpop_nonames.xlsx", col_names = FALSE)
+
+Import the first Excel sheet of urbanpop_nonames.xlsx (specify col_names): 
+cols <- c("country", paste0("year_", 1960:1966))
+pop_b <- read_excel("urbanpop_nonames.xlsx", col_names = cols)
+
+Import the second sheet of urbanpop.xlsx, skipping the first 21 rows: 
+urbanpop_sel <- read_excel("urbanpop.xlsx", sheet = 2, col_names = FALSE, skip = 21)
+
+Print out the first observation from urbanpop_sel
+urbanpop_sel[1,]
+
+
+Import a local file
+Similar to the readxl package, you can import single Excel sheets from Excel sheets to start your analysis in R.
+
+Import the second sheet of urbanpop.xls: 
+urban_pop <- read.xls("urbanpop.xls", sheet = "1967-1974")
+
+Print the first 11 observations using head()
+head(urban_pop, n = 11)
+
+Column names for urban_pop
+columns <- c("country", paste0("year_", 1967:1974))
+
+Finish the read.xls call
+urban_pop <- read.xls("urbanpop.xls", sheet = 2,
+                      skip = 50, header = FALSE, stringsAsFactors = FALSE,
+                      col.names = columns)
+
+Import all sheets from urbanpop.xls
+path <- "urbanpop.xls"
+urban_sheet1 <- read.xls(path, sheet = 1, stringsAsFactors = FALSE)
+urban_sheet2 <- read.xls(path, sheet = 2, stringsAsFactors = FALSE)
+urban_sheet3 <- read.xls(path, sheet = 3, stringsAsFactors = FALSE)
+
+Extend the cbind() call to include urban_sheet3: urban_all
+urban <- cbind(urban_sheet1, urban_sheet2[-1], urban_sheet3[-1])
+
+Remove all rows with NAs from urban: urban_clean
+urban_clean <- na.omit(urban)
+
+Print out a summary of urban_clean
+summary(urban_clean)
+
+
+When working with XLConnect, the first step will be to load a workbook in your R session with loadWorkbook(); this function will build a "bridge" between your Excel file and your R session:
+Here using the XLConnect package
+
+Build connection to urbanpop.xlsx: 
+my_book <- loadWorkbook("urbanpop.xlsx")
+
+List the sheets in my_book
+getSheets(my_book)
+
+Import the second sheet in my_book
+readWorksheet(my_book, sheet = 2)
+
+
+Import columns 3, 4, and 5 from second sheet in my_book: urbanpop_sel
+urbanpop_sel <- readWorksheet(my_book, sheet = 2, startCol = 3, endCol = 5)
+
+Import first column from second sheet in my_book: countries
+countries <- readWorksheet(my_book, sheet = 2, startCol = 1, endCol = 1)
+
+cbind() urbanpop_sel and countries together: selection
+selection <- cbind(countries, urbanpop_sel)
+
+Add a worksheet to my_book, named "data_summary"
+createSheet(my_book, "data_summary")
+
+Use getSheets() on my_book
+getSheets(my_book)
+
+Create data frame: 
+sheets <- getSheets(my_book)[1:3]
+dims <- sapply(sheets, function(x) dim(readWorksheet(my_book, sheet = x)), USE.NAMES = FALSE)
+summ <- data.frame(sheets = sheets,
+                   nrows = dims[1, ],
+                   ncols = dims[2, ])
+
+Add data in summ to "data_summary" sheet
+writeWorksheet(my_book, summ, "data_summary")
+
+Rename "data_summary" sheet to "summary"
+renameSheet(my_book, "data_summary", "summary")
+
+Remove the fourth sheet
+removeSheet(my_book, 4)
+
+Save workbook to "renamed.xlsx"
+saveWorkbook(my_book, file = "renamed.xlsx")
+
+
+Download various files with download.file() 
+Here are the URLs! As you can see they're just normal strings:
+
+```{r get data from urls, message= FALSE}
+
+csv_url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_1561/datasets/chickwts.csv"
+tsv_url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_3026/datasets/tsv_data.tsv"
+
+# Read a file in from the CSV URL and assign it to csv_data
+csv_data <- read.csv(file = csv_url)
+
+# Read a file in from the TSV URL and assign it to tsv_data
+tsv_data <- read.delim(file = tsv_url)
+
+# Examine the objects with head()
+head(csv_data, n = 2)
+head(tsv_data, n = 2)
+```
+
+Download the file with download.file()
+```{r download from url, message= FALSE}
+
+download.file(url = csv_url, destfile = "feed_data.csv")
+
+# Read it in with read.csv()
+csv_data <- read.csv(file = "feed_data.csv")
+
+
+# Add a new column: square_weight
+csv_data$square_weight <- (csv_data$weight ^ 2)
+```
+Save it to disk with saveRDS()
+saveRDS(object = csv_data, file = "modified_feed_data.RDS")
+
+Read it back in with readRDS()
+modified_feed_data <- readRDS(file = "modified_feed_data.RDS")
+
+
+Using data from API clients 
+
+example 1
+Load pageviews library for wikipedia
+```{r load pageviews library, message= FALSE}
+library(pageviews)
+
+# Get the pageviews for "Hadley Wickham"
+hadley_pageviews <- article_pageviews(project = "en.wikipedia", article = "Hadley Wickham")
+
+# Examine the resulting object
+str(hadley_pageviews)
+```
+
+
+Load the httr package:
+```{r load httr package, message= FALSE}
+
+library(httr)
+
+# Make a GET request to http://httpbin.org/get
+get_result <- GET(url = "http://httpbin.org/get")
+
+# Print it to inspect it
+get_result
+```
+
+
+Make a POST request to http://httpbin.org/post with the body "this is a test"
+
+```{r get results from url, message= FALSE}
+
+post_result <- POST(url = "http://httpbin.org/post", body = "this is a test")
+
+# Print it to inspect it
+post_result
+```
+
+Make a GET request to url and save the results:
+Handling http failures
+
+```{r get data using GET, message= FALSE}
+
+fake_url <- "http://google.com/fakepagethatdoesnotexist"
+
+# Make the GET request
+request_result <- GET(fake_url)
+```
+
+
+Example start to finish using httr package: The API url
+```{r get API data, message= FALSE}
+base_url <- "https://en.wikipedia.org/w/api.php"
+
+# Set query parameters
+query_params <- list(action = "parse", 
+                     page = "Hadley Wickham", 
+                     format = "xml")
+```
+
+Read page contents as HTML: library(rvest)
+# Extract page name element from infobox: library(xml2)
+Create a dataframe for full name
+Reproducibility
+
+```{r get infobox, message= FALSE}
+
+get_infobox <- function(title){
+  base_url <- "https://en.wikipedia.org/w/api.php"
+  
+# Change "Hadley Wickham" to title
+
+query_params <- list(action = "parse", 
+                       page = title, 
+                       format = "xml")}
+  
+resp <- GET(url = base_url, query = query_params)
+resp_xml <- content(resp)
+  
+page_html <- read_html(xml_text(resp_xml))
+infobox_element <- html_node(x = page_html, css =".infobox")
+page_name <- html_node(x = infobox_element, css = ".fn")
+
+```
+
+
+Construct a directory-based API URL to `http://swapi.co/api`,
+looking for person `1` in `people`:
+```{r directory url, message= FALSE}
+
+directory_url <- paste("http://swapi.co/api", "people", "1", sep = "/")
+
+# Make a GET call with it
+result <- GET(directory_url)
+
+# Create list with nationality and country elements
+query_params <- list(nationality = "americans", 
+                     country = "antigua")
+
+# Make parameter-based call to httpbin, with query_params
+parameter_response <- GET("https://httpbin.org/get", query = query_params)
+
+# Print parameter_response
+parameter_response
+
+```
+
+Using user agents
+Informative user-agents are a good way of being respectful of the developers running the API you're interacting with. They make it easy for them to contact you in the event something goes wrong. I always try to include:
+My email address; A URL for the project the code is a part of, if it's got a URL.
+
+Do not change the url:
+```{r get halfaker, message= FALSE}
+
+url <- "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Aaron_Halfaker/daily/2015100100/2015103100"
+```
+
+Add the email address and the test sentence inside user_agent()
+server_response <- GET(url, user_agent("my@email.address this is a test"))
+
+Rate-limiting
+The next stage of respectful API usage is rate-limiting: making sure you only make a certain number of requests to the server in a given time period. 
+Your limit will vary from server to server, but the implementation is always pretty much the same and involves a call to Sys.sleep(). 
+This function takes one argument, a number, which represents the number of seconds to "sleep" (pause) the R session for. 
+So if you call Sys.sleep(15), it'll pause for 15 seconds before allowing further code to run.
+
+Construct a vector of 2 URLs:
+for(url in urls){
+  Send a GET request to url
+  result <- GET(url)
+  Delay for 5 seconds between requests
+  Sys.sleep(5)
+}
+```{r vector urls, message= FALSE}
+
+urls <- c("http://httpbin.org/status/404",
+          "http://httpbin.org/status/301")
+```
+
+Tying it all together:
+```{r pageview url, message= FALSE}
+
+get_pageviews <- function(article_title){
+  url <- paste(
+    "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents", 
+    article_title, 
+    "daily/2015100100/2015103100", 
+    sep = "/"
+  )   
+
+response <- GET(url, user_agent("my@email.com this is a test")) 
+  # Is there an HTTP error?
+  if(http_error(response)){ 
+    # Throw an R error
+    stop("the request failed") 
+  }
+  # Return the response's content
+  content(response)
+}
+
+```
+working with JSON files (for more information see: www.json.org)
+While JSON is a useful format for sharing data, your first step will often be to parse it into an R object, so you can manipulate it with R.
+
+web scraping 101
+The first step with web scraping is actually reading the HTML in. 
+This can be done with a function from xml2, which is imported by rvest - read_html(). 
+This accepts a single URL, and returns a big blob of XML that we can use further on.
+
+  
+Hadley Wickham's Wikipedia page:
+
+```{r test url, message= FALSE}
+
+test_url <- "https://en.wikipedia.org/wiki/Hadley_Wickham"
+  
+# Read the URL stored as "test_url" with read_html()
+test_xml <- read_html(test_url)
+  
+# Print test_xml
+test_xml
+```
+
+html_node(), which extracts individual chunks of HTML from a HTML document. 
+There are a couple of ways of identifying and filtering nodes, and for now we're going to use XPATHs: 
+unique identifiers for individual pieces of a HTML document.
+
+Extract the element of table_element referred to by second_xpath_val and store it as page_name
+page_name <- html_node(x = table_element, xpath = second_xpath_val)
+
+Extract the text from page_name:
+
+```{r html title , message= FALSE}
+
+page_title <- html_text(page_name)
+
+# Print page_title
+page_title
+
+# Turn table_element into a data frame and assign it to wiki_table
+# wiki_table <- rvest::html_table(table_element)
+
+# Print wiki_table
+# wiki_table
+```
+
+Cleaning a data frame
+Rename the columns of wiki_table:
+
+CSS web scraping 
+CSS is a way to add design information to HTML, that instructs the browser on how to display the content. You can leverage these design instructions to identify content on the page.
+
+
+<!--chapter:end:02-Importing-data.Rmd-->
+
+
+# Useful R Functions + Examples
+
+> This is *NOT* intended to be fully comprehensive list of every useful R function that exists, but is a practical demonstration of selected relevant examples presented in user-friendly format, all available in base R. For a wider collection to work through, this Reference Card is recommended: https://cran.r-project.org/doc/contrib/Baggott-refcard-v2.pdf
+
+> Additional CRAN reference cards and R guides (including non-English documentation) found here: https://cran.r-project.org/other-docs.html
+
+
+## Contents
+
+A. Essentials    
+* 1. `getwd()`, `setwd()`  
+* 2. `?foo`, `help(foo)`, `example(foo)`  
+* 3. `install.packages("foo")`, `library("foo")`  
+* 4. `devtools::install_github("username/packagename")`  
+* 5. `data("foo")`  
+* 6. `read.csv`, `read.table`  
+* 7. `write.table()`  
+* 8. `save()`, `load()`  
+
+B. Basics   
+* 9. `c()`, `cbind()`, `rbind()`, `matrix()`  
+* 10. `length()`, `dim()`  
+* 11. `sort()`, `'vector'[]`, `'matrix'[]`  
+* 12. `data.frame()`, `class()`, `names()`, `str()`, `summary()`, `View()`, `head()`, `tail()`, `as.data.frame()`  
+
+C. Core   
+* 13. `df[order(),]`  
+* 14. `df[,c()]`, `df[which(),]`  
+* 15. `table()`  
+* 16. `mean()`, `median()`, `sd()`, `var()`, `sum()`, `min()`, `max()`, `range()`  
+* 17. `apply()`  
+* 18. `lapply()` using `list()`  
+* 19. `tapply()`  
+
+D. Common  
+* 20. `if` statement, `if...else` statement  
+* 21. `for` loop  
+* 22. `function()...` 
+
+
+## R Syntax
+
+*REMEMBER: KEY R LANGUAGE SYNTAX*
+
+* **Case Sensitivity**: as per most UNIX-based packages, R is case sensitive, hence `X` and `x` are different symbols and would refer to different variables.    
+* **Expressions vs Assignments**: an expression, like `3 + 5` can be given as a command which will be evaluated and the value immediately printed, but not stored. An assignment however, like `sum <- 3 + 5` using the assignment operator `<-` also evaluates the expression `3 + 5`, but instead of printing and not storing, it stores the value in the object `sum` but doesn't print the result. The object `sum` would need to be called to print the result.    
+* **Reserved Words**: choice for naming objects is almost entirely free, except for these reserved words: https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html    
+* **Spacing**: outside of the function structure, spaces don't matter, e.g. `3+5` is the same as `3+     5` is the same as `3 + 5`. For more best-practices for R code Hadley Wickham's Style Guide is a useful reference: http://adv-r.had.co.nz/Style.html
+* **Comments**: add comments within your code using a hastag, `#`. R will ignore everything to the right of the hashtag within that line
+
+
+## Functional examples
+
+1. Working Directory management 
+
+- `getwd()`, `setwd()`
+R/RStudio is always pointed at a specific directory on your computer, so it's important to be able to check what's the current directory using `getwd()`, and to be able to change and specify a different directory to work in using `setwd()`.
+
+#check the directory R is currently pointed at
+getwd()
+
+
+2. Bring up help documentation & examples 
+
+- `?foo`, `help(foo)`, `example(foo)`
+
+```{r 2, eval=FALSE}
+?boxplot
+help(boxplot)
+example(boxplot)
+```
+
+---
+
+3. Load & Call CRAN Packages 
+
+- `install.packages("foo")`, `library("foo")`
+Packages are add-on functionality built for R but not pre-installed (base R), hence you need to install/load the packages you want yourself. The majority of packages you'd want have been submitted to and are available via CRAN. At time of writing, the CRAN package repository featured 8,592 available packages.
+
+
+4. Load & Call Packages from GitHub 
+
+- `devtools::install_github("username/packagename")`
+Not all packages you'll want will be available via CRAN, and you'll likely need to get certain packages from GitHub accounts. This example shows how to install the `shinyapps` package from RStudio's GitHub account.
+- install.packages("devtools") #pre-requisite for `devtools...` function
+- devtools::install_github("rstudio/shinyapps") #install specific package from specific GitHub account
+- library("shinyapps") #Call package
+
+
+5. Load datasets from base R & Loaded Packages  
+
+- `data("foo")`
+
+```{r 5, eval=FALSE}
+#AIM: show available datasets
+data() 
+
+#AIM: load an available dataset
+data("iris") 
+```
+
+---
+
+6. I/O Loading Existing Local Data 
+
+- `read.csv`, `read.table`
+
+(a) I/O When already in the working directory where the data is
+
+Import a local **csv** file (i.e. where data is separated by **commas**), saving it as an object:
+- object <- read.csv("xxx.csv")
+
+Import a local tab delimited file (i.e. where data is separated by **tabs**), saving it as an object:
+- object <- read.csv("xxx.csv", header = FALSE)
+---
+
+(b) I/O When NOT in the working directory where the data is
+
+For example to import and save a local **csv** file from a different working directory you either need to specify the file path (operating system specific), e.g.:
+
+on a mac:
+- object <- read.csv("~/Desktop/R/data.csv")
+
+on windows:
+= object <- read.csv("C:/Desktop/R/data.csv")
+
+OR
+
+You can use the file.choose() command which will interactively open up the file dialog box for you to browse and select the local file, e.g.:
+- object <- read.csv(file.choose())
+
+
+
+
+(c) I/O Copying & Pasting Data
+
+For relatively small amounts of data you can do an equivalent copy paste (operating system specific):
+
+on a mac:
+- object <- read.table(pipe("pbpaste"))
+
+on windows:
+- object <- read.table(file = "clipboard")
+
+
+(d) I/O Loading Non-Numerical Data - character strings
+
+Be careful when loading text data! R may assume character strings are statistical factor variables, e.g. "low", "medium", "high", when are just individual labels like names. To specify text data NOT to be converted into factor variables, add `stringsAsFactor = FALSE` to your `read.csv/read.table` command:
+- object <- read.table("xxx.txt", stringsAsFactors = FALSE)
+
+
+(e) I/O Downloading Remote Data
+
+For accessing files from the web you can use the same `read.csv/read.table` commands. However, the file being downloaded does need to be in an R-friendly format (maximum of 1 header row, subsequent rows are the equivalent of one data record per row, no extraneous footnotes etc.). Here is an example downloading an online csv file of coffee harvest data used in a Nature study:
+- object <- read.csv("http://sumsar.net/files/posts/2014-02-04-bayesian-first-aid-one-sample-t-test/roubik_2002_coffe_yield.csv")
+
+
+
+7. I/O Exporting Data Frame 
+
+- `write.table()`
+
+Navigate to the working directory you want to save the data table into, then run the command (in this case creating a tab delimited file):
+- write.table(object, "xxx.txt", sep = "\t")
+
+
+
+8. I/O Saving Down & Loading Objects 
+
+- `save()`, `load()`
+
+These two commands allow you to save a named R object to a file and restore that object again.     
+Navigate to the working directory you want to save the object in then run the command:
+- save(object, file = "xxx.rda")
+
+reload the object:
+- load("xxx.rda")
+
+
+
+9. Vector & Matrix Construction 
+
+- `c()`, `cbind()`, `rbind()`, `matrix()`
+Vectors (lists) & Matrices (two-dimensional arrays) are very common R data structures.
+```{r 9, eval = FALSE, message = FALSE, warning = FALSE}
+#use c() to construct a vector by concatenating data
+foo <- c(1, 2, 3, 4) #example of a numeric vector
+oof <- c("A", "B", "C", "D") #example of a character vector
+ofo <- c(TRUE, FALSE, TRUE, TRUE) #example of a logical vector
+
+#use cbind() & rbind() to construct matrices
+coof <- cbind(foo, oof) #bind vectors in column concatenation to make a matrix
+roof <- rbind(foo, oof) #bind vectors in row concatenation to make a matrix
+
+#use matrix() to construct matrices
+moof <- matrix(data = 1:12, nrow=3, ncol=4) #creates matrix by specifying set of values, no. of rows & no. of columns
+```
+
+
+10. Vector & Matrix Explore 
+
+- `length()`, `dim()`
+
+```{r 10, eval = FALSE, message = FALSE, warning = FALSE}
+length(foo) #length of vector
+
+dim(coof) #returns dimensions (no. of rows & columns) of vector/matrix/dataframe
+```
+
+
+11. Vector & Matrix Sort & Select 
+
+- `sort()`, `'vector'[]`, `'matrix'[]`
+
+```{r 11, eval = FALSE, message = FALSE, warning = FALSE}
+#create another numeric vector
+jumble <- c(4, 1, 2, 3)
+sort(jumble) #sorts a numeric vector in ascending order (default)
+sort(jumble, decreasing = TRUE) #specify the decreasing arg to reverse default order
+
+#create another character vector
+mumble <- c( "D", "B", "C", "A")
+sort(mumble) #sorts a character vector in alphabetical order (default)
+sort(mumble, decreasing = TRUE) #specify the decreasing arg to reverse default order
+
+jumble[1] #selects first value in our jumble vector
+tail(jumble, n=1) #selects last value
+jumble[c(1,3)] #selects the 1st & 3rd values
+jumble[-c(1,3)] #selects everything except the 1st & 3rd values
+
+coof[1,] #selects the 1st row of our coof matrix
+coof[,1] #selects the 1st column
+coof[2,1] #selects the value in the 2nd row, 1st column
+coof[,"oof"] #selects the column named "oof"
+coof[1:3,] #selects columns 1 to 3 inclusive
+coof[c(1,2,3),] #selects the 1st, 2nd & 3rd rows (same as previous)
+```
+
+
+12. Create & Explore Data Frames 
+
+- `data.frame()`, `class()`, `names()`, `str()`, `summary()`, `View()`, `head()`, `tail()`, `as.data.frame()`
+A data frame is a matrix-like data structure made up of lists of variables with the same number of rows, which can be of differing data types (numeric, character, factor etc.) - matrices must have columns all of the same data type.
+```{r 12, eval = FALSE, message = FALSE, warning = FALSE}
+#create a data frame with 3 columns with 4 rows each
+doof <- data.frame("V1"=1:4, "V2"=c("A","B","C","D"), "V3"=5:8)
+
+class(doof) #check data frame object class
+names(doof) # returns column names
+str(doof) #see structure of data frame
+summary(doof) #returns basic summary stats
+View(doof) #invokes spreadsheet-style viewer
+head(doof, n=2) #shows first parts of object, here requesting the first 2 rows
+tail(doof, n=2) #shows last parts of object, here requesting the last 2 rows
+
+convert <- as.data.frame(coof) #convert a non-data frame object into a data frame
+```
+
+
+13. Data Frame Sort 
+
+- `df[order(),]`
+
+```{r 13, eval = FALSE, message = FALSE, warning = FALSE}
+#use 'painters' data frame
+library("MASS") #call package with the required data
+data("painters") #load required data
+View(painters) #scan dataset
+
+#syntax for using a specific variable: df=data frame, '$', V1=variable name
+df$V1 
+
+#AIM: print the 'School' variable column
+painters$School
+
+#syntax for df[order(),]
+df[order(df$V1, df$V2...),] #function arguments: df=data frame, in square brackets specify within the order() the columns with which to sort the ROWS by, where default ordering is Ascending, the tailing comma specifies returning all the columns in the df. If only certain columns are wanted this can be specified after the comma.
+
+#AIM: order the dataset rows based on the painters' Composition Score column, in Ascending order
+painters[order(painters$Composition),] #Composition is the sorting variable
+
+#AIM: order the dataset rows based on the painters' Composition Score column, in Descending order
+painters[order(-painters$Composition),] #append a minus sign in front of the variable you want to sort by in Descending order
+
+#AIM: order the dataset rows based on the painters' Composition Score column, in Descending order but return just the first 3 columns
+painters[order(-painters$Composition), c(1:3)]
+```
+
+
+14. Data Frame Select & Deselect 
+
+- `df[,c()]`, `df[which(),]`
+
+```{r 14, eval = FALSE, message = FALSE, warning = FALSE}
+#use 'painters' data frame
+
+#syntax for select & deselect based on column variables
+df[, c("V1", "V2"...)] #function arguments: df=data frame, in square brackets specify columns to select or deselect. The comma specifies returning all the rows. If certain rows are wanted this can be specified before the comma.
+
+#AIM: select the Composition & Drawing variables based on their column name
+painters[, c("Composition", "Drawing")] #subset the df, selecting just the named columns (and all the rows)
+
+#AIM: select the Composition & Drawing variables based on their column positions in the painters data frame
+painters[, c(1,2)] #subset the df, selecting just the 1st & 2nd columns (and all the rows)
+
+#AIM: drop the Expression variable based on it's column position in the painters data frame and return just the first 5 rows
+painters[c(1:5), -4] #returns the subsetted df having deselected the 4th column, Expression and the first 5 rows
+
+
+#syntax for select & deselect based on row variable values
+df[which(),] #df=data frame, specify the variable value within the `which()` to subset the df on. Again, the tailing comma specifies returning all the columns. If certain columns are wanted this can be specified after the comma.
+
+#AIM: select all rows where the painters' School is the 'A' category
+painters[which(painters$School == "A"),] #returns the subsetted df where equality holds true, i.e. row value in School variable column is 'A'
+
+#AIM: deselect all rows where the painters' School is the 'A' category, i.e. return df subset without 'A' values, AND also only select rows where Colour score > 10
+painters[which(painters$School != "A" & painters$Colour > 10),] #returns the subsetted df where equality holds true, i.e. row value in School variable column is 'not A', AND the Colour score filter is also true.
+```
+
+
+15. Data Frame Frequency Calculations 
+- `table()`
+
+```{r 15, eval = FALSE, message = FALSE, warning = FALSE}
+#create new data frame
+flavour <- c("choc", "strawberry", "vanilla", "choc", "strawberry", "strawberry") 
+gender <- c("F", "F", "M", "M", "F", "M")
+icecream <- data.frame(flavour, gender) #icecream df made up of 2 factor variables, flavour & gender, with 3 & 2 levels respectively (choc/strawberry/vanilla & F/M)
+
+#AIM: create a frequency distribution table which shows the count of each gender in the df
+table(icecream$gender) 
+
+#AIM: create a frequency distribution table which shows the count of each flavour in the df
+table(icecream$flavour)
+
+#AIM: create Contingency/2-Way Table showing the counts for each combination of flavour & gender level 
+table(icecream$flavour, icecream$gender)
+```
+
+
+16. Descriptive/Summary Stats Functions 
+
+- `mean()`, `median()`, `sd()`, `var()`, `sum()`, `min()`, `max()`, `range()`
+
+```{r 16, eval = FALSE, message = FALSE, warning = FALSE}
+#re-using the jumble vector from before
+jumble <- c(4, 1, 2, 3) 
+
+mean(jumble)
+median(jumble)
+sd(jumble)
+var(jumble)
+sum(jumble)
+min(jumble)
+max(jumble)
+range(jumble)
+```
+
+
+17. Apply Functions 
+
+- `apply()`
+`apply()` returns a vector, array or list of values where a specified function has been applied to the 'margins' (rows/cols combo) of the original vector/array/list.
+```{r 17, eval = FALSE, message = FALSE, warning = FALSE}
+#re-using the moof matrix from before
+moof <- matrix(data = 1:12, nrow=3, ncol=4) 
+
+#apply syntax
+apply(X, MARGIN, FUN,...) #function arguments: X=an array, MARGIN=1 to apply to rows/2 to apply to cols, FUN=function to apply
+
+#AIM: using the moof matrix, apply the sum function to the rows
+apply(moof, 1, sum) 
+
+#AIM: using the moof matrix, apply the sum function to the columns
+apply(moof, 2, sum) 
+```
+
+
+18. Apply Functions 
+
+- `lapply()` using `list()`
+A list, a common data structure, is a generic vector containing objects of any types.
+`lapply()` returns a list where each element returned is the result of applying a specified function to the objects in the list.
+```{r 18, eval = FALSE, message = FALSE, warning = FALSE}
+#create list of various vectors and matrices
+bundle <- list(moof, jumble, foo) 
+
+#lapply syntax
+lapply(X, FUN,...) #function arguments: X=a list, FUN=function to apply
+
+#AIM: using the bundle list, apply the mean function to each object in the list
+lapply(bundle, mean)
+```
+
+
+19. Apply Functions 
+- `tapply()`
+`tapply()` applies a specified function to specified groups/subsets of a factor variable.
+```{r 19, eval = FALSE, message = FALSE, warning = FALSE}
+#tapply syntax
+tapply(X, INDEX, FUN,...) #function arguments: X=an atomic object, INDEX=list of 1+ factors of X length, FUN=function to apply
+
+#AIM: calculate the mean Drawing Score of the painters, but grouped by School category
+tapply(painters$Drawing, painters$School, mean) #grouping the data by the 8 different Schools, apply the mean function to the Drawing Score variable to return the 8 mean scores
+```
+
+
+20. Programming Tools 
+
+- `if` statement, `if...else` statement
+An `if` statement is used when certain computations are conditional and only execute when a specific condition is met - if the condition is not met, nothing executes. The `if...else` statement extends the `if` statement by adding on a computation to execute when the condition is not met, i.e. the 'else' part of the statement.
+```{r 20, eval = FALSE, message = FALSE, warning = FALSE}
+#if-statement syntax
+if ('test expression')
+    {
+    'statement'
+    }
+
+#if...else statement
+if ('test expression')
+    {
+    'statement'
+    }else{
+    'another statement'
+    }
+
+#AIM: here we want to test if the object, 'condition_to_test' is smaller than 10. If it is smaller, another object, 'result_after_test' is assigned the value 'smaller'. Otherwise, the 'result_after_test' object is assigned the value 'bigger'
+
+#specify the 'test expression'
+condition_to_test <- 7 
+
+#write your 'if...else' function based on a 'statement' or 'another statement' dependent on the 'condition_to_test'. 
+if (condition_to_test > 5)
+    {
+    result_after_test = 'Above Average'
+    }else{
+    result_after_test = 'Below Average'
+    }
+
+#call the resulting 'statement' as per the instruction of the 'if...else' statement
+result_after_test 
+```
+
+
+21. Programming Tools 
+
+- `for` loop
+A `for` loop is an automation method for repeating (looping) a specific set of instructions for each element in a vector.
+```{r 21, eval = FALSE, message = FALSE, warning = FALSE}
+#for loop syntax requires a counter, often called 'i' to denote an index
+for ('counter' in 'looping vector')
+    {
+    'instructions'
+    }
+
+#AIM: here we want to print the phrase "In the Year yyyy" 6x, once for each year between 2010 to 2015.
+#this for loop executes the code chunk 'print(past("In the Year", i)) for each of the 'i' index values
+for (i in 2010:2015)
+    {
+    print(paste("In the Year", i))
+    }
+
+#AIM: create an object which contains 10 items, namely each number between 1 and 10 squared
+#to store rather than just print results, an empty storage container needs to be created prior to running the loop, here called container
+container <- NULL
+for (i in 1:10)
+    {
+    container[i] = i^2
+    }
+
+container #check results: the loop is instructed to square every element of the looping vector, 1:10. The ith element returned is therefore the value of i^2, e.g. the 3rd element is 3^2.
+```
+
+
+22. Programming Tools 
+- `function()...`
+User-programmed functions allow you to specify customised arguments and returned values.
+```{r 22, eval = FALSE, message = FALSE, warning = FALSE}
+#AIM: to create a simplified take-home pay calculator (single-band), called 'takehome_pay'. Our function therefore uses two arguments, a 'tax_rate', and an 'income' level. The code in the curly braces {} instructs what the 'takehome_pay' function should do when it is called, namely, calculate the tax owed in an object 'tax', and then return the result of the 'income' object minus the 'tax' object
+takehome_pay <- function(tax_rate, income)
+    {
+    tax = tax_rate * income
+    return(income - tax)
+    }
+
+takehome_pay(tax_rate = 0.2, income = 25000) #call our function to calculate 'takehome_pay' on a 'tax_rate' of 20% and an 'income' of 25k
+```
+
+
+23. Strings  
+- `grep()`, `tolower()`, `nchar()`   
+
+24. Further Data Selection  
+- `quantile()`, `cut()`, `which()`, `na.omit()`, `complete.cases()`, `sample()`
+
+25. Further Data Creation  
+- `seq()`, `rep()`
+
+26. Other Apply-related functions  
+- `split()`, `sapply()`, `aggregate()`
+
+27. More Loops  
+- `while` loop, `repeat` loop
+
+.....Ad Infinitum!!
+
+
+
+<!--chapter:end:03-R-functions.Rmd-->
+
+# Demo for dplyr
+
+```{r load libraries for dplyr, message= FALSE}
+# Load data and dependencies:
+library(dplyr)
+
+data(iris)
+```
+
+Explore the iris data
+
+```{r explore data, eval = FALSE}
+head(iris)
+pairs(iris)
+str(iris)
+summary(iris)
+```
+
+A. **Select**: keeps only the variables you mention
+
+```{r explore, eval = FALSE}
+select(iris, 1:3)
+select(iris, Petal.Width, Species)
+select(iris, contains("Petal.Width"))
+select(iris, starts_with("Species"))
+
+```
+
+B. **Arrange**: sort a variable in descending order
+
+```{r arrange, eval = FALSE}
+arrange(iris, Sepal.Length)
+arrange(iris, desc(Sepal.Length))
+arrange(iris, Sepal.Length, desc(Sepal.Width))
+```
+
+C. **Filter**: find rows/cases where conditions are true
+Note: rows where the condition evaluates to NA are dropped
+
+```{r conditions, eval = FALSE}
+filter(iris, Petal.Length > 5)
+filter(iris, Petal.Length > 5 & Species == "setosa")
+filter(iris, Petal.Length > 5, Species == "setosa") #the comma is a shorthand for &
+filter(iris, !Species == "setosa")
+```
+
+D. **Pipe Example with MaggriteR** (ref: Rene Magritte This is not a pipe)
+The long Way, before nesting or multiple variables
+```{r long way, eval = FALSE}
+data1 <- filter(iris, Petal.Length > 6)
+data2 <- select(data1, Petal.Length, Species)
+```
+
+With **DPLYR**:
+
+```{r pipes}
+select(
+  filter(iris, Petal.Length > 6),
+  Petal.Length, Species) %>%
+  head()
+```
+
+Using pipes with the data variable
+
+```{r pipes and verbs}
+iris %>%
+  filter(Petal.Length > 6) %>%
+  select(Petal.Length, Species) %>%
+  head()
+```
+
+Using the . to specify where the incoming variable will be piped to: 
+- myFunction(arg1, arg2 = .)
+ 
+```{r pipes with filter, eval = FALSE}
+iris %>%
+  filter(., Species == "versicolor")
+```
+
+Other magrittr examples:
+
+```{r unique, eval = FALSE}
+iris %>%
+  filter(Petal.Length > 2.0) %>%
+  select(1:3)
+
+iris %>%
+  select(contains("Width")) %>%
+  arrange(Petal.Width) %>%
+  head()
+
+iris %>%
+  filter(Petal.Width == "versicolor") %>%
+  arrange(desc(Sepal.Width))
+
+iris %>%
+  filter(Sepal.Width > 1) %>%
+  View()
+
+iris %>%
+  filter(Petal.Width  == 0.1) %>%
+  select(Sepal.Width) %>%
+  unique()
+```
+
+a second way to get the unique values:
+
+```{r distinct }
+iris %>%
+  filter(Petal.Width  == 0.1) %>%
+  distinct(Sepal.Width)
+```
+
+
+E. **Mutate**: adds new variables and preserves existing; transmute() drops existing variables
+
+```{r dplyr verbs, eval = FALSE}
+iris %>%
+  mutate(highSpecies = Sepal.Width > 6) %>%
+  head()
+
+
+iris %>%
+  mutate(size = Sepal.Width + Petal.Width) %>%
+  head()
+
+
+iris %>%
+  mutate(MeanPetal.Width = mean(Petal.Width, na.rm = TRUE),
+         greaterThanMeanPetal.Width = ifelse(Petal.Width > MeanPetal.Width, 1, 0)) %>%
+  head()
+
+
+iris %>%
+  mutate(buckets = cut(Petal.Width, 3)) %>%
+  head()
+
+
+iris %>%
+  mutate(Petal.WidthBuckets = case_when(Petal.Width < 1 ~ "Low",
+                               Petal.Width >= 2 & Sepal.Width < 3 ~ "Med",
+                               Petal.Width >= 4 ~ "High")) %>%
+  head()
+```
+
+E. **Group_by and Summarise**: used on grouped data created by group_by().
+The output will have one row for each group.
+```{r group by, eval = FALSE}
+iris %>%
+  summarise(Petal.WidthMean = mean(Petal.Width),
+            Petal.WidthSD = sd(Petal.Width))
+
+iris %>%
+  group_by(Petal.Width) %>%
+  mutate(Petal.WidthMean = mean(Petal.Width))
+
+iris %>%
+  group_by(Petal.Width) %>%
+  summarise(Petal.WidthMean = mean(Petal.Width))
+
+iris %>%
+  group_by(Petal.Width, Species) %>%
+  summarise(count = n())
+```
+
+F. **Slice**: Slice does not work with relational databases because they have no intrinsic notion of row order. If you want to perform the equivalent operation, use filter() and row_number().
+
+```{r slice}
+iris %>%
+  slice(2:4) %>%
+  head()
+```
+
+Other verbs within DPLYR: **Scoped verbs**
+
+```{r verb examples, eval = FALSE}
+# ungroup
+iris %>%
+  group_by(Petal.Width, Species) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+# Summarise_all
+iris %>%
+  select(1:4) %>%
+  summarise_all(mean)
+
+
+iris %>%
+  select(1:4) %>%
+  summarise_all(funs(mean, min))
+
+
+iris %>%
+  summarise_all(~length(unique(.)))
+
+# summarise_at
+iris %>%
+  summarise_at(vars(-Petal.Width), mean)
+
+
+iris %>%
+  summarise_at(vars(contains("Petal.Width")), funs(mean, min))
+
+# summarise_if
+iris %>%
+  summarise_if(is.numeric, mean)
+
+iris %>%
+  summarise_if(is.factor, ~length(unique(.)))
+
+# other verbs:
+iris %>%
+  mutate_if(is.factor, as.character) %>%
+  str()
+
+
+iris %>%
+  mutate_at(vars(contains("Width")), ~ round(.))
+
+
+iris %>%
+  filter_all(any_vars(is.na(.)))
+
+
+iris %>%
+  filter_all(all_vars(is.na(.)))
+
+# Rename
+iris %>%
+  rename("sp" = "Species") %>%
+  head()
+
+# And finally: make a test and save
+test <- iris %>%
+  group_by(Petal.Width) %>%
+  summarise(MeanPetal.Width = mean(Petal.Width))
+```
+
+
+
+<!--chapter:end:04-dplyR.Rmd-->
+
+# Working with dates in R
+
+```{r load lubridate among others, message= FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+library(hflights)
+library(lubridate)
+library(hflights)
+library(fasttime)
+library(microbenchmark)
+library(anytime)
+library(readr)
+```
+
+#check lubridate functions for fun :)
+```{r find out today, message= FALSE}
+
+today()
+now()
+# and check your local  timezone
+Sys.timezone()
+```
+
+
+Rule to work with dates according to ISO 8601 standard
+format is YYYY-MM-DD 
+
+```{r make up x, message= FALSE}
+
+# The date R 3.0.0 was released
+x <- "2013-04-03"
+
+# Examine structure of x
+str(x)
+
+# Use as.Date() to interpret x as a date
+x_date <- as.Date(x)
+
+# Examine structure of x_date
+str(x_date)
+
+# Store April 10 2019 as a Date
+april_10_2019 <- as.Date("2019-04-10")
+
+# round dates
+r_3_4_1 <- ymd_hms("2016-05-03 07:13:28 UTC")
+
+# Round down to day
+floor_date(r_3_4_1, unit = "day")
+
+# Round to nearest 5 minutes
+round_date(r_3_4_1, unit = "5 minutes")
+
+# Round up to week
+ceiling_date(r_3_4_1, unit = "week")
+
+# Subtract r_3_4_1 rounded down to day
+r_3_4_1 - floor_date(r_3_4_1, unit = "day")
+```
+
+
+Setting the timezone:
+
+```{r set timezones, message= FALSE}
+
+# Game2: CAN vs NZL in Edmonton
+game2 <- mdy_hm("June 11 2015 19:00")
+
+# Game3: CHN vs NZL in Winnipeg
+game3 <- mdy_hm("June 15 2015 18:30")
+
+# Set the timezone to "America/Edmonton"
+game2_local <- force_tz(game2, tzone = "America/Edmonton")
+game2_local
+
+# Set the timezone to "America/Winnipeg"
+game3_local <- force_tz(game3, tzone = "America/Winnipeg")
+game3_local
+
+# How long does the team have to rest?
+as.period(game2_local %--% game3_local)
+
+
+# What time is game2_local in NZ?
+with_tz(game2_local, tzone = "Pacific/Auckland")
+
+# What time is game2_local in Corvallis, Oregon?
+with_tz(game2_local, tzone = "America/Los_Angeles")
+
+# What time is game3_local in NZ?
+with_tz(game3_local, tzone = "Pacific/Auckland")
+```
+
+Examine DepTime and ArrTime in library(hflights) and others:
+
+```{r load hflights, message= FALSE}
+library(hflights)
+head(hflights$DepTime, 2)
+head(hflights$ArrTime, 2)
+
+# Examine structure of time column
+str(hflights$DepTime)
+str(hflights$ArrTime)
+
+min(hflights$Year)
+max(hflights$Year)
+
+tibble::glimpse(hflights) %>%
+   head()
+```
+
+Are DepTime and ArrTime the same moments
+```{r table of departure time, message= FALSE}
+table(hflights$DepTime - hflights$ArrTime) %>%
+  head()
+
+
+# A plot using just time
+ggplot(hflights, aes(x = DepTime, y = ArrTime)) +
+  geom_line(aes(group = make_date(Year, Month, DayofMonth)), alpha = 0.2)
+```
+
+Force datetime to Pacific/Auckland:
+
+```{r change datetime, message= FALSE}
+
+hflights_hourly <- hflights %>%
+  mutate(
+    Dep = make_date(Year, Month, DayofMonth),
+    newDep = force_tz(Dep, tzone = "Pacific/Auckland"))
+
+# check whether times changed
+## hflights_hourly$newDep == hflights$DepTime
+```
+
+Taking differences of datetimes 
+- difftime(time1, time2) takes an argument units which specifies the units for the difference. 
+- Your options are "secs", "mins", "hours", "days", or "weeks"
+
+The date landing and moment of step
+
+```{r date landing, message= FALSE}
+date_landing <- mdy("July 20, 1969")
+moment_step <- mdy_hms("July 20, 1969, 02:56:15", tz = "UTC")
+
+# How many days since the first man on the moon?
+difftime(today(), date_landing, units = "days")
+
+# How many seconds since the first man on the moon?
+difftime(now(), moment_step, units = "secs")
+
+# another example with three dates
+mar_11 <- ymd_hms("2017-03-11 12:00:00", 
+                  tz = "America/Los_Angeles")
+mar_12 <- ymd_hms("2017-03-12 12:00:00", 
+                  tz = "America/Los_Angeles")
+mar_13 <- ymd_hms("2017-03-13 12:00:00", 
+                  tz = "America/Los_Angeles")
+
+# Difference between mar_13 and mar_12 in seconds
+difftime(mar_13, mar_12, units = "secs")
+
+# Difference between mar_12 and mar_11 in seconds
+difftime(mar_12, mar_11, units = "secs")
+```
+
+
+Getting datetimes into R
+Use as.POSIXct to enter the datetime 
+```{r datetime in R, message= FALSE}
+
+as.POSIXct("2010-10-01 12:12:00")
+
+# Use as.POSIXct again but set the timezone to `"America/Los_Angeles"`
+as.POSIXct("2010-10-01 12:12:00", tz = "America/Los_Angeles")
+```
+
+
+timespans
+Add a period of one week to mon_2pm
+```{r time spans, message= FALSE}
+
+mon_2pm <- dmy_hm("27 Aug 2018 14:00")
+mon_2pm + weeks(1)
+
+# Add a duration of 81 hours to tue_9am
+tue_9am <- dmy_hm("28 Aug 2018 9:00")
+tue_9am + hours(81)
+
+# Subtract a period of five years from today()
+today() - years(5)
+
+# Subtract a duration of five years from today()
+today() - dyears(5)
+
+# Arithmetic with timespans
+## Time of North American Eclipse 2017
+eclipse_2017 <- ymd_hms("2017-08-21 18:26:40")
+
+# Duration of 29 days, 12 hours, 44 mins and 3 secs
+synodic <- ddays(29) + dhours(12) + dminutes(44) + dseconds(3)
+
+# 223 synodic months
+saros <- 223*synodic
+
+# Add saros to eclipse_2017
+eclipse_2017 + saros
+```
+
+
+Generating sequences of datetimes and arithmetics
+
+Add a period of 8 hours to today
+
+```{r date arithmetic, message= FALSE}
+
+today_8am <- today() + hours(8) 
+
+# Sequence of two weeks from 1 to 26
+every_two_weeks <- 1:26 * weeks(2)
+
+# Create datetime for every two weeks for a year
+today_8am + every_two_weeks
+
+# A sequence of 1 to 12 periods of 1 month
+month_seq <- 1:12 * months(1)
+
+# Add 1 to 12 months to today_8am
+today_8am + month_seq 
+
+# Replace + with %m+%
+today_8am %m+% month_seq
+
+
+# %m+% and %m-% are operators not functions. 
+## That means you don't need parentheses, just put the operator between the two objects to add or subtract.
+# Replace + with %m-%
+today_8am %m-% month_seq
+```
+
+
+Intervals
+The operator %within% tests if the datetime (or interval) on the left hand side is within the interval of the right hand side. New column for interval from start to end date:
+
+```{r new columns with dates, message= FALSE}
+
+hflights_intervals <- hflights %>% 
+  mutate(
+    start_date = make_datetime(Year, Month, DayofMonth, DepTime), 
+    end_date =  make_datetime(Year, Month, DayofMonth, ArrTime),
+    visible = start_date %--% end_date)
+
+# The individual elements 
+hflights_intervals$visible[14, ] 
+
+# within
+hflights_intervals %>% 
+  filter(hflights_intervals$start_date %in% hflights_intervals$end_date) %>%
+  select(Year, Month, DayofMonth, ArrTime) %>%
+  head()
+
+```
+
+
+#can create an interval by using the operator %--% with two datetimes. For example ymd("2001-01-01") %--% ymd("2001-12-31") creates an interval for the year of 2001.
+Once you have an interval you can find out certain properties like its start, end and length with int_start(), int_end() and int_length() respectively.
+
+Create an interval for flights
+
+```{r int_dates, message= FALSE}
+
+flights <- hflights_intervals %>%
+  mutate(ints = start_date %--% end_date) 
+
+# Find the length of flights, and arrange
+flights %>%
+  mutate(length = length(hflights_intervals$start_date)) %>% 
+  arrange(desc(length)) %>%
+  head()
+``` 
+
+Intervals are the most specific way to represent a span of time since they retain information about the exact start and end moments. 
+They can be converted to periods and durations exactly: it's possible to calculate both the exact number of seconds elapsed between the start and end date, as well as the perceived change in clock time.New columns for duration and period
+
+
+Load the readr package which also has build-in functions for dealing with dates: anytime package:
+
+```{r readr for dates, message= FALSE}
+
+# Various ways of writing Sep 10 2009
+sep_10_2009 <- c("September 10 2009", "2009-09-10", "10 Sep 2009", "09-10-2009")
+
+# Use anytime() to parse sep_10_2009
+library(anytime)
+anytime(sep_10_2009)
+
+# Extract the month of hflights 
+month(hflights$Month) %>% table()
+
+# How often is the hour before 12 (noon)?
+mean(as.POSIXct(hflights$DepTime, origin="1991-01-01"))
+
+
+# Use wday() to tabulate release by day of the week
+wday(hflights$DepTime) %>% table() %>%
+  head()
+
+# Add label = TRUE to make table more readable
+wday(hflights$DepTime, label = TRUE) %>% table() %>%
+  head()
+
+# Create column wday to hold week days
+hflights$wday <- wday(hflights$DepTime, label = TRUE)
+
+```
+
+Parsing dates with `lubridate`
+
+```{r parse with lubridate, message= FALSE}
+# Parse x 
+x <- "2010 September 20th" 
+ymd(x)
+
+# Parse y 
+y <- "02.01.2010" 
+dmy(y)
+
+# Parse z 
+z <- "Sep, 12th 2010 14:00" 
+mdy_hm(z)
+
+# Specifying an order with `parse_date_time()`
+## Specify an order string to parse x
+x <- "Monday June 1st 2010 at 4pm"
+parse_date_time(x, orders = "ABdyIp")
+
+# Specify order to include both "mdy" and "dmy"
+two_orders <- c("October 7, 2001", "October 13, 2002", "April 13, 2003", 
+                "17 April 2005", "23 April 2017")
+parse_date_time(two_orders, orders = c("mdy", "dmy"))
+
+# Specify order to include "dOmY", "OmY" and "Y"
+short_dates <- c("11 December 1282", "May 1372", "1253")
+parse_date_time(short_dates, orders = c("dOmY", "OmY", "Y"))
+
+```
+
+
+
+Use make_date() to combine year, month and mday:
+
+```{r parse hrflights, message= FALSE}
+
+hflights_dates  <- hflights  %>% 
+  mutate(date = make_date(year = Year, month = Month, day = DayofMonth))
+
+# Plot to check work
+ggplot(hflights_dates, aes(x = date, y = DepDelay)) +
+  geom_line()
+```
+
+
+If you plot a Date on the axis of a plot, you expect the dates to be in calendar order, 
+#and that's exactly what happens with plot() or ggplot().
+
+Set the x axis to the date column:
+```{r visualize hflights, message= FALSE}
+
+ggplot(hflights, aes(x = Year, y = DayofMonth)) +
+  geom_line(aes(group = 1, color = factor(Month)))
+```
+
+
+Outputting pretty dates and times
+Create a stamp based on April 04 2019:
+```{r time-stamps, message= FALSE}
+D <- ymd("2019-04-04") - days(1:5)
+stamp("Created on Sunday, Jan 1, 1999 3:34 pm")(D)
+```
+
+More on importing and exporting datetimes
+Fast parsing with `fasttime`
+The fasttime package provides a single function fastPOSIXct()
+#designed to read in datetimes formatted according to ISO 8601. 
+#Because it only reads in one format, and doesn't have to guess a format, it is really fast!
+
+
+The arguments to microbenchmark() are just R expressions that you want to time. 
+Make sure you match up the names of these arguments to the parsing functions.
+
+
+Use fastPOSIXct() to parse dates
+```{r posix, message= FALSE}
+library(fasttime)
+library(microbenchmark)
+
+fastPOSIXct(hflights_dates$date) %>% str()
+
+```
+
+<!--chapter:end:05-dates-in-R.Rmd-->
+
+# Demo for Data.table 
+
+
+Load libraries:
+
+```{r load libraries for data.table, message= FALSE}
+# Load data.table
+library(data.table)
+library(bikeshare14)
+library(tidyverse)
+```
+
+
+Create the data.table:
+
+```{r make a table}
+X <- data.table(id = c("a", "b", "c"), value = c(0.5, 1.0, 1.5))
+
+print(X)
+```
+
+
+Get number of columns in batrips:
+
+```{r get cols}
+batrips <- as.data.table(batrips)
+col_number <- ncol(batrips)
+col_number
+```
+
+Print the first 4 rows:
+
+```{r see rows}
+head(batrips, 4)
+```
+
+Print the last 4 rows:
+
+```{r see tails}
+tail(batrips, 4)
+```
+
+Print the structure of batrips:
+
+```{r structure}
+str(batrips)
+```
+
+Filter third row:
+
+```{r row numbers}
+row_3 <- batrips[3]
+row_3 %>%
+  head(3)
+```
+
+Filter rows 1 through 2:
+
+```{r rows }
+rows_1_2 <- batrips[1:2]
+rows_1_2 %>%
+  head(2)
+```
+
+Filter the 1st, 6th and 10th rows:
+
+```{r row numbers 1,6,10}
+rows_1_6_10 <- batrips[c(1, 6, 10)]
+rows_1_6_10 %>%
+  head()
+```
+
+Select all rows except the first two:
+
+```{r exclude rows}
+not_first_two <- batrips[-(1:2)]
+not_first_two %>%
+  head(2)
+```
+
+Select all rows except 1 through 5 and 10 through 15:
+
+```{r exclude more}
+exclude_some <- batrips[-c(1:5, 10:15)]
+exclude_some %>%
+  head(2)
+```
+
+Select all rows except the first and last:
+
+```{r all rows}
+not_first_last <- batrips[-c(1, .N)] 
+# Or
+# batrips[-c(1, nrow(batrips))]
+
+not_first_last %>%
+  head(2)
+```
+
+Filter all rows where start_station is "Market at 10th":
+
+```{r start}
+trips_mlk <- batrips[start_station == "Market at 10th"]
+trips_mlk %>%
+  head(2)
+```
+
+Filter all rows where start_station is "MLK Library" AND duration > 1600:
+
+```{r filter is }
+trips_mlk_1600 <- batrips[start_station == "MLK Library" & duration > 1600]
+trips_mlk_1600 %>%
+  head(2)
+```
+
+Filter all rows where `subscription_type` is not `"Subscriber"`::
+
+```{r filter is not}
+customers <- batrips[subscription_type != "Subscriber"]
+customers %>%
+  head(2)
+```
+
+Filter all rows where start_station is "Ryland Park" AND subscription_type is not "Customer":
+
+```{r filter all}
+ryland_park_subscribers <- batrips[start_station == "Ryland Park" & subscription_type != "Customer"]
+ryland_park_subscribers %>%
+  head(2)
+```
+
+Filter all rows where end_station contains "Market":
+```{r filter ending with}
+
+any_markets <- batrips[end_station %like% "Market"]
+any_markets %>%
+  head(2)
+```
+
+Filter all rows where trip_id is 588841, 139560, or 139562:
+```{r filter combinations}
+
+filter_trip_ids <- batrips[trip_id %in% c(588841, 139560, 139562)]
+filter_trip_ids %>%
+  head(2)
+```
+
+Filter all rows where duration is between [5000, 6000]:
+```{r filter between}
+
+duration_5k_6k <- batrips[duration %between% c(5000, 6000)]
+duration_5k_6k %>%
+  head(2)
+```
+
+Filter all rows with specific start stations:
+```{r filter in}
+
+two_stations <- batrips[start_station %chin% c("San Francisco City Hall", "Embarcadero at Sansome")]
+two_stations %>%
+  head(2)
+```
+
+
+Selecting columns from a data.table
+Select bike_id and trip_id using a character vector:
+```{r select some columns}
+
+df_way <- batrips[, c("bike_id", "trip_id")]
+df_way %>%
+  head(2)
+```
+
+Select start_station and end_station cols without a character vector:
+```{r start and end with }
+
+dt_way <- batrips[, .(start_station, end_station)]
+dt_way %>%
+  head(2)
+```
+
+Deselect start_terminal and end_terminal columns:
+```{r select not }
+
+drop_terminal_cols <- batrips[, !c("start_terminal", "end_terminal")]
+drop_terminal_cols %>%
+  head(2)
+```
+
+Calculate median duration using the j argument:
+```{r calculate median}
+
+median_duration <- batrips[, median(duration)]
+median_duration %>%
+  head()
+```
+
+Get median duration after filtering:
+```{r median after filtering}
+
+median_duration_filter <- batrips[end_station == "Market at 10th" & subscription_type == "Subscriber", median(duration)]
+median_duration_filter %>%
+  head()
+```
+
+Compute duration of all trips:
+```{r duration}
+
+trip_duration <- batrips[, difftime(end_date, start_date, units = "min")]
+head(trip_duration) %>%
+  head(2)
+```
+
+Have the column mean_durn:
+```{r make a mean_durn}
+
+mean_duration <- batrips[, .(mean_durn = mean(duration))]
+mean_duration %>%
+  head(2)
+```
+
+Get the min and max duration values:
+```{r make a min/max}
+
+min_max_duration <- batrips[, .(min(duration), max(duration))]
+min_max_duration %>%
+  head(2)
+```
+
+Calculate the number of unique values:
+```{r calculate unique}
+
+other_stats <- batrips[, .(mean_duration = mean(duration), 
+                           last_ride = max(end_date))]
+other_stats %>%
+  head(2)
+```
+
+```{r select min / max}
+duration_stats <- batrips[start_station == "Townsend at 7th" & duration < 500, 
+                          .(min_dur = min(duration), 
+                            max_dur = max(duration))]
+duration_stats
+```
+
+Plot the histogram of duration based on conditions:
+```{r make histogram}
+
+batrips[start_station == "Townsend at 7th" & duration < 500, hist(duration)]
+```
+
+
+Computations by groups
+Compute the mean duration for every start_station:
+```{r compute by group}
+
+mean_start_stn <- batrips[, .(mean_duration = mean(duration)), by = start_station]
+mean_start_stn %>%
+  head(2)
+```
+
+Compute the mean duration for every start and end station:
+```{r compute for start/end}
+
+mean_station <- batrips[, .(mean_duration = mean(duration)), by = .(start_station, end_station)]
+mean_station %>%
+  head(2)
+```
+
+Compute the mean duration grouped by start_station and month:
+```{r grouped}
+
+mean_start_station <- batrips[, .(mean_duration = mean(duration)), by = .(start_station, month(start_date))]
+mean_start_station %>%
+  head(2)
+```
+
+Compute mean of duration and total trips grouped by start and end stations:
+```{r duration and total}
+
+aggregate_mean_trips <- batrips[, .(mean_duration = mean(duration), 
+                                    total_trips = .N), 
+                                by = .(start_station, end_station)]
+aggregate_mean_trips %>%
+  head(2)
+```
+
+Compute min and max duration grouped by start station, end station, and month:
+```{r min and max}
+
+aggregate_min_max <- batrips[, .(min_duration = min(duration), 
+                                 max_duration = max(duration)), 
+                             by = .(start_station, end_station, 
+                                    month(start_date))]
+aggregate_min_max %>%
+  head(2)
+```
+
+Chaining data.table expressions:
+Compute the total trips grouped by start_station and end_station
+
+```{r Compute the total}
+
+trips_dec <- batrips[, .N, by = .(start_station, 
+                                  end_station)]
+trips_dec %>%
+  head(2)
+```
+
+Arrange the total trips grouped by start_station and end_station in decreasing order:
+```{r Arrange}
+
+trips_dec <- batrips[, .N, by = .(start_station, 
+                                  end_station)][order(-N)]
+trips_dec %>%
+  head(2)
+``` 
+
+Top five most popular destinations:
+```{r Top five}
+
+top_5 <- batrips[, .N, by = end_station][order(-N)][1:5]
+top_5
+```
+
+Compute most popular end station for every start station:
+```{r Compute most popular}
+
+popular_end_station <- trips_dec[, .(end_station = end_station[1]), 
+                                 by = start_station]
+popular_end_station %>%
+  head(2)
+```
+
+Find the first and last ride for each start_station:
+```{r  first and last}
+
+first_last <- batrips[order(start_date), 
+                      .(start_date = start_date[c(1, .N)]), 
+                      by = start_station]
+first_last
+```
+
+Using .SD (I)
+
+```{r standard deviation}
+
+relevant_cols <- c("start_station", "end_station", 
+                   "start_date", "end_date", "duration")
+```
+
+Find the row corresponding to the shortest trip per month:
+
+```{r date selection}
+
+shortest <- batrips[, .SD[which.min(duration)], 
+                    by = month(start_date), 
+                    .SDcols = relevant_cols]
+shortest %>%
+  head(2)
+```
+
+Using .SD (II)
+Find the total number of unique start stations and zip codes per month:
+
+```{r date by month}
+
+unique_station_month <- batrips[, lapply(.SD, uniqueN), 
+                                by = month(start_date), 
+                                .SDcols = c("start_station", "zip_code")]
+unique_station_month %>%
+  head(2)
+```
+
+
+Adding and updating columns by reference
+Add a new column, duration_hour:
+
+```{r duration calculations}
+batrips[, duration_hour := duration / 3600]
+```
+
+Fix/edit spelling in the second row of start_station:
+
+```{r select based on speeling}
+batrips[2, start_station := "San Francisco City Hall 2"]
+```
+
+Replace negative duration values with NA:
+
+```{r less or more}
+batrips[duration < 0, duration := NA]
+```
+
+Add a new column equal to total trips for every start station:
+
+```{r make a new column}
+batrips[, trips_N := .N, by = start_station]
+```
+
+Add new column for every start_station and end_station:
+
+```{r new column with calculation}
+batrips[, duration_mean := mean(duration), by = .(start_station, end_station)]
+```
+
+Calculate the mean duration for each month:
+
+```{r calculate mean}
+batrips[, mean_dur := mean(duration, na.rm = TRUE), 
+            by = month(start_date)]
+```
+
+Replace NA values in duration with the mean value of duration for that month:
+
+```{r mean value per month}
+batrips[, mean_dur := mean(duration, na.rm = TRUE), 
+            by = month(start_date)][is.na(duration), 
+                                    duration := mean_dur]
+```
+
+Delete the mean_dur column by reference:
+
+```{r mean duration}
+batrips[, mean_dur := mean(duration, na.rm = TRUE), 
+            by = month(start_date)][is.na(duration), 
+                                    duration := mean_dur][, mean_dur := NULL]
+```
+
+Add columns using the LHS := RHS form
+LHS := RHS form. In the LHS, you specify column names as a character vector and in the RHS, you specify values/expressions to be added inside list() (or the alias, .()):
+
+```{r left and right hand side }
+batrips[, c("mean_duration", 
+            "median_duration") := .(mean(duration), median(duration)), 
+        by = start_station]
+```
+
+Add columns using the functional form:
+
+```{r functions}
+batrips[, `:=`(mean_duration = mean(duration), 
+               median_duration = median(duration)), 
+        by = start_station]
+```
+
+Add the mean_duration column:
+
+```{r function duration selection}
+batrips[duration > 600, mean_duration := mean(duration), 
+        by = .(start_station, end_station)]
+```
+
+Use read.csv() to import batrips
+Fread is much faster!
+
+- system.time(read.csv("batrips.csv"))
+- system.time(fread("batrips.csv"))
+
+
+Import using read.csv():
+
+```{r read in a file}
+csv_file <- read.csv("data/sample.csv", fill = NA, quote = "", 
+                     stringsAsFactors = FALSE, strip.white = TRUE, 
+                     header = TRUE)
+csv_file %>%
+  head(2)
+```
+
+Import using fread():
+
+```{r read in a csv file}
+csv_file <- fread("data/sample.csv")
+csv_file %>%
+  head(2)
+```
+
+Check the class of Sex column:
+
+```{r check class}
+class(csv_file$Sex)
+```
+
+Import using read.csv with defaults:
+
+```{r check structure}
+str(csv_file)
+```
+
+Select "id" and "val" columns:
+
+```{r read and select some columns}
+select_columns <- fread("data/sample.csv", select = c("GEO", "Sex"))
+select_columns %>%
+  head(2)
+```
+
+Drop the "val" column:
+
+```{r read and drop columns}
+drop_column <- fread("data/sample.csv", drop = "Sex")
+drop_column %>%
+  head(2)
+```
+
+Import the file while avoiding the warning:
+
+```{r read first three rows}
+only_data <- fread("data/sample.csv", nrows = 3)
+only_data
+```
+
+Import only the metadata:
+
+```{r read while skipping some lines}
+only_metadata <- fread("data/sample.csv", skip = 7)
+only_metadata %>%
+  head(2)
+```
+
+Import using read.csv:
+
+```{r read a csv in R}
+base_r <- read.csv("data/sample.csv", 
+                   colClasses = c(rep("factor", 4), 
+                                  "character", 
+                                  "numeric"))
+str(base_r)
+```
+
+Import using fread:
+
+```{r read csv with column classes}
+import_fread <- fread("data/sample.csv", 
+                      colClasses = list(factor = 1:4, numeric = 7:10))
+str(import_fread)
+```
+
+Import the file correctly,  use the fill argument to ensure all rows are imported correctly:
+
+```{r read with fill}
+correct <- fread("data/sample.csv", fill = TRUE)
+correct %>%
+  head(2)
+```
+
+Import the file using na.strings
+The missing values are encoded as "##". Note that fread() handles an empty field ,, by default as NA
+
+```{r read csv}
+missing_values <- fread("data/sample.csv", na.strings = "##") 
+missing_values %>%
+  head(2)
+```
+
+Write dt to fwrite.txt:
+- fwrite(dt, "fwrite.txt")
+
+Import the file using readLines():
+
+```{r readlines into R}
+readLines("data/sample.csv") %>%
+  head(2)
+```
+
+Write batrips_dates to file using "ISO" format:
+- fwrite(batrips_dates, "iso.txt", dateTimeAs = "ISO")
+
+Write batrips_dates to file using "squash" format:
+- fwrite(batrips_dates, "squash.txt", dateTimeAs = "squash")
+
+
+
+<!--chapter:end:06-datatable.Rmd-->
+
+# Tests for experiments
+
+Prior to performing experiments, we need to set the dependent variables (outcome), and independent variables (explanatory variables).
+
+Other experimental components to consider include randomization, replication, blocking
+
+```{r load libraries ggplot broom, message= FALSE}
+# load dependencies
+library(ggplot2) 
+library(broom)
+library(tidyverse)
+library(pwr)
+library(haven)
+library(simputation)
+library(sampling)
+library(agricolae)
+library(naniar)
+library(DescTools)
+library(mice)
+```
+
+
+load data: Dataset is on the Effect of Vitamin C on Tooth Growth in Guinea Pigs:
+```{r load data, message= FALSE}
+data(ToothGrowth) 
+
+ToothGrowth %>%
+  head(2)
+```
+
+Perform a two-sided t-test:
+```{r perform t-test on one variable, message= FALSE}
+
+t.test(x = ToothGrowth$len, alternative = "two.sided", mu = 18)
+```
+
+Perform a t-test
+```{r perform t-test on two variables, message= FALSE}
+
+ToothGrowth_ttest <- t.test(len ~ supp, data = ToothGrowth)
+ToothGrowth_ttest
+```
+
+
+Tidy ToothGrowth_ttest:
+```{r tidy visualize, message= FALSE}
+tidy(ToothGrowth_ttest)
+```
+
+
+Replication:
+Count number of observations for each combination of supp and dose
+```{r tidy, message= FALSE}
+
+ToothGrowth %>% 
+  count(supp, dose) 
+```
+
+Blocking:
+Create a boxplot with geom_boxplot()
+aov() creates a linear regression model by calling lm() and examining results with anova() all in one function call.
+
+```{r Visualize, message= FALSE}
+
+ggplot(ToothGrowth, aes(x = dose, y = len)) + 
+  geom_boxplot()
+```
+
+
+Create ToothGrowth_aov and 
+Examine ToothGrowth_aov with summary():
+
+```{r aov, message= FALSE}
+
+ToothGrowth_aov <- aov(len ~ dose + supp, data = ToothGrowth)
+summary(ToothGrowth_aov)
+```
+
+
+Hypothesis Testing (null and alternative) with `pwr` package
+one sided and two sided tests: 
+- type ?t.test to find out more
+```{r pwr less, message= FALSE}
+
+#Less than
+t.test(x = ToothGrowth$len,
+       alternative = "less",
+       mu = 18)
+```
+
+```{r pwr greater, message= FALSE}
+
+# Greater than
+t.test(x = ToothGrowth$len,
+       alternative = "greater",
+       mu = 18)
+```
+
+
+It turns out the mean of len is actually very close to 18, so neither of these tests tells us much about the mean of tooth length.
+?pwr.t.test()
+
+Calculate sample size:
+
+```{r pwr sample size, message= FALSE}
+
+pwr.t.test(n = NULL,
+           d = 0.25,  # small effect size of 0.25
+           sig.level = 0.05, 
+           type = "one.sample", 
+           alternative = "greater", 
+           power = 0.8)
+```
+
+
+Calculate power:
+
+```{r pwr power, message= FALSE}
+
+pwr.t.test(n = 100,
+           d = 0.35,
+           sig.level = 0.1,
+           type = "two.sample",
+           alternative = "two.sided",
+           power = NULL)
+```
+
+power for multiple groups:
+
+```{r pwr power for multiple groups k, message= FALSE}
+
+pwr.anova.test(k = 3,
+               n = 20,
+               f = 0.2, #effect size
+               sig.level = 0.05,
+               power = NULL)
+```
+
+
+Anova tests (for multiple groups) can be done in two ways
+
+Basic Experiments for exploratory data analysis including A/B testing
+
+get data:
+
+```{r get data txhousing, message= FALSE}
+
+data(txhousing)
+
+txhousing %>%
+  head(2)
+```
+
+
+remove NAs:
+```{r omit NA, message= FALSE}
+tx_housing <- na.omit(txhousing)
+
+# Examine the variables with glimpse()
+glimpse(tx_housing)
+```
+
+Find median and means with summarize():
+
+```{r find med/mean, message= FALSE}
+tx_housing %>% 
+  summarize(median(volume), mean(sales), mean(inventory))
+
+```
+
+Use ggplot2 to build a bar chart of purpose:
+
+```{r visualize txhousing, message= FALSE}
+ggplot(data=tx_housing, aes(x = city)) + 
+  geom_bar() +
+  coord_flip()
+```
+Use recode() to create the new purpose_recode variable
+
+```{r recode, message= FALSE}
+tx_housing$city_recode <- tx_housing$city %>%
+  recode("Bay Area" = "California",
+         "El Paso" = "California")
+```
+
+Build a linear regression model, purpose_recode_model:
+```{r recode lm, message= FALSE}
+purpose_recode_model <- lm(sales ~ city_recode, data = tx_housing)
+
+# Examine results of purpose_recode_model
+summary(purpose_recode_model)
+```
+
+
+
+Get anova results and save as purpose_recode_anova:
+
+```{r recode anova, message= FALSE}
+
+purpose_recode_anova <- anova(purpose_recode_model)
+
+# Print purpose_recode_anova
+purpose_recode_anova
+
+```
+
+
+Examine class of purpose_recode_anova:
+```{r recode class, message= FALSE}
+
+class(purpose_recode_anova)
+```
+
+Use aov() to build purpose_aov:
+```{r recode aov, message= FALSE}
+
+# Analysis of variance
+purpose_aov <- aov(sales ~ city_recode, data = tx_housing)
+```
+
+Conduct Tukey's HSD test to create tukey_output:
+```{r recode tukey test, message= FALSE}
+
+tukey_output <- TukeyHSD(purpose_aov, "city_recode", conf.level = 0.95)
+
+# Tidy tukey_output to make sense of the results
+tidy(tukey_output)
+```
+
+
+Multiple factor experiments:
+Use aov() to build purpose_emp_aov
+```{r manova, message= FALSE}
+
+purpose_emp_aov <- aov(sales ~ city_recode + volume , data = tx_housing)
+
+# Print purpose_emp_aov to the console
+# purpose_emp_aov
+
+#Call summary() to see the p-values:
+summary(purpose_emp_aov)
+```
+
+
+
+Model validation
+Pre-modeling exploratory data analysis
+Examine the summary of sales
+
+```{r exploratory, message= FALSE}
+summary(tx_housing$sales)
+```
+
+Examine sales by volume:
+
+```{r examine sales, message= FALSE}
+tx_housing %>% 
+  group_by(volume) %>% 
+  summarize(mean = mean(sales), var = var(sales), median = median(sales))
+```
+
+Make a boxplot of sales by volume
+
+```{r box plot of sales a/b test, message= FALSE}
+ggplot(tx_housing, aes(x = volume, y = sales)) + 
+  geom_boxplot()
+```
+
+Use aov() to create volume_aov plus call summary() to print results
+```{r aov and summary, message= FALSE}
+volume_aov <- aov(volume ~ sales, data = tx_housing)
+summary(volume_aov)
+```
+
+Post-modeling validation plots + variance
+For a 2x2 grid of plots:
+
+```{r qq plots, message= FALSE}
+par(mfrow = c(2, 2))
+
+# Plot grade_aov
+plot(volume_aov)
+```
+
+Bartlett's test for homogeneity of variance
+We can test for homogeneity of variances using bartlett.test(), which takes a formula and a dataset as inputs:
+- bartlett.test(volume ~ sales, data = tx_housing)
+
+Conduct the Kruskal-Wallis rank sum test:
+kruskal.test() to examine whether volume varies by sales when a non-parametric model is employed
+
+```{r Kruskal-Wallis, message= FALSE}
+kruskal.test(volume ~ sales,
+             data = tx_housing)
+```
+
+The low p-value indicates that based on this test, we can be confident in our result, which we found across this experiment, that volume varies by sales
+
+
+Sampling [randomized experiments]
+
+load data from NHANES dataset
+https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2015
+
+Import the three datasets using read_xpt():
+
+```{r import data from urls, message= FALSE}
+nhanes_demo <- read_xpt(url("https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/DEMO_I.XPT"))
+nhanes_bodymeasures <- read_xpt(url("https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/BMX_I.XPT"))
+nhanes_medical <- read_xpt(url("https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/MCQ_I.XPT"))
+```
+
+Merge the 3 datasets you just created to create nhanes_combined:
+
+```{r merge data, message= FALSE}
+
+nhanes_combined <- list(nhanes_demo, nhanes_medical, nhanes_bodymeasures) %>%
+  Reduce(function(df1, df2) inner_join(df1, df2, by = "SEQN"), .)
+```
+
+Fill in the dplyr code:
+```{r summarize merged data, message= FALSE}
+
+nhanes_combined %>% 
+  group_by(MCQ035) %>% 
+  summarize(mean = mean(INDHHIN2, na.rm = TRUE))
+```
+
+Fill in the ggplot2 code:
+
+```{r  plot data, message= FALSE}
+nhanes_combined %>% 
+  ggplot(aes(as.factor(MCQ035), INDHHIN2)) +
+  geom_boxplot() +
+  labs(x = "Disease type",
+       y = "Income")
+```
+
+NHANES Data Cleaning
+Filter to keep only those greater than 16:
+```{r  filter age, message= FALSE}
+nhanes_filter <- nhanes_combined %>% filter(RIDAGEYR > 16)
+```
+
+Load simputation & impute bmxwt by riagendr: library(simputation)
+```{r use simputation, message= FALSE}
+
+nhanes_final <- simputation::impute_median(nhanes_filter, INDHHIN2 ~ RIDAGEYR)
+
+```
+
+Recode mcq365d with recode() & examine with count():
+```{r  recode mcq365d, message= FALSE}
+
+nhanes_final$mcq365d <- recode(nhanes_final$MCQ035, 
+                               `1` = 1,
+                               `2` = 2,
+                               `9` = 2)
+nhanes_final %>% count(MCQ035)
+```
+
+Resampling NHANES data:
+Use sample_n() to create nhanes_srs:
+```{r  resample, message= FALSE}
+
+nhanes_srs <- nhanes_final %>% sample_n(2500)
+```
+
+Create nhanes_stratified with group_by() and sample_n()
+```{r  sample_n and group_by, message= FALSE}
+
+nhanes_stratified <- nhanes_final %>% group_by(RIDAGEYR) %>% sample_n(2000, replace = TRUE)
+
+nhanes_stratified %>% 
+  count(RIDAGEYR)
+```
+
+
+Load sampling package and create nhanes_cluster with cluster(): library(sampling)
+
+```{r  sample_n, message= FALSE}
+
+nhanes_cluster <- cluster(nhanes_final, c("INDHHIN2"), 6, method = "srswor")
+
+```
+
+Randomized complete block designs (RCBD): use library(agricolae)
+block = experimental groups are blocked to be similar (e.g. by sex)
+complete = each treatment is used the same of times in every block
+randomized = the treatment is assigned randomly inside each block
+
+Create designs using ls():
+```{r  agricolae library, message= FALSE}
+
+designs <- ls("package:agricolae", pattern = "design")
+print(designs)
+```
+
+Use str() to view design.rcbd's criteria:
+```{r structure of design, message= FALSE}
+
+str(design.rcbd)
+```
+
+Build treats and rep
+
+```{r build letters, message= FALSE}
+
+treats <- LETTERS[1:5]
+blocks <- 4
+blocks
+```
+
+
+NHANES RCBD:
+Build my_design_rcbd and view the sketch
+```{r build and view, message= FALSE}
+
+my_design_rcbd <- design.rcbd(treats, r = blocks, seed = 42)
+my_design_rcbd$sketch
+```
+
+Use aov() to create nhanes_rcbd:
+```{r aov for nhanes, message= FALSE}
+
+nhanes_rcbd <- aov(INDHHIN2 ~ MCQ035 + RIDAGEYR, data = nhanes_final)
+```
+Check results of nhanes_rcbd with summary():
+```{r result summary, message= FALSE}
+
+summary(nhanes_rcbd)
+```
+Print mean weights by mcq365d and riagendr:
+```{r mean weights, message= FALSE}
+
+nhanes_final %>% 
+  group_by(MCQ035, RIDAGEYR) %>% 
+  summarize(mean_ind = mean(INDHHIN2, na.rm = TRUE))
+```
+
+RCBD Model Validation
+Set up the 2x2 plotting grid and plot nhanes_rcbd
+```{r 2x2 grid, message= FALSE}
+
+par(mfrow = c(2, 2))
+plot(nhanes_rcbd)
+```
+
+Run the code to view the interaction plots:
+```{r view final, message= FALSE}
+
+with(nhanes_final, interaction.plot(MCQ035, RIDAGEYR, INDHHIN2))
+```
+
+
+Balanced incomplete block design (BIBD)
+Balanced = each pair of treatment occur together in a block an equal of times
+Incomplete = not every treatment will appear in every block
+
+Use str() to view design.bibd's criteria
+str(design.bib) 
+
+Columns are a blocking factor
+
+create my_design_bibd_1
+```{r design.bib, message= FALSE}
+
+my_design_bibd_1 <- agricolae::design.bib(LETTERS[1:3], k = 3, seed = 42)
+```
+
+create my_design_bibd_2
+```{r create with k of 3, message= FALSE}
+
+my_design_bibd_2 <- design.bib(LETTERS[1:8], k = 8, seed = 42)
+```
+
+
+
+create my_design_bibd_3:
+  
+```{r create with k of 4, message= FALSE}
+
+my_design_bibd_3 <- design.bib(LETTERS[1:4], k = 4, seed = 42)
+my_design_bibd_3$sketch
+```
+
+
+Build the data.frame:
+```{r build data, message= FALSE}
+
+creatinine <- c(1.98, 1.97, 2.35, 2.09, 1.87, 1.95, 2.08, 2.01, 1.84, 2.06, 1.97, 2.22)
+food <- as.factor(c("A", "C", "D", "A", "B", "C", "B", "C", "D", "A", "B", "D"))
+color <- as.factor(rep(c("Black", "White", "Orange", "Spotted"), each = 3))
+cat_experiment <- as.data.frame(cbind(creatinine, food, color))
+```
+
+Create cat_model and examine with summary():
+
+```{r create model, message= FALSE}
+
+cat_model <- aov(creatinine ~ food + color, data = cat_experiment)
+summary(cat_model)
+```
+
+Calculate lambda, where lamdba is a measure of proportional reduction in error in cross tabulation analysis:
+
+```{r calculate lambda, message= FALSE}
+DescTools::Lambda(cat_experiment, direction = c("symmetric", "row", "column"), conf.level = NA)
+```
+
+Create weightlift_model & examine results:
+```{r create model /results, message= FALSE}
+
+weightlift_model <- aov(MCQ035 ~ INDHHIN2 + RIDAGEYR, data = nhanes_final)
+summary(weightlift_model)
+```
+
+
+Latin Squares Design
+Key assumption: the treatment and two blocking factors do NOT interact
+Two blocking factors (instead of one)
+Analyze like RCBD
+
+Mean, var, and median of Math score by Borough:
+
+```{r calculate mean, var, median, message= FALSE}
+
+sat_scores <- read.csv(url("https://data.ct.gov/api/views/kbxi-4ia7/rows.csv?accessType=DOWNLOAD"))
+
+sat_scores %>%
+  group_by(District, Test.takers..2012) %>% 
+  summarize(mean = mean(Test.takers..2012, na.rm = TRUE),
+            var = var(Test.takers..2012, na.rm = TRUE),
+            median = median(Test.takers..2012, na.rm = TRUE)) %>%
+  head()
+```
+
+Dealing with Missing Test Scores
+Examine missingness with miss_var_summary() and library(mice):
+```{r Examine missingness with md.pattern(), message= FALSE}
+
+sat_scores %>% miss_var_summary()
+sat_scores <- na.omit(sat_scores)
+
+mice::md.pattern(sat_scores)
+```
+
+
+Impute the Math score by Borough:
+```{r impute median, message= FALSE}
+
+sat_scores_2 <- simputation::impute_median(sat_scores, Test.takers..2012 ~ District)
+#Convert Math score to numeric
+sat_scores$Average_testtakers2012 <- as.numeric(sat_scores$Test.takers..2012)
+```
+
+Examine scores by Borough in both datasets, before and after imputation:
+```{r cexamine scores, message= FALSE}
+
+sat_scores %>% 
+  group_by(District) %>% 
+  summarize(median = median(Test.takers..2012, na.rm = TRUE), 
+            mean = mean(Test.takers..2012, na.rm = TRUE))
+sat_scores_2 %>% 
+  group_by(District) %>% 
+  summarize(median = median(Test.takers..2012), 
+            mean = mean(Test.takers..2012))
+```
+
+Drawing Latin Squares with agricolae
+
+Design a LS with 5 treatments A:E then look at the sketch
+```{r ls with 5 treatments, message= FALSE}
+my_design_lsd <- design.lsd(trt = LETTERS[1:5], seed = 42)
+my_design_lsd$sketch
+```
+
+Build nyc_scores_ls_lm:
+
+```{r ls_lm, message= FALSE}
+sat_scores_ls_lm <- lm(Test.takers..2012 ~ Test.takers..2013 + District,
+                       data = sat_scores)
+
+# Tidy the results with broom
+tidy(sat_scores_ls_lm) %>%
+  head()
+```
+
+Examine the results with anova:
+
+```{r anova for scores, message= FALSE}
+anova(sat_scores_ls_lm)
+```
+
+
+Graeco-Latin Squares
+three blocking factors (when there is treatments)
+Key assumption: the treatment and two blocking factors do NOT interact
+Analyze like RCBD
+
+Drawing Graeco-Latin Squares with agricolae
+
+Create trt1 and trt2
+Create my_graeco_design
+```{r graeco design, message= FALSE}
+trt1 <- LETTERS[1:5]
+trt2 <- 1:5
+my_graeco_design <- design.graeco(trt1, trt2, seed = 42)
+```
+
+Examine the parameters and sketch:
+
+```{r parameters/sketch, message= FALSE}
+my_graeco_design$parameters
+my_graeco_design$sketch
+```
+
+Create a boxplot of scores by District, with a title and x/y axis labels:
+```{r scores and titles, message= FALSE}
+ggplot(sat_scores, aes(District, Test.takers..2012)) +
+  geom_boxplot() + 
+  labs(title = "Average SAT Math Scores by District in 2012",
+       x = "District",
+       y = "Test Takers in 2012")
+```
+
+Build sat_scores_gls_lm:
+
+```{r gls_lm, message= FALSE}
+sat_scores_gls_lm <- lm(Test.takers..2012 ~ Test.takers..2013 + District + School,
+                        data = sat_scores)
+
+# Tidy the results with broom
+tidy(sat_scores_gls_lm) %>%
+  head()
+```
+
+Examine the results with anova
+```{r anova examination, message= FALSE}
+anova(sat_scores_gls_lm)
+```
+
+
+Factorial Experiment Design
+2 or more factor variables are combined and crossed
+All of the possible interactions between factors are considered as effect on outcome
+e.g. high/low water on high/low light
+
+
+Build the boxplot for the district vs. test taker score:
+
+```{r boxplot with scores, message= FALSE}
+ggplot(sat_scores,
+       aes(District, Test.takers..2012)) + 
+  geom_boxplot()
+```
+
+Create sat_scores_factorial and examine the results:
+```{r aov and tidy, message= FALSE}
+sat_scores_factorial <- aov(Test.takers..2012 ~ Test.takers..2013 * District * School, data = sat_scores)
+
+tidy(sat_scores_factorial) %>%
+  head()
+```
+
+Evaluating the sat_scores Factorial Model
+
+Use shapiro.test() to test the outcome:
+```{r shapiro test, message= FALSE}
+shapiro.test(sat_scores$Test.takers..2013)
+```
+
+<!--chapter:end:07-experiment-tests.Rmd-->
+
+
+# Demo for A/B testing 
+
+```{r dependencies, message= FALSE}
+# load dependencies
+library(tidyverse)
+library(powerMediation)
+library(broom)
+library(pwr)
+library(gsDesign)
+library(powerMediation)
+```
+
+Read in data:
+
+```{r read-in the data, message= FALSE}
+
+fileLocation <- "http://stat.columbia.edu/~rachel/datasets/nyt1.csv"
+click_data <- read.csv(url(fileLocation))
+```
+
+Find oldest and most recent age:
+
+```{r check max/min, message= FALSE}
+
+min(click_data$Age)
+max(click_data$Age) 
+```
+
+
+Compute baseline conversion rates:
+
+```{r baseline rates, message= FALSE}
+
+click_data %>%
+  summarize(impression_rate = mean(Impressions))
+```
+
+determine baseline for genders:
+
+```{r baseline genders, message= FALSE}
+
+click_data %>%
+  group_by(Gender) %>%
+  summarize(impression_rate = mean(Impressions))
+```
+
+
+determine baseline for clicks:
+
+```{r baseline clicks, message= FALSE}
+
+click_data_age<- click_data %>%
+  group_by(Clicks, Age) %>%
+  summarize(impression_rate = mean(Impressions))
+```
+
+visualize baselines:
+
+```{r visualize baselines, message= FALSE}
+
+ggplot(click_data_age, aes(x = Age, y = impression_rate)) +
+  geom_point() +
+  geom_line() 
+```
+
+
+Experimental design, power analysis, and t-tests
+
+run power analysis:
+learn more here: help(SSizeLogisticBin)
+
+```{r sample size for clicks, message= FALSE}
+
+total_sample_size <- SSizeLogisticBin(p1 = 0.2, # conversion rate for control condition
+                                      p2 = 0.3, # conversion rate for expected conversion rate for test condition: backed by previous data (e.g.30% conversion rate to get 10% boost)
+                                      B = 0.5, # most commonly used
+                                      alpha = 0.05, # most commonly used
+                                      power = 0.8) # most commonly used
+total_sample_size
+total_sample_size /2 # per condition
+```
+
+can use a ttest or linear regression for statistical tests:
+lm is used when more variables are in data but similar to t-test
+```{r lm for clicks, message= FALSE}
+
+lm(Gender ~ Clicks, data = click_data) %>%
+  summary()
+
+# t.test(Gender ~ Clicks, data = click_data) %>%
+#  summary()
+```
+
+Analyzing results
+Group and summarize
+```{r click summary, message= FALSE}
+
+click_data_groups <- click_data %>%
+  group_by(Clicks, Age) %>%
+  summarize(impression_rate = mean(Impressions))
+```
+
+Make plot of conversion rates for clicks:
+```{r visualize clicks, message= FALSE}
+
+ggplot(click_data_groups,
+       aes(x = Age,
+           y = impression_rate,
+           color = Clicks,
+           group = Clicks)) +
+  geom_point(size = 3) +
+  geom_line(lwd = 1)
+```
+
+Make plot of conversion rates for clicks 
+(can add intercepts and interaction of two variables):
+```{r plot clicks, message= FALSE}
+
+ggplot(click_data_groups,
+       aes(x = Age,
+           y = impression_rate,
+           color = Clicks,
+           group = interaction(Clicks, impression_rate))) +
+  geom_point(size = 3) +
+  geom_line(lwd = 1) +
+  geom_vline(xintercept = as.numeric(as.Date("2018-02-15"))) 
+
+```
+
+Check for glm documentation
+family can be used to express different error distributions.
+?glm
+
+Run logistic regression to analyze model outputs:
+```{r run glm for clicks, message= FALSE}
+
+experiment_results <- glm(Gender ~ Clicks,
+                          family = "binomial",
+                          data = click_data) %>%
+  tidy()
+
+experiment_results
+```
+
+
+Follow-up experimentations to test assumptions
+
+Designing follow-up experiments since A/B testing is a continuous loops
+i.e. make new dataframes and compute various other conversion rate differences
+can use spread() to reformat data
+
+```{r test experiment for click data, message= FALSE}
+
+click_data_new_groups <- click_data %>%
+  group_by(Clicks, Age) %>%
+  summarize(impression_rate = mean(Impressions)) %>% 
+  spread(Clicks, impression_rate)
+```
+Compute summary statistics:
+
+```{r compute summary for clicks, message= FALSE}
+
+mean(click_data_new_groups$Age, na.rm = TRUE)
+sd(click_data_new_groups$Age, na.rm = TRUE)
+```
+
+Run logistic regression and power analysis
+Run power analysis for logistic regression
+
+```{r SS & power, message= FALSE}
+
+total_sample_size <- SSizeLogisticBin(p1 = 0.49,
+                                      p2 = 0.64,
+                                      B = 0.5,
+                                      alpha = 0.05,
+                                      power = 0.8)
+total_sample_size
+```
+
+View summary of data:
+```{r means of click impressions, message= FALSE}
+
+new_data <- click_data %>%
+  group_by(Clicks) %>%
+  summarize(impression_rate = mean(Impressions)/10)
+
+# Run logistic regression to analyze model outputs
+followup_experiment_sep_results <- glm(impression_rate ~ Clicks,
+                                       family = "binomial",
+                                       data = new_data) %>%
+  tidy()
+
+followup_experiment_sep_results
+```
+
+
+Specifics of A/B Testing= use of experimental design to compare 2 or more variants of a design
+Test Types: A/B, A/A, A/B/N test conditions 
+Assumptions to test: within group vs. between group experiments
+
+e.g. plotting A/A data
+Compute conversion rates for A/A experiment:
+
+```{r compute conversion rates, message= FALSE}
+
+click_data_sum <- click_data %>%
+  group_by(Signed_In) %>%
+  summarize(impression_rate = mean(Impressions)/10)
+click_data_sum
+```
+
+Plot conversion rates for two conditions:
+```{r plot conversion rates, message= FALSE}
+
+ggplot(click_data_sum,
+       aes(x = Signed_In, y = impression_rate)) +
+  geom_bar(stat = "identity")  
+  
+#Based on these bar plots the two A conditions look very similar. That's good!
+```
+
+
+Run logistic regression to analyze model outputs:
+
+```{r use broom to run glm, message= FALSE}
+
+aa_experiment_results <- glm(Signed_In ~ impression_rate,
+                             family = "binomial",
+                             data = click_data_sum) %>%
+  tidy()
+aa_experiment_results
+```
+
+
+Confounding variables: element that can affect the truth of A/B exp
+change one element at a time to know the change you are testing
+Need to also consider the side effects 
+procedures are the same as above
+
+Power analysis requires 3 variables: power (1-beta) , significance level (alpha or p-value), effect size
+as power goes up, so does the of data points needed
+as significance level goes up (i.e. more significant), so do of data points needed
+as effect sizw increase, of data points decrease
+ttest (linear regression) can be used for continuous dependent variable (e.g. time spent on a website)
+
+```{r use pwr for lm, message= FALSE}
+
+pwr.t.test(power = 0.8,
+           sig.level = 0.05,
+           d = 0.6)  # d = effect size 
+
+pwr.t.test(power = 0.8,
+           sig.level = 0.05,
+           d = 0.2) #(see more on experimental design)
+
+```
+
+Load package to run power analysis: library(powerMediation)
+
+logistic regression can be used for categorical dependent variable (e.g. click or not click)
+Run power analysis for logistic regression
+
+```{r use powerMediation package, message= FALSE}
+
+total_sample_size <- SSizeLogisticBin(p1 = 0.17, # assuming a control value of 17%
+                                      p2 = 0.27, # assuming 10% increase in the test condition
+                                      B = 0.5,
+                                      alpha = 0.05,
+                                      power = 0.8)
+total_sample_size
+```
+
+
+Stopping rules and sequential analysis
+procedures that allow interim analyses in pre-defined points = sequential analysis
+
+```{r use powerMediation with gsdesign, message= FALSE}
+
+seq_analysis <- gsDesign(k=4, # number of times you want to look at the data
+                         test.type = 1,
+                         alpha = 0.05,
+                         beta = 0.2, # power = 1-beta so power is 0.8
+                         sfu = "Pocock") # spending function to figure out how to update p-values
+seq_analysis
+
+```
+
+```{r random generation of sequences, message= FALSE}
+
+max_n <- 1000
+max_n_per_group <- max_n / 2
+stopping_points <- max_n_per_group * seq_analysis$timing
+stopping_points
+```
+
+
+Run sequential analysis:
+
+```{r use gsdesign for power analysis, message= FALSE}
+
+seq_analysis_3looks <- gsDesign(k = 3,
+                                test.type = 1,
+                                alpha = 0.05,
+                                beta = 0.2,
+                                sfu = "Pocock")
+seq_analysis_3looks
+```
+
+Fill in max number of points and compute points per group and find stopping points
+
+```{r random generation of sequences max.min, message= FALSE}
+
+max_n <- 3000
+max_n_per_group <- max_n / 2
+stopping_points = max_n_per_group * seq_analysis_3looks$timing
+stopping_points
+
+```
+
+Multivariate testing (i.e. more than one independent variable in the experiment)
+
+Compute summary values for four conditions
+```{r use broom to visualize clicks, message= FALSE}
+
+new_click_data <- click_data %>%
+  group_by(Age, Gender, Clicks) %>%
+  summarize(impression_mean = mean(Impressions))
+
+# Plot summary values for four conditions
+ggplot(new_click_data,
+       aes(x = Gender,
+           y = impression_mean,
+           color = Clicks,
+           fill = Age)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
+
+```{r broom with lm, message= FALSE}
+
+multivar_results <- lm(Age ~ Gender * Clicks, data = click_data) %>%
+  tidy()
+
+multivar_results$p.value #none are significant
+multivar_results
+```
+
+Organize variables and run logistic regression:
+
+```{r run lm with variable, message= FALSE}
+
+new_click_data_results <- click_data %>%
+  mutate(gender = factor(Gender,
+                           levels = c("0", "1"))) %>%
+  mutate(clicks = factor(Clicks,
+                           levels = c("1", "0"))) %>%
+  glm(gender ~ gender * clicks,
+      family = "binomial",
+      data = .) %>%
+  tidy()
+new_click_data_results
+```
+
+<!--chapter:end:08-AB-testing.Rmd-->
+
+# Working with time-series in R
+
+```{r load xts and zoo, message= FALSE}
+# load dependencies
+library(xts)
+library(zoo)
+```
+
+xts objects are simple. Think of them as a matrix of observations combined with an index of corresponding dates and times. Create the object data using 5 random numbers
+
+```{r xts objects, message= FALSE}
+
+data <- rnorm(5)
+head(data, 3)
+
+# Create dates as a Date class object starting from 2016-01-01
+dates <- seq(as.Date("2016-01-01"), length = 5, by = "days")
+head(dates, 3)
+
+# Use xts() to create data_dates
+xts <- dates + data 
+
+#xts takes two arguments: x for the data and order.by for the index
+data_dates <- xts(x = data, order.by = dates)
+head(data_dates, 3)
+
+# Create one_date (1899-05-08) using a POSIXct date class object
+one_date <- as.POSIXct("1899-05-08")
+head(one_date, 3)
+
+# Create some_dates and add a new attribute called one_date
+some_dates <- xts(x = data, order.by = dates, born = one_date)
+head(some_dates, 3)
+
+```
+
+Deconstructing xts
+Extract the core data of some_dates
+```{r deconstruct xts, message= FALSE}
+
+some_dates_core <- coredata(some_dates)
+
+# View the class of some_dates_core
+class(some_dates_core)
+
+# Extract the index of some_dates_core
+some_dates_core_index <- index(some_dates_core)
+
+# View the class of some_dates_core_index
+class(some_dates_core_index)
+
+# Time based indices
+## Create dates
+dates <- as.Date("2016-01-01") + 0:4
+
+# Create ts_a
+ts_a <- xts(x = 1:5, order.by = dates)
+head(ts_a, 3)
+
+# Create ts_b
+ts_b <- xts(x = 1:5, order.by = as.POSIXct(dates))
+head(ts_b, 3)
+
+# Extract the rows of ts_a using the index of ts_b
+ts_a[index(ts_b)]
+
+# Extract the rows of ts_b using the index of ts_a
+ts_b[index(ts_a)]
+```
+
+
+Importing, exporting and converting time series
+It is often necessary to convert between classes when working with time series data in R. 
+```{r xts examples, message= FALSE}
+
+data(sunspots)
+data(austres)
+
+# Convert austres to an xts object called au and inspect
+au <- as.xts(austres)
+class(au)
+head(au, 3)
+
+# Then convert your xts object (au) into a matrix am and inspect
+am <- as.matrix(au)
+class(am)
+head(am, 3)
+
+# Convert the original austres into a matrix am2
+am2 <- as.matrix(austres)
+head(am2, 3)
+```
+
+Create dat by reading tmp_file:
+```{r url for xts, message= FALSE}
+
+temp_url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_1127/datasets/tmp_file.csv"
+dat <- read.csv(temp_url)
+head(dat)
+
+# Convert dat into xts
+xts(dat, order.by = as.Date(rownames(dat), "%m/%d/%Y"))
+```
+
+Read tmp_file using read.zoo and as.xts:
+
+```{r read tmp file, message= FALSE}
+dat_zoo <- read.zoo(temp_url, index.column = 0, sep = ",", format = "%m/%d/%Y")
+
+# Read tmp_file using read.zoo and as.xts
+dat_xts <- as.xts(dat_zoo)
+head(dat_xts)
+
+# exporting data
+## Convert sunspots to xts using as.xts().
+sunspots_xts <- as.xts(sunspots)
+
+# Get the temporary file name
+tmp <- tempfile()
+
+# Write the xts object using zoo to tmp 
+write.zoo(sunspots_xts, sep = ",", file = tmp)
+```
+
+Read the tmp file. FUN = as.yearmon converts strings such as Jan 1749 into a proper time class:
+
+```{r read zoo file, message= FALSE}
+sun <- read.zoo(tmp, sep = ",", FUN = as.yearmon)
+head(sun, 3)
+
+# Convert sun into xts. Save this as sun_xts
+sun_xts <- as.xts(sun)
+head(sun_xts, 3)
+
+
+# Select all of 2016 from x
+x_2016 <- x["2010"]
+
+
+# Select January 1, 2016 to March 22, 2016
+jan_march <- x["2016/2016-03-22"]
+
+# Verify that jan_march contains 82 rows
+82 == length(jan_march)
+
+# Row selection with time objects
+# Subset x using the vector dates
+jan_march[dates]
+
+# Subset x using dates as POSIXct
+x[as.POSIXct(dates)]
+
+# Replace the values in x contained in the dates vector with NA
+x[dates] <- NA
+
+# Replace all values in x for dates starting June 9, 2016 with 0
+x["2016-06-09/"] <- 0
+
+# Verify that the value in x for June 11, 2016 is now indeed 0
+x["2016-06-11"]
+
+```
+
+
+Additional Methods To Find Periods in Your Data
+#Using the first() and last() functions
+
+Create lastweek using the last 1 week of temps
+```{r last, message= FALSE}
+
+lastweek <- last(sun, "1 week")
+
+# Print the last 2 observations in lastweek
+last(lastweek, 2)
+
+# Extract all but the first two days of lastweek
+first(lastweek, "2 days")
+
+# Extract the first three days of the second week of temps
+first(last(first(sun, "2 weeks"), "1 week"), "3 days")
+```
+
+Math operations in xts
+Matrix arithmetic - add, subtract, multiply, and divide in time!
+Use coredata() or as.numeric() (drop one to a matrix or vector).
+Manually shift index values - i.e. use lag().
+Reindex your data (before or after the calculation).
+
+```{r last with R, message= FALSE}
+
+a <- xts(x = 1:2, as.Date("2012-01-01") + 0:1)
+a[index(a)]
+
+
+a <- xts(x = 1:2, as.Date("2012-01-01") + 0:1)
+a[index(a)]
+
+b <- xts(x = 1:2, as.Date("2013-01-01") + 0:1)
+b[index(b)]
+
+
+# Add a and b
+a + b
+
+# Add a with the numeric value of b
+a + as.numeric(b)
+
+
+# Add a to b, and fill all missing rows of b with 0
+a + merge(b, index(a), fill = 0)
+
+# Add a to b and fill NAs with the last observation
+a + merge(b, index(a), fill = na.locf)
+
+# Merging time series
+## Perform an inner join of a and b
+merge(a, b, join = "inner")
+
+# Perform a left-join of a and b, fill missing values with 0
+merge(a, b, join = "left", fill = 0)
+
+# Combining xts by row with rbind
+## Row bind a and b, assign this to temps2
+temps2 <- rbind(a, b)
+head(temps2,4)
+
+```
+
+Handling missingness in your data
+
+#Airpass data: install.packages("TSA") and library(TSA)
+```{r load data from TSA package, message= FALSE}
+library(TSA)
+data("airpass")
+head(airpass, 3)
+```
+
+Fill missing values in temps using the last observation
+```{r fill values of airpass, message= FALSE}
+temps_last <- na.locf(airpass)
+head(temps_last, 4)
+
+```
+Fill missing values in temps using the next observation
+Fill missing values using last or previous observation
+Last obs. carried forward: na.locf(x)                
+
+Next obs. carried backward
+na.locf(x, fromLast = TRUE)
+locf = last object carried forward
+
+```{r na.locf for airpass, message= FALSE}
+
+temps_next <- na.locf(airpass, fromLast = TRUE)
+head(temps_next, 4)
+
+# NA interpolation using na.approx()
+## Interpolate NAs using linear approximation
+
+na.approx(airpass)
+```
+
+
+Lag operators and difference operations
+Combine a leading and lagging time series
+
+```{r lag airpass, message= FALSE}
+
+# Create a lagging object called lag_x
+#The k argument in zoo uses positive values for shifting past observations forward and negative values for shifting them backwards
+x <- stats::lag(airpass, k = 1)
+head(x, 5)
+```
+Merge your three series together and assign to z
+
+Calculate a difference of a series using diff()
+Calculate the first difference of AirPass using lag and subtraction
+
+```{r diff, message= FALSE}
+
+diff(x, differences = 2)
+diff(diff(x))
+
+diff_by_hand <- x - stats::lag(x)
+head(diff_by_hand, 5)
+```
+Use merge to compare the first parts of diff_by_hand and diff(AirPass)
+```{r diff in airpass, message= FALSE}
+
+head(diff(airpass))
+
+```
+
+One of the benefits to working with time series objects is how easy it is to apply functions by time.
+Apply by Time
+
+Locate the years
+```{r locate years in airpass, message= FALSE}
+
+endpoints(airpass, on = "years")
+
+# Locate every two years
+# In order to find the end of the second year, you should set k = 2 in your second endpoints() call.
+endpoints(airpass, on = "years", k = 2)
+
+# Calculate the yearly endpoints
+ep <- endpoints(airpass, on = "years")
+
+#Using lapply() and split() to apply functions on intervals
+# Split temps by years
+temps_yearly <- split(airpass, f = "years") # could also split by "months" etc.
+
+# Create a list of weekly means, temps_avg, and print this list
+temps_avg <- lapply(X = temps_yearly, FUN = mean)
+temps_avg
+
+#Selection by endpoints vs. split-lapply-rbind
+# Use the proper combination of split, lapply and rbind
+temps_1 <- do.call(rbind, lapply(split(airpass, "years"), function(w) last(w)))
+temps_1
+
+# Create last_day_of_weeks using endpoints()
+last_year_of_data <- endpoints(airpass, "years")
+last_year_of_data
+
+# Subset airpass using last_year_of_data 
+temps_2 <- airpass[last_year_of_data]
+temps_2
+```
+
+
+Convert univariate series to OHLC data
+Aggregating time series
+In financial series it is common to find Open-High-Low-Close data (or OHLC) calculated over some repeating and regular interval.
+
+```{r xts data, message= FALSE}
+
+ts_b <- xts(x = 1:5, order.by = as.POSIXct(dates))
+
+
+# Convert usd_eur to weekly and assign to usd_eur_weekly
+usd_eur_weekly <- to.period(x, period = "weeks")
+
+# Convert usd_eur to monthly and assign to usd_eur_monthly
+usd_eur_monthly <- to.period(x, period = "months")
+
+# Convert eq_mkt to quarterly using shortcut function
+mkt_quarterly2 <- to.monthly(x, name = "edhec_equity", indexAt = "firstof")
+
+```
+
+
+Index, Attributes, and Timezones
+
+View the first three indexes of temps
+```{r index data, message= FALSE}
+
+index(x)[1:3]
+
+# Get the index class of temps
+indexClass(x)
+
+# Get the timezone of temps
+indexTZ(x)
+
+
+# Change the time zone of times_xts to Asia/Hong_Kong
+tzone(x) <- "Asia/Hong_Kong"
+
+# Extract the current time zone of times_xts
+tzone(x)
+```
+
+Periods, Periodicity and Timestamps
+
+Calculate the periodicity of edhec
+
+```{r periodicity of data, message= FALSE}
+
+periodicity(x)
+
+# Calculate the periodicity of edhec_yearly
+periodicity(x)
+
+# Count the months
+nmonths(x)
+
+# Count the quarters
+nquarters(x)
+
+```
+
+Explore underlying units of temps in two commands: .index() and .indexwday()
+.index(ts_b)
+.indexwday(ts_b)
+
+Create an index of weekend days using which():
+```{r temps and index, message= FALSE}
+
+# Make ts_b have unique timestamps
+z_unique <- make.index.unique(ts_b, eps = 1e-4)
+head(z_unique, 3)
+
+# Remove duplicate times in ts_b
+z_dup <- make.index.unique(ts_b, drop = TRUE)
+head(z_dup, 3)
+
+# Round observations in ts_b to the next hour
+z_round <- align.time(ts_b, n = 3600)
+head(z_round, 3)
+```
+
+<!--chapter:end:09-timeseries.Rmd-->
+
+# Feature engineering in R
+
+```{r load caret and others, message= FALSE}
+
+library(tidyverse)
+library(caret)
+library(lubridate)
+library(tidyverse)
+library(dendextend)
+
+```
+
+load data
+```{r starwar data, message= FALSE}
+
+head(starwars, 5) 
+
+starwars_logs <- starwars %>%	
+  na.omit() %>%
+  mutate( 
+    #Create male column
+    male = ifelse(gender == "male", 1, 0),
+    
+    #Create female column
+    female = ifelse(gender == "female", 1, 0))
+```
+
+
+Binning encoding: content driven
+
+Look at a variable in a table:
+```{r bin starwars, message= FALSE}
+
+starwars %>%
+  select(gender) %>%
+  table()
+
+starwars %>%
+  select(gender, skin_color) %>%
+  table()
+
+# Look at a table of the new column 
+starwars_logs %>%
+  select(male) %>%
+  table()
+
+# Create a new column with the proper string encodings
+starwars_logs_new <-  starwars %>%
+  na.omit() %>%
+  mutate(skin = 
+           case_when(skin_color == "fair" ~ "fair skin",
+                     skin_color == "white" ~ "white skin"))
+
+# Converting new categories to numeric
+starwars_new <- starwars %>%	
+  na.omit() %>%
+  mutate( 
+    # Create hair column
+    hair1 = ifelse(hair_color == "fair", 1, 0),
+    
+    # Create mid_sch column
+    hair2 = ifelse(hair_color == "white", 1, 0),
+    
+    # Create high_sch column
+    hair3 = ifelse(hair_color == "brown", 1, 0))
+
+# Create a table of the frequencies
+starwars_table <- starwars %>%
+  na.omit() %>%
+  select(skin_color, hair_color) %>%
+  table() 
+
+# Create a table of the proportions
+prop_table <- prop.table(starwars_table, 1)
+
+# Combine the proportions and discipline logs data
+starwars_join <- inner_join(as.data.frame(starwars_table), as.data.frame(prop_table), by = "skin_color")
+
+# Display a glimpse of the new data frame
+glimpse(starwars_join)
+
+# Create a new column with three levels using the proportions as ranges
+starwars_join_ed <- starwars_join %>%
+  mutate(skin_levels = 
+           case_when(skin_color =="blue" ~ "blue skin",
+                     skin_color =="brown" ~ "brown skin"))
+
+```
+
+Numerical bucketing or binning
+Look at a variable in a table
+
+```{r bucketing, message= FALSE}
+
+starwars %>%
+  na.omit() %>%
+  select(mass) %>%
+  glimpse()
+
+starwars %>%
+  na.omit() %>%
+  select(mass) %>%
+  summary() 
+
+# Create a histogram of the possible variable values
+ggplot(starwars, aes(x = mass)) + 
+  geom_histogram(stat = "count")
+
+# Create a sequence of numbers to capture the mass range
+seq(1, 140, by = 20)
+
+# Use the cut function to create a variable quant_cat
+starwars_mass <- starwars %>% 
+  mutate(quant_cat = cut(mass, breaks = seq(1, 140, by = 20))) 
+
+
+# Create a table of the new column quant_cat
+starwars_mass %>%
+  select(quant_cat) %>%
+  table()
+
+```
+
+Create new columns from the quant_cat feature
+
+```{r model starwards, message= FALSE}
+
+head(model.matrix(~ quant_cat -1, data = starwars_mass)) # -1 means we want to select all the encodings
+
+# Break the Quantity variable into 3 buckets
+starwars_tile <- starwars %>% 
+  mutate(quant_q = ntile(mass, 3))
+
+# Use table to look at the new variable
+starwars_tile %>% 
+  select(quant_q) %>%
+  table()
+
+# Specify a full rank representation of the new column
+head(model.matrix(~ quant_q, data = starwars_tile))
+
+```
+
+Date and time feature extraction
+
+```{r date extraction, message= FALSE}
+
+myData <- data.frame(time=as.POSIXct(c("2019-01-22 14:28:21","2017-01-23 14:28:55",
+                            "2019-01-23 14:29:02","2018-01-23 14:31:18")),
+                     speed=c(2.0,2.2,3.4,5.5))
+
+# Look at the column times
+myData %>%
+  select(time) %>%
+  glimpse()
+
+# Assign date format to the timestamp_date column
+myData %>%
+  mutate(times_date = ymd_hms(time))
+
+myData$times <- as.POSIXct(strptime(myData$time,"%Y-%m-%d %H:%M:%S"))
+
+# Create new column dow (day of the week) 
+myData_logs <- myData %>% 
+  mutate(dow = wday(as.POSIXct(times, label = TRUE)))
+
+head(myData, 4)
+
+# Create new column hod (hour of day) 
+myData_logs <- myData %>% 
+  mutate(hod = hour(times))
+
+head(myData_logs, 4)
+
+
+# Create histogram of hod 
+ggplot(myData_logs, aes(x = hod)) + 
+  geom_histogram(stat = "count")
+
+```
+
+
+Box-Cox and Yeo-Johnson are used to address issues with non-normally distributed features
+Box-Cox transformations
+
+Select the variables:
+```{r box cos, message= FALSE}
+
+cars_vars <- mtcars %>%
+  select(mpg, cyl) 
+
+# Perform a Box-Cox transformation on the two variables.
+processed_vars <- preProcess(cars_vars, method = c("BoxCox"))
+
+# Use predict to transform data
+cars_vars_pred <- predict(processed_vars, cars_vars)
+
+# Plot transformed features
+ggplot(cars_vars_pred, aes(x = mpg)) + 
+  geom_density()
+
+ggplot(cars_vars_pred, aes(x = cyl)) + 
+  geom_density()
+
+```
+
+Yeo-Johnson transformations
+Select the variables
+```{r Yeo-johnson, message= FALSE}
+
+cars_vars <- mtcars %>%
+  select(mpg, wt) 
+
+# Perform a Yeo-Johnson transformation 
+processed_vars <- preProcess(cars_vars, method = c("YeoJohnson"))
+
+# Use predict to transform data
+cars_vars_pred <- predict(processed_vars, cars_vars)
+
+# Plot transformed features
+ggplot(cars_vars_pred,aes(x = mpg)) + 
+  geom_density()
+
+ggplot(cars_vars_pred,aes(x = wt)) + 
+  geom_density()
+```
+
+
+Other normalization techniques include scale features
+including mean centering and z-score standardization
+
+scaling:
+Create a scaled new feature scaled_mpg 
+
+```{r scaling, message= FALSE}
+
+mtcars_df <- mtcars %>%
+  mutate(scaled_mpg = (mpg - min(mpg)) / 
+           (max(mpg) - min(mpg)))
+
+# Summarize both features
+mtcars_df %>% 
+  select(mpg, scaled_mpg) %>%
+  summary()
+
+
+# Use mutate to create column mean_mpg
+mtcars_df <- mtcars %>%
+  select(mpg) %>%
+  mutate(mpg_mean = mpg - mean(mpg)) %>%
+  summary()
+
+# Select variables 
+mtcars_vars <- mtcars %>% 
+  select(mpg, cyl, wt)
+
+# Use preProcess to mean center variables
+processed_vars <- preProcess(mtcars_vars, method = c("center"))
+
+# Use predict to include tranformed variables into data
+mtcars_pred_df <- predict(processed_vars, mtcars_vars)
+
+# Summarize the three new column scales
+mtcars_pred_df %>% 
+  select(mpg, cyl, wt) %>%
+  summary()
+```
+
+Z-score standardization:
+Standardize mppg
+```{r z-score, message= FALSE}
+
+mtcars_df <- mtcars %>% 
+  mutate(z_mpg = (mpg - mean(mpg))/
+           sd(mpg))
+
+# Summarize new and original variable
+mtcars_df %>% 
+  select(mpg, z_mpg) %>%
+  summary()
+
+# Select variables 
+mtcars_vars <- mtcars %>% 
+  select(mpg, cyl, wt)
+
+# Create preProcess variable list 
+processed_vars <- preProcess(mtcars_vars, method = c("center", "scale"))
+
+# Use predict to assign standardized variables
+mtcars_vars_df <- predict(processed_vars, mtcars_df)
+
+# Summarize new variables
+mtcars_df %>% 
+  select(mpg, cyl, wt) %>% 
+  summary()
+```
+
+
+Feature crossing
+
+Group the data and create a summary of the counts:
+
+```{r feature crossing, message= FALSE}
+
+# Create a table of the variables of interest
+mtcars %>% 
+  select(mpg, gear) %>%
+  table()
+
+# Create a feature cross between mpg and gear  
+dmy <- dummyVars( ~ mpg:gear, data = mtcars)
+
+# Create object of your resulting data frame
+oh_data <- predict(dmy, newdata = mtcars)
+
+# Summarize the resulting output
+summary(oh_data)
+
+```
+
+Principal component analysis
+
+Create the df
+
+```{r pca, message= FALSE}
+
+mtcars_x <- mtcars %>% 
+  select(cyl, mpg, gear, carb, wt)
+
+# Perfom PCA
+mtcars_x_pca <- prcomp(mtcars_x,
+                   center = TRUE,
+                   scale. = TRUE) 
+
+summary(mtcars_x_pca)
+
+# visualizing and plotting the outcome of PCA
+## Create pca component column 
+prop_var <- tibble(sdev = mtcars_x_pca$sdev) %>%
+  mutate(pca_comp = 1:n())
+
+# Calculate the proportion of variance
+prop_var <- prop_var %>%
+  mutate(pcVar = sdev^2,
+         propVar_ex = pcVar/sum(pcVar), 
+         pca_comp = as.character(pca_comp))
+
+ggplot(prop_var, aes(pca_comp, propVar_ex), group = 1) +
+  geom_line() +
+  geom_point()
+
+```
+
+
+
+
+
+<!--chapter:end:10-feature_engineering.Rmd-->
+
+# Impute missingness
+
+```{r load naniar, message= FALSE}
+
+# load libraries
+library(tidyverse)
+library(naniar)
+```
+
+Create x, a vector, with values NA, NaN, Inf, ".", and "missing"
+
+```{r make missing data, message= FALSE}
+
+x <- c(NA, NaN, Inf, ".", "missing")
+
+# Use any_na() and are_na() on to explore the missings
+any_na(x)
+are_na(x)
+
+# Use n_miss() to count the total number of missing values in x
+n_miss(x)
+
+# Use n_complete() on dat_hw to count the total number of complete values
+n_complete(x)
+```
+
+Use prop_miss() and prop_complete on dat_hw to count the total number of missing values in each of the variables:
+```{r proportion of missingness, message= FALSE}
+
+prop_miss(x)
+prop_complete(x)
+```
+
+
+Use tarwars data to use to find missing values
+summarizing missingness
+
+```{r load starwars, message= FALSE}
+
+starwars %>%
+  miss_var_summary()
+
+starwars %>%
+  group_by(birth_year) %>%
+  miss_var_summary()
+
+# Return the summary of missingness in each case, by group
+starwars %>%
+  miss_case_summary() %>%
+  head()
+
+starwars %>%
+  group_by(birth_year) %>%
+  miss_case_summary() %>%
+  head()
+
+# Tabulate missingness in each variable and case of the dataset
+starwars %>%
+  miss_var_table() %>%
+  head()
+
+# Tabulate the missingness in each variable and in grouped_by
+starwars %>%
+  miss_case_table() %>%
+  head()
+
+starwars %>%
+  group_by(birth_year) %>%
+  miss_var_table() %>%
+  head()
+
+# Tabulate the missingness in each variable and in grouped_by
+starwars %>%
+  miss_case_table() %>%
+  head()
+
+starwars %>%
+  group_by(birth_year) %>%
+  miss_case_table() %>%
+  head()
+```
+
+Other summaries of missingness
+Calculate the summaries for each span of missingness
+
+For each `birth_year` variable, calculate the run of missingness:
+
+```{r calculate missing summaries, message= FALSE}
+
+starwars %>%
+  miss_var_run(var = birth_year)
+
+# For each `birth_year` variable, calculate the run of missingness every 2 years
+starwars %>%
+  miss_var_span(var = birth_year, span_every = 2)
+
+# Visualize missing values
+vis_miss(starwars)
+
+# Visualize and cluster all of the missingness 
+vis_miss(starwars, cluster = TRUE)
+
+# Visualize and sort the columns by missingness
+vis_miss(starwars, sort_miss = TRUE)
+```
+
+Visualizing missing cases and variables
+Visualize the number of missings in variables using `gg_miss_var()`:
+
+```{r visualize missing data, message= FALSE}
+
+gg_miss_var(starwars)
+gg_miss_var(starwars, facet = birth_year)
+
+# Explore the number of missings in cases using `gg_miss_case()` and facet by the variable `birth_year`
+gg_miss_var(starwars)
+gg_miss_case(starwars, facet = birth_year)
+
+# Explore the missingness pattern using gg_miss_upset()
+gg_miss_upset(starwars)
+
+# Explore how the missingness changes across the birth_year variable using gg_miss_fct()
+gg_miss_fct(starwars, fct = birth_year)
+
+# and explore how missingness changes for a span of 2 years 
+gg_miss_span(starwars, var =birth_year, span_every = 100, facet = mass) # also possible to facet
+```
+
+
+
+Explicitly missing values
+Searching for and replacing missing values
+
+```{r search and replace missing data, message= FALSE}
+
+df <- tibble::tribble(
+  ~name,           ~x,  ~y,              ~z,  
+  "N/A",           "1",   "N/A",           "-100", 
+  "N/A",           "3",   "Not Available", "-99",
+  "N/A",         "NA",  "29",              "-98",
+  "Not Available", "-99", "25",              "-101",
+  "John Smith",    "-98", "28",              "-1")
+
+
+# Explore the strange missing values "N/A"
+miss_scan_count(data = df, search = list("N/A"))
+
+# Explore the strange missing values "missing"
+miss_scan_count(data = df, search = list("missing"))
+
+# Explore the strange missing values "na"
+miss_scan_count(data = df, search = list("na"))
+
+# Explore the strange missing values "Not Available"
+miss_scan_count(data = df, search = list("Not Available"))
+
+# Explore the strange missing values " " (a single space)
+miss_scan_count(data = df, search = list(" "))
+
+# Explore all of the strange missing values, "N/A", "missing", "na", " "
+miss_scan_count(data = df, search = list("N/A", "missing","na", " ", "Not Available"))
+
+# Replace the strange missing values "N/A", "na", and "missing" with `NA` for the variables x and y
+df_clean <- replace_with_na(df, replace = list(x = c("N/A", "missing","na", " ", "Not Available"),
+                                                       y = c("N/A", "missing","na", " ", "Not Available")))
+```
+
+Test if `df_clean` still has these values in it?
+
+```{r df clean, message= FALSE}
+
+miss_scan_count(df_clean, search = list("N/A", "missing","na", " ", "Not Available"))
+
+# Use `replace_with_na_at()` to replace with NA
+replace_with_na_at(df,
+                   .vars = c("x", "y", "name"), 
+                   ~.x %in% c("N/A", "missing","na", " ", "Not Available"))
+
+# Use `replace_with_na_if()` to replace with NA the character values using `is.character`
+replace_with_na_if(df,
+                   .predicate = is.character, 
+                   ~.x %in% c("N/A", "missing","na", " ", "Not Available"))
+
+# Use `replace_with_na_all()` to replace with NA
+replace_with_na_all(df, ~.x %in% c("N/A", "missing","na", " ", "Not Available"))
+
+```
+
+
+Implicitly missing values
+
+Print the frogger data to have a look at it
+starwars
+
+Use `complete()` on the `time` variable to make implicit missing values explicit
+
+```{r implicit NA, message= FALSE}
+
+starwars_tidy <- starwars %>% complete(name, hair_color)
+
+# Use `fill()` to fill down the name variable in the starwars dataset
+starwars %>% fill(name)
+
+# Correctly fill() and complete() missing values so that our dataset becomes sensible
+starwars %>%
+  fill(name) %>%
+  complete(name, hair_color)
+
+# Missing Data dependence
+# Exploring missingness dependence
+# Arrange by birth_year
+starwars %>% arrange(birth_year) %>% vis_miss() # this variable is important for missingness
+
+# Arrange by mass
+starwars %>% arrange(mass) %>% vis_miss() # this variable is important for missingness
+
+# Arrange by height 
+starwars %>% arrange(height) %>% vis_miss() # this variable is important for missingness
+```
+
+
+Tools to explore missing data dependence
+data to use
+airquality
+
+Create shadow matrix data with `as_shadow()`
+
+```{r tools for missing data, message= FALSE}
+
+as_shadow(airquality) %>%
+  head()
+
+# Create nabular data by binding the shadow to the data with `bind_shadow()`
+bind_shadow(airquality) %>%
+  head()
+
+# Bind only the variables with missing values by using bind_shadow(only_miss = TRUE)
+bind_shadow(airquality, only_miss = TRUE) %>%
+  head()
+```
+
+performing group summaries
+`bind_shadow()` and `group_by()` humidity missingness (`Ozone_NA`)
+
+```{r group summaries, message= FALSE}
+
+airquality %>%
+  bind_shadow() %>%
+  group_by(Ozone_NA) %>%
+  summarise(Wind_mean = mean(Wind), # calculate mean of Wind
+            Wind_sd = sd(Wind)) # calculate standard deviation of Wind
+
+# Repeat this, but calculating summaries for Temp
+airquality %>%
+  bind_shadow() %>%
+  group_by(Ozone_NA) %>%
+  summarise(Temp_mean = mean(Temp),
+            Temp_sd = sd(Temp))
+
+
+# Summarise wind by the missingness of `Solar.R_NA`
+airquality %>% 
+  bind_shadow() %>%
+  group_by(Solar.R_NA) %>%
+  summarise(Wind_mean = mean(Wind), # calculate mean of Wind
+            Wind_sd = sd(Wind), # calculate standard deviation of Wind
+            n_obs = n())
+
+# Summarise wind by missingness of `Solar.R_NA` and `Ozone_NA`
+airquality %>%
+  bind_shadow() %>%
+  group_by(Solar.R_NA, Ozone_NA) %>%
+  summarise(Temp_mean = mean(Temp),
+            Temp_sd = sd(Temp),
+            n_obs = n())
+
+```
+
+Visualizing missingness across one variable
+First explore the missingness structure of `airquality` using `vis_miss()`
+
+```{r visualize across variables, message= FALSE}
+
+vis_miss(airquality)
+
+# Explore the distribution of `Temp` for the missingness of `Ozone_NA` using  `geom_density()`
+bind_shadow(airquality) %>%
+  ggplot(aes(x = Temp, 
+             color = Ozone_NA)) + 
+  geom_density()
+
+# Explore the distribution of Temp for the missingness of humidity (Solar.R_NA) using  `geom_density()`
+bind_shadow(airquality) %>%
+  ggplot(aes(x = Temp,
+             color = Solar.R_NA)) + 
+  geom_density()
+
+# Explore the distribution of Wind for the missingness of Solar.R_NA using  `geom_density()` and facetting by the missingness of (`Solar.R_NA`).
+airquality %>%
+  bind_shadow() %>%
+  ggplot(aes(x = Wind)) + 
+  geom_density() + 
+  facet_wrap(~Solar.R_NA)
+
+# Build upon this visualisation by filling by the missingness of (`Solar.R_NA`).
+airquality %>%
+  bind_shadow() %>%
+  ggplot(aes(x = Wind,
+             color = Solar.R_NA)) + 
+  geom_density() + 
+  facet_wrap(~Solar.R_NA)
+
+
+# Explore the distribution of wind for the missingness of air temperature using  `geom_boxplot()`
+airquality %>%
+  bind_shadow() %>%
+  ggplot(aes(x = Ozone_NA,
+             y = Wind)) + 
+  geom_boxplot()
+
+# Build upon this visualisation by facetting by the missingness of Ozone_NA 
+airquality %>%
+  bind_shadow() %>%
+  ggplot(aes(x = Ozone_NA,
+             y = Wind)) + 
+  geom_boxplot() + 
+  facet_wrap(~Ozone_NA)
+```
+
+
+Visualizing missingness across two variables
+
+Explore the missingness in wind and air temperature, and display the missingness using `geom_miss_point()`:
+
+```{r visualize 2 missing vars, message= FALSE}
+
+ggplot(airquality,
+       aes(x = Wind,
+           y = Temp)) + 
+  geom_miss_point()
+
+# Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`
+ggplot(airquality,
+       aes(x = Ozone,
+           y = Solar.R)) + 
+  geom_miss_point()
+
+
+# Explore the missingness in Ozone and Solar.R, and display the missingness using `geom_miss_point()`. Facet by Temp to explore this further.
+ggplot(airquality,
+       aes(x = Ozone,
+           y = Solar.R)) + 
+  geom_miss_point() + 
+  facet_wrap(~Temp)
+
+# Use geom_miss_point() and facet_wrap to explore how the missingness in Ozone  is different for missingness of Solar.R
+bind_shadow(airquality) %>%
+  ggplot(aes(x = Ozone,
+             y = Solar.R)) + 
+  geom_miss_point() + 
+  facet_wrap(~Temp)
+
+# Use airquality() and facet_grid to explore how the missingness in wind_ew and air_temp_c is different for missingness of Temp AND by Month- by using `facet_grid(Temp ~ Month)`
+bind_shadow(airquality) %>%
+  ggplot(aes(x = Ozone,
+             y = Solar.R)) + 
+  geom_miss_point() + 
+  facet_grid(Temp ~ Month)
+```
+
+
+Filling in the blanks
+Impute the data below the range using `impute_below`.
+
+```{r fill in blanks, message= FALSE}
+
+airquality_imp <- impute_below_all(airquality)
+
+# Visualise the new missing values
+ggplot(airquality_imp,
+       aes(x = Wind, y = Temp)) + 
+  geom_point()
+
+# Impute and track data with `bind_shadow`, `impute_below`, and `add_label_shadow`
+airquality_imp_track <- bind_shadow(airquality) %>% 
+  impute_below_all() %>%
+  add_label_shadow()
+
+# Look at the imputed values
+airquality_imp_track
+```
+
+Visualise imputed values in a scatterplot
+Visualise the missingness in wind and air temperature, coloring missing values with Ozone_NA:
+
+```{r scatterplot of missings, message= FALSE}
+
+ggplot(airquality_imp_track,
+       aes(x = Wind, y = Temp, color = Ozone_NA)) + 
+  geom_point()
+
+# Visualise humidity and air temp, coloring any missing cases using the variable any_missing
+ggplot(airquality_imp_track,
+       aes(x = Wind, y = Temp, color = any_missing)) + 
+  geom_point()
+```
+
+Create histogram of imputed data
+Explore the values of air_temp_c, visualising the amount of missings with `air_temp_c_NA`.
+
+```{r histogram of missings, message= FALSE}
+
+p <- ggplot(airquality_imp_track, aes(x = Ozone, fill = Ozone_NA)) + geom_histogram()
+
+# Expore the missings in humidity using humidity_NA
+p2 <- ggplot(airquality_imp_track, aes(x = Solar.R, fill = Solar.R_NA)) + geom_histogram()
+
+# Explore the missings in airquality_imp_track according to Month, using `facet_wrap(~Month)`.
+p + facet_wrap(~Month)
+
+# Explore the missings in humidity according to Month, using `facet_wrap(~Month)`.
+p2 + facet_wrap(~Month)
+```
+
+
+What makes a good imputation
+Impute the mean value and track the imputations 
+
+```{r impute, message= FALSE}
+
+airquality_imp_mean <- bind_shadow(airquality) %>% 
+  impute_mean_all() %>% 
+  add_label_shadow()
+
+# Explore the mean values in wind in the imputed dataset
+ggplot(airquality_imp_mean, 
+       aes(x = Ozone_NA, y = Wind)) + 
+  geom_boxplot()
+
+# Explore the values in air wind in the imputed dataset
+ggplot(airquality_imp_mean, 
+       aes(x = Solar.R_NA, y = Wind)) + 
+  geom_boxplot()
+
+# Explore imputations in air temperature and wind, coloring by the variable, any_missing
+ggplot(airquality_imp_mean, 
+       aes(x = Wind, y = Temp, color = any_missing)) + 
+  geom_point()
+
+# Explore imputations in air temperature and wind, coloring by the variable, any_missing, and faceting by Month
+ggplot(airquality_imp_mean, 
+       aes(x = Wind, y = Temp, color = any_missing)) +
+  geom_point() + 
+  facet_wrap(~ Month)
+
+
+# Gather the imputed data 
+airquality_imp_mean_gather <- shadow_long(airquality_imp_mean,
+                                     Temp,
+                                     Wind)
+# Inspect the data
+airquality_imp_mean_gather
+
+# Explore the imputations in a histogram 
+ggplot(airquality_imp_mean_gather, 
+       aes(x = as.numeric(value), fill = value_NA)) + 
+  geom_histogram() + 
+  facet_wrap(~ variable) 
+```
+
+
+Performing imputations
+Impute Temp and Wind, and track missing values
+
+```{r simputation library, message= FALSE}
+
+library(simputation)
+
+airquality_imp_lm_wind <- airquality %>% 
+  bind_shadow() %>%
+  impute_lm(Temp ~ Wind + Month) %>% 
+  impute_lm(Temp ~ Wind + Day) %>%
+  add_label_shadow()
+
+# Plot the imputed values for Temp and Wind, colored by missingness
+ggplot(airquality_imp_lm_wind, 
+       aes(x = Temp, y = Wind, color = any_missing)) +
+  geom_point()
+
+# Evaluating and comparing imputations
+## Bind the models together 
+bound_models <- bind_rows(mean = airquality_imp_mean,
+                          lm_wind = airquality_imp_lm_wind,
+                          .id = "imp_model")
+
+# Inspect the values of air_temp and humidity as a scatterplot
+ggplot(bound_models,
+       aes(x = Wind,
+           y = Temp,
+           color = any_missing)) +
+  geom_point() + 
+  facet_wrap(~imp_model)
+
+
+# Build a model adding Month to the outcome
+airquality_imp_lm_wind_month <- bind_shadow(airquality) %>%
+  impute_lm(Temp ~ Wind + Day + Month) %>%
+  impute_lm(Temp ~ Wind + Ozone + Month) %>%
+  add_label_shadow()
+
+# Bind the mean, lm_wind, and lm_wind_year models together
+bound_models <- bind_rows(mean = airquality_imp_mean,
+                          lm_wind = airquality_imp_lm_wind,
+                          lm_wind_year = airquality_imp_lm_wind_month,
+                          .id = "imp_model")
+
+# Explore air_temp and humidity, coloring by any missings, and faceting by imputation model
+ggplot(bound_models, aes(x = Wind, y = Temp, color = any_missing)) +
+  geom_point() + facet_wrap(~imp_model)
+
+
+# Gather the data and inspect the distributions of the values
+bound_models_gather <- bound_models %>%
+  select(Temp, Wind, any_missing, imp_model) %>%
+  gather(key = "key", value = "value", -any_missing, -imp_model)
+
+# Inspect the distribution for each variable, for each model
+ggplot(bound_models_gather,
+       aes(x = imp_model, y = value, color = imp_model)) +
+  geom_boxplot() + facet_wrap(~key, scales = "free_y")
+
+# Inspect the imputed values
+bound_models_gather %>%
+  filter(any_missing == "Missing") %>%
+  ggplot(aes(x = imp_model, y = value, color = imp_model)) +
+  geom_boxplot() + facet_wrap(~key, scales = "free_y")
+```
+
+
+Combining and comparing many imputation models
+Create an imputed dataset using a linear models
+
+```{r compare imputation models, message= FALSE}
+
+airquality_imp_lm_all <- bind_shadow(airquality) %>%
+  add_label_shadow() %>%
+  impute_lm(Temp ~ Wind + Day + Month) %>%
+  impute_lm(Temp ~ Wind + Ozone + Month) 
+
+# Bind the datasets
+cc = airquality
+imp_lm_wind = as.data.frame(airquality_imp_lm_wind) %>%
+  mutate_if(is.factor, ~ as.numeric(levels(.x))[.x])
+
+imp_lm_all = as.data.frame(airquality_imp_lm_all) %>%
+  mutate_if(is.factor, ~ as.numeric(levels(.x))[.x])
+
+bound_models <- bind_rows(airquality,
+                          imp_lm_wind,
+                          imp_lm_all,
+                          .id = "imp_model")
+
+# Look at the models
+head(bound_models,4)
+
+# Create the model summary for each dataset
+library(broom)
+library(tidyr)
+model_summary <- bound_models %>% 
+  group_by(imp_model) %>%
+  nest() %>%
+  mutate(mod = map(data, ~lm(Temp ~ Wind + Ozone + Month, data = .)),
+         res = map(mod, residuals),
+         pred = map(mod, predict),
+         tidy = map(mod, tidy))
+
+# Explore the coefficients in the model
+model_summary %>% 
+  select(imp_model,tidy) %>%
+  unnest()
+
+best_model <- "imp_lm_all"
+```
+
+<!--chapter:end:11-Impute_missingness.Rmd-->
+
+# R for Reporting
+
+Possible ways to report your findings include e-mailing figures and tables around with some explanatory text or creating reports in Word, LaTeX or HTML.
+
+R code used to produce the figures and tables is typically not part of these documents. So in case the data changes, e.g., if new data becomes available, the code needs to be re-run and all the figures and tables updated. This can be rather cumbersome. If code and reporting are not in the same place, it can also be a bit of a hassle to reconstruct the details of the analysis carried out to produce the results.  
+
+To enable reproducible data analysis and research, the idea of dynamic reporting is that data, code and results are all in one place. This can for example be a R Markdown document like this one. Generating the report automatically executes the analysis code and includes the results in the report.
+
+
+## Usage demonstrations
+
+### Inline code
+
+Simple pieces of code can be included inline. This can be handy to, e.g., include the number of observations in your data set dynamically. The *cars* data set, often used to illustrate the linear model, has `r nrow(cars)` observations.  
+
+### Code chunks
+
+You can include typical output like a summary of your data set and a summary of a linear model through code chunks.
+
+```{r}
+summary(cars)
+m <- lm(dist ~ speed, data = cars)
+summary(m)
+```
+
+
+#### Include tables
+
+The estimated coefficients, as well as their standard errors, t-values and p-values can also be included in the form of a table, for example through **knitr**'s `kable` function.
+
+```{r, echo = TRUE}
+library("knitr")
+kable(summary(m)$coef, digits = 2)
+```
+   
+
+#### Include figures
+
+The **trackeR** package provides infrastructure for running and cycling data in **R** and is used here to illustrate how figures can be included. 
+
+```{r, message = FALSE}
+## install.packages("devtools")
+## devtools::install_github("hfrick/trackeR")
+library("trackeR") 
+data("runs", package = "trackeR")
+```
+
+A plot of how heart rate and pace evolve over time in 10 training sessions looks like this 
+
+```{r, cache = TRUE, echo = FALSE}
+p <- plot(runs, session = 1:10)
+p
+```
+
+but the plot looks better with a wider plotting window.
+
+```{r, echo = FALSE, fig.width = 10}
+p
+```
+
+## Resources
+
+* [Markdown main page](http://daringfireball.net/projects/markdown/)
+* [R Markdown](http://rmarkdown.rstudio.com/)
+* [knitr in a nutshell](http://kbroman.org/knitr_knutshell/) tutorial by Karl Broman
+
+<!--chapter:end:12-R-4-Reporting.Rmd-->
+
+`r if (knitr::is_html_output()) '
+# Resources {-}
+'`
+
+***
+
+## Beginner Resources by Topic
+
+***
+
+### Getting Set-Up with R & RStudio
+
+* __Download & Install R:__
+    + https://cran.r-project.org
+    + For Mac: click on **Download R for (Mac) OS X**, look at the top link under **Files**, which at time of writing is **R-3.2.4.pkg**, and download this if compatible with your current version mac OS (Mavericks 10.9 or higher). Otherwise download the version beneath it which is compatible for older mac OS versions. Then install the downloaded software.
+    + For Windows: click on **Download R for Windows**, then click on the link **install R for the first time**, and download from the large link at the top of the page which at time of writing is **Download R 3.2.4 for Windows**. Then install the downloaded software.
+    
+* __Download & Install RStudio:__
+    + https://www.rstudio.com/products/rstudio/download/
+    + For Mac: under the **Installers for Supported Platforms** heading click the link with **Mac OS X** in it. Install the downloaded software.
+    + For Windows: under the **Installers for Supported Platforms** heading click the link with **Windows Vista** in it. Install the downloaded software.
+    
+
+
+* __Exercises in R: swirl (HIGHLY RECOMMENDED):__
+    + http://swirlstats.com/students.html
+    
+    
+* __Data Prep__:
+    + Intro to dplyr: https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html
+    + Data Manipulation (detailed): http://www.sr.bham.ac.uk/~ajrs/R/index.html
+    + Aggregation and Restructing Data (base & reshape): http://www.r-statistics.com/2012/01/aggregation-and-restructuring-data-from-r-in-action/
+* **Data Types intro**: Vectors, Matrices, Arrays, Data Frames, Lists, Factors: http://www.statmethods.net/input/datatypes.html
+* **Using Dates and Times**: http://www.cyclismo.org/tutorial/R/time.html
+* **Text Data and Character Strings**: http://gastonsanchez.com/Handling_and_Processing_Strings_in_R.pdf
+* **Data Mining**: http://www.rdatamining.com  
+
+****
+
+* **Data Viz**:
+    + ggplot2 Cheat Sheet (RECOMMENDED): http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/
+    + ggplot2 theoretical tutorial (detailed but RECOMMENDED): http://www.ling.upenn.edu/~joseff/avml2012/
+    + Examples of base R, ggplot2, and rCharts: http://patilv.com/Replication-of-few-graphs-charts-in-base-R-ggplot2-and-rCharts-part-1-base-R/
+    + Intro to ggplot2: http://heather.cs.ucdavis.edu/~matloff/GGPlot2/GGPlot2Intro.pdf
+* **Interactive Visualisations**:
+    + Interactive graphics (rCharts, jQuery): http://www.computerworld.com/article/2473365/business-intelligence/business-intelligence-106897-how-to-turn-csv-data-into-interactive-visualizations-with-r-and-rchart.html    
+
+*****
+
+* **Statistics**:  
+    + Detailed Statistics Primer: http://health.adelaide.edu.au/psychology/ccs/docs/lsr/lsr-0.3.pdf
+    + Beginner guide to statistical topics in R: http://www.cyclismo.org/tutorial/R/
+* **Linear Models**: http://data.princeton.edu/R/gettingStarted.html
+* **Time Series Analysis**: https://www.otexts.org/fpp/resources
+* **Little Book of R series**:
+    + Time Series: http://a-little-book-of-r-for-time-series.readthedocs.org/en/latest/
+    + Biomedical Statistics: http://a-little-book-of-r-for-biomedical-statistics.readthedocs.org/en/latest/
+    + Multivariate Statistics: http://little-book-of-r-for-multivariate-analysis.readthedocs.org/en/latest/
+
+***
+* **RStudio Cheat Sheets**:
+    + RStudio IDE: http://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf
+    + Data Wrangling (dplyr & tidyr): https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf
+    + Data Viz (ggplot2): https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
+    + Reproducible Reports (markdown): https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+    + Interactive Web Apps (shiny): https://www.rstudio.com/wp-content/uploads/2015/02/shiny-cheatsheet.pdf  
+    
+***
+### Specialist Topics
+
+* __Google Analytics__: http://online-behavior.com/analytics/r
+* **Spatial Cheat Sheet**: http://www.maths.lancs.ac.uk/~rowlings/Teaching/UseR2012/cheatsheet.html
+* **Translating between R and SQL**: http://www.burns-stat.com/translating-r-sql-basics/
+* **Google's R style guide**: https://google.github.io/styleguide/Rguide.xml
+
+***
+
+### Operational Basics
+
+* **Working Directory**:  
+Example on a mac = `setwd("~/Desktop/R")` or `setwd("/Users/CRT/Desktop/R")`         
+Example on windows = `setwd("C:/Desktop/R")`       
+* **Help**:  
+`?functionName`   
+`example(functionName)`   
+`args(functionName)`   
+`help.search("your search term")`   
+* **Assignment Operator**: `<-`   
+
+***
+
+
+<!--chapter:end:13-R-Resources.Rmd-->
+

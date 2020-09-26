@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 9 Working with time-series in R | Codes for STEM</title>
+  <meta name="description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 9 Working with time-series in R | Codes for STEM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 9 Working with time-series in R | Codes for STEM" />
+  
+  <meta name="twitter:description" content="This is a collection of codes for analytics projects from import, wrangling, analyzing, visualizing, to reporting" />
+  
+
+<meta name="author" content="Noushin Nabavi" />
+
+
+<meta name="date" content="2020-09-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="demo-for-ab-testing.html"/>
+<link rel="next" href="feature-engineering-in-r.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Coding for STEM</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html"><i class="fa fa-check"></i><b>3</b> Useful R Functions + Examples</a><ul>
+<li class="chapter" data-level="3.1" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#contents"><i class="fa fa-check"></i><b>3.1</b> Contents</a></li>
+<li class="chapter" data-level="3.2" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#r-syntax"><i class="fa fa-check"></i><b>3.2</b> R Syntax</a></li>
+<li class="chapter" data-level="3.3" data-path="useful-r-functions-examples.html"><a href="useful-r-functions-examples.html#functional-examples"><i class="fa fa-check"></i><b>3.3</b> Functional examples</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="demo-for-dplyr.html"><a href="demo-for-dplyr.html"><i class="fa fa-check"></i><b>4</b> Demo for dplyr</a></li>
+<li class="chapter" data-level="5" data-path="working-with-dates-in-r.html"><a href="working-with-dates-in-r.html"><i class="fa fa-check"></i><b>5</b> Working with dates in R</a></li>
+<li class="chapter" data-level="6" data-path="demo-for-data-table.html"><a href="demo-for-data-table.html"><i class="fa fa-check"></i><b>6</b> Demo for Data.table</a></li>
+<li class="chapter" data-level="7" data-path="tests-for-experiments.html"><a href="tests-for-experiments.html"><i class="fa fa-check"></i><b>7</b> Tests for experiments</a></li>
+<li class="chapter" data-level="8" data-path="demo-for-ab-testing.html"><a href="demo-for-ab-testing.html"><i class="fa fa-check"></i><b>8</b> Demo for A/B testing</a></li>
+<li class="chapter" data-level="9" data-path="working-with-time-series-in-r.html"><a href="working-with-time-series-in-r.html"><i class="fa fa-check"></i><b>9</b> Working with time-series in R</a></li>
+<li class="chapter" data-level="10" data-path="feature-engineering-in-r.html"><a href="feature-engineering-in-r.html"><i class="fa fa-check"></i><b>10</b> Feature engineering in R</a></li>
+<li class="chapter" data-level="11" data-path="impute-missingness.html"><a href="impute-missingness.html"><i class="fa fa-check"></i><b>11</b> Impute missingness</a></li>
+<li class="chapter" data-level="12" data-path="r-for-reporting.html"><a href="r-for-reporting.html"><i class="fa fa-check"></i><b>12</b> R for Reporting</a><ul>
+<li class="chapter" data-level="12.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#usage-demonstrations"><i class="fa fa-check"></i><b>12.1</b> Usage demonstrations</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="r-for-reporting.html"><a href="r-for-reporting.html#inline-code"><i class="fa fa-check"></i><b>12.1.1</b> Inline code</a></li>
+<li class="chapter" data-level="12.1.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#code-chunks"><i class="fa fa-check"></i><b>12.1.2</b> Code chunks</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i><b>12.2</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="r-for-reporting.html"><a href="r-for-reporting.html#resources"><i class="fa fa-check"></i>Resources</a><ul>
+<li class="chapter" data-level="12.3" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>12.3</b> Beginner Resources by Topic</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="resources.html"><a href="resources.html#getting-set-up-with-r-rstudio"><i class="fa fa-check"></i><b>12.3.1</b> Getting Set-Up with R &amp; RStudio</a></li>
+<li class="chapter" data-level="12.3.2" data-path="resources.html"><a href="resources.html#specialist-topics"><i class="fa fa-check"></i><b>12.3.2</b> Specialist Topics</a></li>
+<li class="chapter" data-level="12.3.3" data-path="resources.html"><a href="resources.html#operational-basics"><i class="fa fa-check"></i><b>12.3.3</b> Operational Basics</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Codes for STEM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="working-with-time-series-in-r" class="section level1">
+<h1><span class="header-section-number">Chapter 9</span> Working with time-series in R</h1>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb504-1" data-line-number="1"><span class="co"># load dependencies</span></a>
+<a class="sourceLine" id="cb504-2" data-line-number="2"><span class="kw">library</span>(xts)</a>
+<a class="sourceLine" id="cb504-3" data-line-number="3"><span class="kw">library</span>(zoo)</a></code></pre></div>
+<p>xts objects are simple. Think of them as a matrix of observations combined with an index of corresponding dates and times. Create the object data using 5 random numbers</p>
+<div class="sourceCode" id="cb505"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb505-1" data-line-number="1">data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb505-2" data-line-number="2"><span class="kw">head</span>(data, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## [1] -0.9866340 -0.2549515  0.3041537</code></pre>
+<div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb507-1" data-line-number="1"><span class="co"># Create dates as a Date class object starting from 2016-01-01</span></a>
+<a class="sourceLine" id="cb507-2" data-line-number="2">dates &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>), <span class="dt">length =</span> <span class="dv">5</span>, <span class="dt">by =</span> <span class="st">&quot;days&quot;</span>)</a>
+<a class="sourceLine" id="cb507-3" data-line-number="3"><span class="kw">head</span>(dates, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;2016-01-01&quot; &quot;2016-01-02&quot; &quot;2016-01-03&quot;</code></pre>
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb509-1" data-line-number="1"><span class="co"># Use xts() to create data_dates</span></a>
+<a class="sourceLine" id="cb509-2" data-line-number="2">xts &lt;-<span class="st"> </span>dates <span class="op">+</span><span class="st"> </span>data </a>
+<a class="sourceLine" id="cb509-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb509-4" data-line-number="4"><span class="co">#xts takes two arguments: x for the data and order.by for the index</span></a>
+<a class="sourceLine" id="cb509-5" data-line-number="5">data_dates &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> data, <span class="dt">order.by =</span> dates)</a>
+<a class="sourceLine" id="cb509-6" data-line-number="6"><span class="kw">head</span>(data_dates, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##                  [,1]
+## 2016-01-01 -0.9866340
+## 2016-01-02 -0.2549515
+## 2016-01-03  0.3041537</code></pre>
+<div class="sourceCode" id="cb511"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb511-1" data-line-number="1"><span class="co"># Create one_date (1899-05-08) using a POSIXct date class object</span></a>
+<a class="sourceLine" id="cb511-2" data-line-number="2">one_date &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;1899-05-08&quot;</span>)</a>
+<a class="sourceLine" id="cb511-3" data-line-number="3"><span class="kw">head</span>(one_date, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;1899-05-08 EST&quot;</code></pre>
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb513-1" data-line-number="1"><span class="co"># Create some_dates and add a new attribute called one_date</span></a>
+<a class="sourceLine" id="cb513-2" data-line-number="2">some_dates &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> data, <span class="dt">order.by =</span> dates, <span class="dt">born =</span> one_date)</a>
+<a class="sourceLine" id="cb513-3" data-line-number="3"><span class="kw">head</span>(some_dates, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##                  [,1]
+## 2016-01-01 -0.9866340
+## 2016-01-02 -0.2549515
+## 2016-01-03  0.3041537</code></pre>
+<p>Deconstructing xts
+Extract the core data of some_dates</p>
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb515-1" data-line-number="1">some_dates_core &lt;-<span class="st"> </span><span class="kw">coredata</span>(some_dates)</a>
+<a class="sourceLine" id="cb515-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb515-3" data-line-number="3"><span class="co"># View the class of some_dates_core</span></a>
+<a class="sourceLine" id="cb515-4" data-line-number="4"><span class="kw">class</span>(some_dates_core)</a></code></pre></div>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb517-1" data-line-number="1"><span class="co"># Extract the index of some_dates_core</span></a>
+<a class="sourceLine" id="cb517-2" data-line-number="2">some_dates_core_index &lt;-<span class="st"> </span><span class="kw">index</span>(some_dates_core)</a>
+<a class="sourceLine" id="cb517-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb517-4" data-line-number="4"><span class="co"># View the class of some_dates_core_index</span></a>
+<a class="sourceLine" id="cb517-5" data-line-number="5"><span class="kw">class</span>(some_dates_core_index)</a></code></pre></div>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb519-1" data-line-number="1"><span class="co"># Time based indices</span></a>
+<a class="sourceLine" id="cb519-2" data-line-number="2"><span class="co">## Create dates</span></a>
+<a class="sourceLine" id="cb519-3" data-line-number="3">dates &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb519-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb519-5" data-line-number="5"><span class="co"># Create ts_a</span></a>
+<a class="sourceLine" id="cb519-6" data-line-number="6">ts_a &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">order.by =</span> dates)</a>
+<a class="sourceLine" id="cb519-7" data-line-number="7"><span class="kw">head</span>(ts_a, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##            [,1]
+## 2016-01-01    1
+## 2016-01-02    2
+## 2016-01-03    3</code></pre>
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb521-1" data-line-number="1"><span class="co"># Create ts_b</span></a>
+<a class="sourceLine" id="cb521-2" data-line-number="2">ts_b &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">order.by =</span> <span class="kw">as.POSIXct</span>(dates))</a>
+<a class="sourceLine" id="cb521-3" data-line-number="3"><span class="kw">head</span>(ts_b, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##                     [,1]
+## 2015-12-31 19:00:00    1
+## 2016-01-01 19:00:00    2
+## 2016-01-02 19:00:00    3</code></pre>
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb523-1" data-line-number="1"><span class="co"># Extract the rows of ts_a using the index of ts_b</span></a>
+<a class="sourceLine" id="cb523-2" data-line-number="2">ts_a[<span class="kw">index</span>(ts_b)]</a></code></pre></div>
+<pre><code>##            [,1]
+## 2016-01-01    1
+## 2016-01-02    2
+## 2016-01-03    3
+## 2016-01-04    4
+## 2016-01-05    5</code></pre>
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb525-1" data-line-number="1"><span class="co"># Extract the rows of ts_b using the index of ts_a</span></a>
+<a class="sourceLine" id="cb525-2" data-line-number="2">ts_b[<span class="kw">index</span>(ts_a)]</a></code></pre></div>
+<pre><code>##      [,1]</code></pre>
+<p>Importing, exporting and converting time series
+It is often necessary to convert between classes when working with time series data in R.</p>
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb527-1" data-line-number="1"><span class="kw">data</span>(sunspots)</a>
+<a class="sourceLine" id="cb527-2" data-line-number="2"><span class="kw">data</span>(austres)</a>
+<a class="sourceLine" id="cb527-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb527-4" data-line-number="4"><span class="co"># Convert austres to an xts object called au and inspect</span></a>
+<a class="sourceLine" id="cb527-5" data-line-number="5">au &lt;-<span class="st"> </span><span class="kw">as.xts</span>(austres)</a>
+<a class="sourceLine" id="cb527-6" data-line-number="6"><span class="kw">class</span>(au)</a></code></pre></div>
+<pre><code>## [1] &quot;xts&quot; &quot;zoo&quot;</code></pre>
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb529-1" data-line-number="1"><span class="kw">head</span>(au, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##            [,1]
+## 1971 Q2 13067.3
+## 1971 Q3 13130.5
+## 1971 Q4 13198.4</code></pre>
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb531-1" data-line-number="1"><span class="co"># Then convert your xts object (au) into a matrix am and inspect</span></a>
+<a class="sourceLine" id="cb531-2" data-line-number="2">am &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(au)</a>
+<a class="sourceLine" id="cb531-3" data-line-number="3"><span class="kw">class</span>(am)</a></code></pre></div>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb533-1" data-line-number="1"><span class="kw">head</span>(am, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##              au
+## 1971 Q2 13067.3
+## 1971 Q3 13130.5
+## 1971 Q4 13198.4</code></pre>
+<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb535-1" data-line-number="1"><span class="co"># Convert the original austres into a matrix am2</span></a>
+<a class="sourceLine" id="cb535-2" data-line-number="2">am2 &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(austres)</a>
+<a class="sourceLine" id="cb535-3" data-line-number="3"><span class="kw">head</span>(am2, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##         [,1]
+## [1,] 13067.3
+## [2,] 13130.5
+## [3,] 13198.4</code></pre>
+<p>Create dat by reading tmp_file:</p>
+<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb537-1" data-line-number="1">temp_url &lt;-<span class="st"> &quot;http://s3.amazonaws.com/assets.datacamp.com/production/course_1127/datasets/tmp_file.csv&quot;</span></a>
+<a class="sourceLine" id="cb537-2" data-line-number="2">dat &lt;-<span class="st"> </span><span class="kw">read.csv</span>(temp_url)</a>
+<a class="sourceLine" id="cb537-3" data-line-number="3"><span class="kw">head</span>(dat)</a></code></pre></div>
+<pre><code>##           a b
+## 1/02/2015 1 3
+## 2/03/2015 2 4</code></pre>
+<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb539-1" data-line-number="1"><span class="co"># Convert dat into xts</span></a>
+<a class="sourceLine" id="cb539-2" data-line-number="2"><span class="kw">xts</span>(dat, <span class="dt">order.by =</span> <span class="kw">as.Date</span>(<span class="kw">rownames</span>(dat), <span class="st">&quot;%m/%d/%Y&quot;</span>))</a></code></pre></div>
+<pre><code>##            a b
+## 2015-01-02 1 3
+## 2015-02-03 2 4</code></pre>
+<p>Read tmp_file using read.zoo and as.xts:</p>
+<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb541-1" data-line-number="1">dat_zoo &lt;-<span class="st"> </span><span class="kw">read.zoo</span>(temp_url, <span class="dt">index.column =</span> <span class="dv">0</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;%m/%d/%Y&quot;</span>)</a>
+<a class="sourceLine" id="cb541-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb541-3" data-line-number="3"><span class="co"># Read tmp_file using read.zoo and as.xts</span></a>
+<a class="sourceLine" id="cb541-4" data-line-number="4">dat_xts &lt;-<span class="st"> </span><span class="kw">as.xts</span>(dat_zoo)</a>
+<a class="sourceLine" id="cb541-5" data-line-number="5"><span class="kw">head</span>(dat_xts)</a></code></pre></div>
+<pre><code>##            a b
+## 2015-01-02 1 3
+## 2015-02-03 2 4</code></pre>
+<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb543-1" data-line-number="1"><span class="co"># exporting data</span></a>
+<a class="sourceLine" id="cb543-2" data-line-number="2"><span class="co">## Convert sunspots to xts using as.xts().</span></a>
+<a class="sourceLine" id="cb543-3" data-line-number="3">sunspots_xts &lt;-<span class="st"> </span><span class="kw">as.xts</span>(sunspots)</a>
+<a class="sourceLine" id="cb543-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb543-5" data-line-number="5"><span class="co"># Get the temporary file name</span></a>
+<a class="sourceLine" id="cb543-6" data-line-number="6">tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()</a>
+<a class="sourceLine" id="cb543-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb543-8" data-line-number="8"><span class="co"># Write the xts object using zoo to tmp </span></a>
+<a class="sourceLine" id="cb543-9" data-line-number="9"><span class="kw">write.zoo</span>(sunspots_xts, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">file =</span> tmp)</a></code></pre></div>
+<p>Read the tmp file. FUN = as.yearmon converts strings such as Jan 1749 into a proper time class:</p>
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb544-1" data-line-number="1">sun &lt;-<span class="st"> </span><span class="kw">read.zoo</span>(tmp, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">FUN =</span> as.yearmon)</a>
+<a class="sourceLine" id="cb544-2" data-line-number="2"><span class="kw">head</span>(sun, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## Jan 1749 Feb 1749 Mar 1749 
+##     58.0     62.6     70.0</code></pre>
+<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb546-1" data-line-number="1"><span class="co"># Convert sun into xts. Save this as sun_xts</span></a>
+<a class="sourceLine" id="cb546-2" data-line-number="2">sun_xts &lt;-<span class="st"> </span><span class="kw">as.xts</span>(sun)</a>
+<a class="sourceLine" id="cb546-3" data-line-number="3"><span class="kw">head</span>(sun_xts, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##          [,1]
+## Jan 1749 58.0
+## Feb 1749 62.6
+## Mar 1749 70.0</code></pre>
+<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb548-1" data-line-number="1"><span class="co"># Select all of 2016 from x</span></a>
+<a class="sourceLine" id="cb548-2" data-line-number="2">x_<span class="dv">2016</span> &lt;-<span class="st"> </span>x[<span class="st">&quot;2010&quot;</span>]</a>
+<a class="sourceLine" id="cb548-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb548-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb548-5" data-line-number="5"><span class="co"># Select January 1, 2016 to March 22, 2016</span></a>
+<a class="sourceLine" id="cb548-6" data-line-number="6">jan_march &lt;-<span class="st"> </span>x[<span class="st">&quot;2016/2016-03-22&quot;</span>]</a>
+<a class="sourceLine" id="cb548-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb548-8" data-line-number="8"><span class="co"># Verify that jan_march contains 82 rows</span></a>
+<a class="sourceLine" id="cb548-9" data-line-number="9"><span class="dv">82</span> <span class="op">==</span><span class="st"> </span><span class="kw">length</span>(jan_march)</a></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb550-1" data-line-number="1"><span class="co"># Row selection with time objects</span></a>
+<a class="sourceLine" id="cb550-2" data-line-number="2"><span class="co"># Subset x using the vector dates</span></a>
+<a class="sourceLine" id="cb550-3" data-line-number="3">jan_march[dates]</a></code></pre></div>
+<pre><code>## [1] NA NA NA NA NA</code></pre>
+<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb552-1" data-line-number="1"><span class="co"># Subset x using dates as POSIXct</span></a>
+<a class="sourceLine" id="cb552-2" data-line-number="2">x[<span class="kw">as.POSIXct</span>(dates)]</a></code></pre></div>
+<pre><code>## [1] NA NA NA NA NA</code></pre>
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb554-1" data-line-number="1"><span class="co"># Replace the values in x contained in the dates vector with NA</span></a>
+<a class="sourceLine" id="cb554-2" data-line-number="2">x[dates] &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb554-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb554-4" data-line-number="4"><span class="co"># Replace all values in x for dates starting June 9, 2016 with 0</span></a>
+<a class="sourceLine" id="cb554-5" data-line-number="5">x[<span class="st">&quot;2016-06-09/&quot;</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb554-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb554-7" data-line-number="7"><span class="co"># Verify that the value in x for June 11, 2016 is now indeed 0</span></a>
+<a class="sourceLine" id="cb554-8" data-line-number="8">x[<span class="st">&quot;2016-06-11&quot;</span>]</a></code></pre></div>
+<pre><code>## &lt;NA&gt; 
+##   NA</code></pre>
+<p>Additional Methods To Find Periods in Your Data
+#Using the first() and last() functions</p>
+<p>Create lastweek using the last 1 week of temps</p>
+<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb556-1" data-line-number="1">lastweek &lt;-<span class="st"> </span><span class="kw">last</span>(sun, <span class="st">&quot;1 week&quot;</span>)</a>
+<a class="sourceLine" id="cb556-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb556-3" data-line-number="3"><span class="co"># Print the last 2 observations in lastweek</span></a>
+<a class="sourceLine" id="cb556-4" data-line-number="4"><span class="kw">last</span>(lastweek, <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>## Dec 1983 
+##     33.4</code></pre>
+<div class="sourceCode" id="cb558"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb558-1" data-line-number="1"><span class="co"># Extract all but the first two days of lastweek</span></a>
+<a class="sourceLine" id="cb558-2" data-line-number="2"><span class="kw">first</span>(lastweek, <span class="st">&quot;2 days&quot;</span>)</a></code></pre></div>
+<pre><code>## Warning in periodicity(x): can not calculate periodicity of 1 observation</code></pre>
+<pre><code>## Warning in first.xts(x, n = n, keep = keep, ...): requested length is greater
+## than original</code></pre>
+<pre><code>## Dec 1983 
+##     33.4</code></pre>
+<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb562-1" data-line-number="1"><span class="co"># Extract the first three days of the second week of temps</span></a>
+<a class="sourceLine" id="cb562-2" data-line-number="2"><span class="kw">first</span>(<span class="kw">last</span>(<span class="kw">first</span>(sun, <span class="st">&quot;2 weeks&quot;</span>), <span class="st">&quot;1 week&quot;</span>), <span class="st">&quot;3 days&quot;</span>)</a></code></pre></div>
+<pre><code>## Warning in periodicity(x): can not calculate periodicity of 1 observation
+
+## Warning in periodicity(x): requested length is greater than original</code></pre>
+<pre><code>## Feb 1749 
+##     62.6</code></pre>
+<p>Math operations in xts
+Matrix arithmetic - add, subtract, multiply, and divide in time!
+Use coredata() or as.numeric() (drop one to a matrix or vector).
+Manually shift index values - i.e. use lag().
+Reindex your data (before or after the calculation).</p>
+<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb565-1" data-line-number="1">a &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">as.Date</span>(<span class="st">&quot;2012-01-01&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb565-2" data-line-number="2">a[<span class="kw">index</span>(a)]</a></code></pre></div>
+<pre><code>##            [,1]
+## 2012-01-01    1
+## 2012-01-02    2</code></pre>
+<div class="sourceCode" id="cb567"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb567-1" data-line-number="1">a &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">as.Date</span>(<span class="st">&quot;2012-01-01&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb567-2" data-line-number="2">a[<span class="kw">index</span>(a)]</a></code></pre></div>
+<pre><code>##            [,1]
+## 2012-01-01    1
+## 2012-01-02    2</code></pre>
+<div class="sourceCode" id="cb569"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb569-1" data-line-number="1">b &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">as.Date</span>(<span class="st">&quot;2013-01-01&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb569-2" data-line-number="2">b[<span class="kw">index</span>(b)]</a></code></pre></div>
+<pre><code>##            [,1]
+## 2013-01-01    1
+## 2013-01-02    2</code></pre>
+<div class="sourceCode" id="cb571"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb571-1" data-line-number="1"><span class="co"># Add a and b</span></a>
+<a class="sourceLine" id="cb571-2" data-line-number="2">a <span class="op">+</span><span class="st"> </span>b</a></code></pre></div>
+<pre><code>## Data:
+## integer(0)
+## 
+## Index:
+## Date of length 0</code></pre>
+<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb573-1" data-line-number="1"><span class="co"># Add a with the numeric value of b</span></a>
+<a class="sourceLine" id="cb573-2" data-line-number="2">a <span class="op">+</span><span class="st"> </span><span class="kw">as.numeric</span>(b)</a></code></pre></div>
+<pre><code>##            [,1]
+## 2012-01-01    2
+## 2012-01-02    4</code></pre>
+<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb575-1" data-line-number="1"><span class="co"># Add a to b, and fill all missing rows of b with 0</span></a>
+<a class="sourceLine" id="cb575-2" data-line-number="2">a <span class="op">+</span><span class="st"> </span><span class="kw">merge</span>(b, <span class="kw">index</span>(a), <span class="dt">fill =</span> <span class="dv">0</span>)</a></code></pre></div>
+<pre><code>##            e1
+## 2012-01-01  1
+## 2012-01-02  2</code></pre>
+<div class="sourceCode" id="cb577"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb577-1" data-line-number="1"><span class="co"># Add a to b and fill NAs with the last observation</span></a>
+<a class="sourceLine" id="cb577-2" data-line-number="2">a <span class="op">+</span><span class="st"> </span><span class="kw">merge</span>(b, <span class="kw">index</span>(a), <span class="dt">fill =</span> na.locf)</a></code></pre></div>
+<pre><code>##            e1
+## 2012-01-01 NA
+## 2012-01-02 NA</code></pre>
+<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb579-1" data-line-number="1"><span class="co"># Merging time series</span></a>
+<a class="sourceLine" id="cb579-2" data-line-number="2"><span class="co">## Perform an inner join of a and b</span></a>
+<a class="sourceLine" id="cb579-3" data-line-number="3"><span class="kw">merge</span>(a, b, <span class="dt">join =</span> <span class="st">&quot;inner&quot;</span>)</a></code></pre></div>
+<pre><code>## Data:
+## integer(0)
+## 
+## Index:
+## Date of length 0</code></pre>
+<div class="sourceCode" id="cb581"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb581-1" data-line-number="1"><span class="co"># Perform a left-join of a and b, fill missing values with 0</span></a>
+<a class="sourceLine" id="cb581-2" data-line-number="2"><span class="kw">merge</span>(a, b, <span class="dt">join =</span> <span class="st">&quot;left&quot;</span>, <span class="dt">fill =</span> <span class="dv">0</span>)</a></code></pre></div>
+<pre><code>##            a b
+## 2012-01-01 1 0
+## 2012-01-02 2 0</code></pre>
+<div class="sourceCode" id="cb583"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb583-1" data-line-number="1"><span class="co"># Combining xts by row with rbind</span></a>
+<a class="sourceLine" id="cb583-2" data-line-number="2"><span class="co">## Row bind a and b, assign this to temps2</span></a>
+<a class="sourceLine" id="cb583-3" data-line-number="3">temps2 &lt;-<span class="st"> </span><span class="kw">rbind</span>(a, b)</a>
+<a class="sourceLine" id="cb583-4" data-line-number="4"><span class="kw">head</span>(temps2,<span class="dv">4</span>)</a></code></pre></div>
+<pre><code>##            [,1]
+## 2012-01-01    1
+## 2012-01-02    2
+## 2013-01-01    1
+## 2013-01-02    2</code></pre>
+<p>Handling missingness in your data</p>
+<p>#Airpass data: install.packages(“TSA”) and library(TSA)</p>
+<div class="sourceCode" id="cb585"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb585-1" data-line-number="1"><span class="kw">library</span>(TSA)</a>
+<a class="sourceLine" id="cb585-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;airpass&quot;</span>)</a>
+<a class="sourceLine" id="cb585-3" data-line-number="3"><span class="kw">head</span>(airpass, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## [1] 112 118 132</code></pre>
+<p>Fill missing values in temps using the last observation</p>
+<div class="sourceCode" id="cb587"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb587-1" data-line-number="1">temps_last &lt;-<span class="st"> </span><span class="kw">na.locf</span>(airpass)</a>
+<a class="sourceLine" id="cb587-2" data-line-number="2"><span class="kw">head</span>(temps_last, <span class="dv">4</span>)</a></code></pre></div>
+<pre><code>## [1] 112 118 132 129</code></pre>
+<p>Fill missing values in temps using the next observation
+Fill missing values using last or previous observation
+Last obs. carried forward: na.locf(x)</p>
+<p>Next obs. carried backward
+na.locf(x, fromLast = TRUE)
+locf = last object carried forward</p>
+<div class="sourceCode" id="cb589"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb589-1" data-line-number="1">temps_next &lt;-<span class="st"> </span><span class="kw">na.locf</span>(airpass, <span class="dt">fromLast =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb589-2" data-line-number="2"><span class="kw">head</span>(temps_next, <span class="dv">4</span>)</a></code></pre></div>
+<pre><code>## [1] 112 118 132 129</code></pre>
+<div class="sourceCode" id="cb591"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb591-1" data-line-number="1"><span class="co"># NA interpolation using na.approx()</span></a>
+<a class="sourceLine" id="cb591-2" data-line-number="2"><span class="co">## Interpolate NAs using linear approximation</span></a>
+<a class="sourceLine" id="cb591-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb591-4" data-line-number="4"><span class="kw">na.approx</span>(airpass)</a></code></pre></div>
+<pre><code>##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+## 1960 112 118 132 129 121 135 148 148 136 119 104 118
+## 1961 115 126 141 135 125 149 170 170 158 133 114 140
+## 1962 145 150 178 163 172 178 199 199 184 162 146 166
+## 1963 171 180 193 181 183 218 230 242 209 191 172 194
+## 1964 196 196 236 235 229 243 264 272 237 211 180 201
+## 1965 204 188 235 227 234 264 302 293 259 229 203 229
+## 1966 242 233 267 269 270 315 364 347 312 274 237 278
+## 1967 284 277 317 313 318 374 413 405 355 306 271 306
+## 1968 315 301 356 348 355 422 465 467 404 347 305 336
+## 1969 340 318 362 348 363 435 491 505 404 359 310 337
+## 1970 360 342 406 396 420 472 548 559 463 407 362 405
+## 1971 417 391 419 461 472 535 622 606 508 461 390 432</code></pre>
+<p>Lag operators and difference operations
+Combine a leading and lagging time series</p>
+<div class="sourceCode" id="cb593"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb593-1" data-line-number="1"><span class="co"># Create a lagging object called lag_x</span></a>
+<a class="sourceLine" id="cb593-2" data-line-number="2"><span class="co">#The k argument in zoo uses positive values for shifting past observations forward and negative values for shifting them backwards</span></a>
+<a class="sourceLine" id="cb593-3" data-line-number="3">x &lt;-<span class="st"> </span>stats<span class="op">::</span><span class="kw">lag</span>(airpass, <span class="dt">k =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb593-4" data-line-number="4"><span class="kw">head</span>(x, <span class="dv">5</span>)</a></code></pre></div>
+<pre><code>## [1] 112 118 132 129 121</code></pre>
+<p>Merge your three series together and assign to z</p>
+<p>Calculate a difference of a series using diff()
+Calculate the first difference of AirPass using lag and subtraction</p>
+<div class="sourceCode" id="cb595"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb595-1" data-line-number="1"><span class="kw">diff</span>(x, <span class="dt">differences =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>##       Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+## 1960         8  -17   -5   22   -1  -13  -12   -5    2   29  -17
+## 1961   14    4  -21   -4   34   -3  -21  -12  -13    6   45  -21
+## 1962    0   23  -43   24   -3   15  -21  -15   -7    6   36  -15
+## 1963    4    4  -25   14   33  -23    0  -45   15   -1   41  -20
+## 1964   -2   40  -41   -5   20    7  -13  -43    9   -5   52  -18
+## 1965  -19   63  -55   15   23    8  -47  -25    4    4   52  -13
+## 1966  -22   43  -32   -1   44    4  -66  -18   -3    1   78  -35
+## 1967  -13   47  -44    9   51  -17  -47  -42    1   14   70  -26
+## 1968  -23   69  -63   15   60  -24  -41  -65    6   15   73  -27
+## 1969  -26   66  -58   29   57  -16  -42 -115   56   -4   76   -4
+## 1970  -41   82  -74   34   28   24  -65 -107   40   11   88  -31
+## 1971  -38   54   14  -31   52   24 -103  -82   51  -24  113</code></pre>
+<div class="sourceCode" id="cb597"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb597-1" data-line-number="1"><span class="kw">diff</span>(<span class="kw">diff</span>(x))</a></code></pre></div>
+<pre><code>##       Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+## 1960         8  -17   -5   22   -1  -13  -12   -5    2   29  -17
+## 1961   14    4  -21   -4   34   -3  -21  -12  -13    6   45  -21
+## 1962    0   23  -43   24   -3   15  -21  -15   -7    6   36  -15
+## 1963    4    4  -25   14   33  -23    0  -45   15   -1   41  -20
+## 1964   -2   40  -41   -5   20    7  -13  -43    9   -5   52  -18
+## 1965  -19   63  -55   15   23    8  -47  -25    4    4   52  -13
+## 1966  -22   43  -32   -1   44    4  -66  -18   -3    1   78  -35
+## 1967  -13   47  -44    9   51  -17  -47  -42    1   14   70  -26
+## 1968  -23   69  -63   15   60  -24  -41  -65    6   15   73  -27
+## 1969  -26   66  -58   29   57  -16  -42 -115   56   -4   76   -4
+## 1970  -41   82  -74   34   28   24  -65 -107   40   11   88  -31
+## 1971  -38   54   14  -31   52   24 -103  -82   51  -24  113</code></pre>
+<div class="sourceCode" id="cb599"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb599-1" data-line-number="1">diff_by_hand &lt;-<span class="st"> </span>x <span class="op">-</span><span class="st"> </span>stats<span class="op">::</span><span class="kw">lag</span>(x)</a>
+<a class="sourceLine" id="cb599-2" data-line-number="2"><span class="kw">head</span>(diff_by_hand, <span class="dv">5</span>)</a></code></pre></div>
+<pre><code>## [1]  -6 -14   3   8 -14</code></pre>
+<p>Use merge to compare the first parts of diff_by_hand and diff(AirPass)</p>
+<div class="sourceCode" id="cb601"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb601-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">diff</span>(airpass))</a></code></pre></div>
+<pre><code>## [1]  6 14 -3 -8 14 13</code></pre>
+<p>One of the benefits to working with time series objects is how easy it is to apply functions by time.
+Apply by Time</p>
+<p>Locate the years</p>
+<div class="sourceCode" id="cb603"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb603-1" data-line-number="1"><span class="kw">endpoints</span>(airpass, <span class="dt">on =</span> <span class="st">&quot;years&quot;</span>)</a></code></pre></div>
+<pre><code>##  [1]   0  12  24  36  48  60  72  84  96 108 120 132 144</code></pre>
+<div class="sourceCode" id="cb605"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb605-1" data-line-number="1"><span class="co"># Locate every two years</span></a>
+<a class="sourceLine" id="cb605-2" data-line-number="2"><span class="co"># In order to find the end of the second year, you should set k = 2 in your second endpoints() call.</span></a>
+<a class="sourceLine" id="cb605-3" data-line-number="3"><span class="kw">endpoints</span>(airpass, <span class="dt">on =</span> <span class="st">&quot;years&quot;</span>, <span class="dt">k =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>## [1]   0  24  48  72  96 120 144</code></pre>
+<div class="sourceCode" id="cb607"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb607-1" data-line-number="1"><span class="co"># Calculate the yearly endpoints</span></a>
+<a class="sourceLine" id="cb607-2" data-line-number="2">ep &lt;-<span class="st"> </span><span class="kw">endpoints</span>(airpass, <span class="dt">on =</span> <span class="st">&quot;years&quot;</span>)</a>
+<a class="sourceLine" id="cb607-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb607-4" data-line-number="4"><span class="co">#Using lapply() and split() to apply functions on intervals</span></a>
+<a class="sourceLine" id="cb607-5" data-line-number="5"><span class="co"># Split temps by years</span></a>
+<a class="sourceLine" id="cb607-6" data-line-number="6">temps_yearly &lt;-<span class="st"> </span><span class="kw">split</span>(airpass, <span class="dt">f =</span> <span class="st">&quot;years&quot;</span>) <span class="co"># could also split by &quot;months&quot; etc.</span></a>
+<a class="sourceLine" id="cb607-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb607-8" data-line-number="8"><span class="co"># Create a list of weekly means, temps_avg, and print this list</span></a>
+<a class="sourceLine" id="cb607-9" data-line-number="9">temps_avg &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dt">X =</span> temps_yearly, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb607-10" data-line-number="10">temps_avg</a></code></pre></div>
+<pre><code>## $years
+## [1] 280.2986</code></pre>
+<div class="sourceCode" id="cb609"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb609-1" data-line-number="1"><span class="co">#Selection by endpoints vs. split-lapply-rbind</span></a>
+<a class="sourceLine" id="cb609-2" data-line-number="2"><span class="co"># Use the proper combination of split, lapply and rbind</span></a>
+<a class="sourceLine" id="cb609-3" data-line-number="3">temps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <span class="kw">lapply</span>(<span class="kw">split</span>(airpass, <span class="st">&quot;years&quot;</span>), <span class="cf">function</span>(w) <span class="kw">last</span>(w)))</a>
+<a class="sourceLine" id="cb609-4" data-line-number="4">temps_<span class="dv">1</span></a></code></pre></div>
+<pre><code>##       [,1]
+## years  432</code></pre>
+<div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb611-1" data-line-number="1"><span class="co"># Create last_day_of_weeks using endpoints()</span></a>
+<a class="sourceLine" id="cb611-2" data-line-number="2">last_year_of_data &lt;-<span class="st"> </span><span class="kw">endpoints</span>(airpass, <span class="st">&quot;years&quot;</span>)</a>
+<a class="sourceLine" id="cb611-3" data-line-number="3">last_year_of_data</a></code></pre></div>
+<pre><code>##  [1]   0  12  24  36  48  60  72  84  96 108 120 132 144</code></pre>
+<div class="sourceCode" id="cb613"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb613-1" data-line-number="1"><span class="co"># Subset airpass using last_year_of_data </span></a>
+<a class="sourceLine" id="cb613-2" data-line-number="2">temps_<span class="dv">2</span> &lt;-<span class="st"> </span>airpass[last_year_of_data]</a>
+<a class="sourceLine" id="cb613-3" data-line-number="3">temps_<span class="dv">2</span></a></code></pre></div>
+<pre><code>##  [1] 118 140 166 194 201 229 278 306 336 337 405 432</code></pre>
+<p>Convert univariate series to OHLC data
+Aggregating time series
+In financial series it is common to find Open-High-Low-Close data (or OHLC) calculated over some repeating and regular interval.</p>
+<div class="sourceCode" id="cb615"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb615-1" data-line-number="1">ts_b &lt;-<span class="st"> </span><span class="kw">xts</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">order.by =</span> <span class="kw">as.POSIXct</span>(dates))</a>
+<a class="sourceLine" id="cb615-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb615-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb615-4" data-line-number="4"><span class="co"># Convert usd_eur to weekly and assign to usd_eur_weekly</span></a>
+<a class="sourceLine" id="cb615-5" data-line-number="5">usd_eur_weekly &lt;-<span class="st"> </span><span class="kw">to.period</span>(x, <span class="dt">period =</span> <span class="st">&quot;weeks&quot;</span>)</a>
+<a class="sourceLine" id="cb615-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb615-7" data-line-number="7"><span class="co"># Convert usd_eur to monthly and assign to usd_eur_monthly</span></a>
+<a class="sourceLine" id="cb615-8" data-line-number="8">usd_eur_monthly &lt;-<span class="st"> </span><span class="kw">to.period</span>(x, <span class="dt">period =</span> <span class="st">&quot;months&quot;</span>)</a>
+<a class="sourceLine" id="cb615-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb615-10" data-line-number="10"><span class="co"># Convert eq_mkt to quarterly using shortcut function</span></a>
+<a class="sourceLine" id="cb615-11" data-line-number="11">mkt_quarterly2 &lt;-<span class="st"> </span><span class="kw">to.monthly</span>(x, <span class="dt">name =</span> <span class="st">&quot;edhec_equity&quot;</span>, <span class="dt">indexAt =</span> <span class="st">&quot;firstof&quot;</span>)</a></code></pre></div>
+<p>Index, Attributes, and Timezones</p>
+<p>View the first three indexes of temps</p>
+<div class="sourceCode" id="cb616"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb616-1" data-line-number="1"><span class="kw">index</span>(x)[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</a></code></pre></div>
+<pre><code>## [1] 1959.917 1960.000 1960.083</code></pre>
+<div class="sourceCode" id="cb618"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb618-1" data-line-number="1"><span class="co"># Get the index class of temps</span></a>
+<a class="sourceLine" id="cb618-2" data-line-number="2"><span class="kw">indexClass</span>(x)</a></code></pre></div>
+<pre><code>## Warning: &#39;indexClass&#39; is deprecated.
+## Use &#39;tclass&#39; instead.
+## See help(&quot;Deprecated&quot;) and help(&quot;xts-deprecated&quot;).</code></pre>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb621"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb621-1" data-line-number="1"><span class="co"># Get the timezone of temps</span></a>
+<a class="sourceLine" id="cb621-2" data-line-number="2"><span class="kw">indexTZ</span>(x)</a></code></pre></div>
+<pre><code>## Warning: &#39;indexTZ&#39; is deprecated.
+## Use &#39;tzone&#39; instead.
+## See help(&quot;Deprecated&quot;) and help(&quot;xts-deprecated&quot;).</code></pre>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb624"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb624-1" data-line-number="1"><span class="co"># Change the time zone of times_xts to Asia/Hong_Kong</span></a>
+<a class="sourceLine" id="cb624-2" data-line-number="2"><span class="kw">tzone</span>(x) &lt;-<span class="st"> &quot;Asia/Hong_Kong&quot;</span></a>
+<a class="sourceLine" id="cb624-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb624-4" data-line-number="4"><span class="co"># Extract the current time zone of times_xts</span></a>
+<a class="sourceLine" id="cb624-5" data-line-number="5"><span class="kw">tzone</span>(x)</a></code></pre></div>
+<pre><code>## [1] &quot;Asia/Hong_Kong&quot;</code></pre>
+<p>Periods, Periodicity and Timestamps</p>
+<p>Calculate the periodicity of edhec</p>
+<div class="sourceCode" id="cb626"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb626-1" data-line-number="1"><span class="kw">periodicity</span>(x)</a></code></pre></div>
+<pre><code>## Monthly periodicity from Dec 1959 to Nov 1971</code></pre>
+<div class="sourceCode" id="cb628"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb628-1" data-line-number="1"><span class="co"># Calculate the periodicity of edhec_yearly</span></a>
+<a class="sourceLine" id="cb628-2" data-line-number="2"><span class="kw">periodicity</span>(x)</a></code></pre></div>
+<pre><code>## Monthly periodicity from Dec 1959 to Nov 1971</code></pre>
+<div class="sourceCode" id="cb630"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb630-1" data-line-number="1"><span class="co"># Count the months</span></a>
+<a class="sourceLine" id="cb630-2" data-line-number="2"><span class="kw">nmonths</span>(x)</a></code></pre></div>
+<pre><code>## [1] 144</code></pre>
+<div class="sourceCode" id="cb632"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb632-1" data-line-number="1"><span class="co"># Count the quarters</span></a>
+<a class="sourceLine" id="cb632-2" data-line-number="2"><span class="kw">nquarters</span>(x)</a></code></pre></div>
+<pre><code>## [1] 49</code></pre>
+<p>Explore underlying units of temps in two commands: .index() and .indexwday()
+.index(ts_b)
+.indexwday(ts_b)</p>
+<p>Create an index of weekend days using which():</p>
+<div class="sourceCode" id="cb634"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb634-1" data-line-number="1"><span class="co"># Make ts_b have unique timestamps</span></a>
+<a class="sourceLine" id="cb634-2" data-line-number="2">z_unique &lt;-<span class="st"> </span><span class="kw">make.index.unique</span>(ts_b, <span class="dt">eps =</span> <span class="fl">1e-4</span>)</a>
+<a class="sourceLine" id="cb634-3" data-line-number="3"><span class="kw">head</span>(z_unique, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##                     [,1]
+## 2015-12-31 19:00:00    1
+## 2016-01-01 19:00:00    2
+## 2016-01-02 19:00:00    3</code></pre>
+<div class="sourceCode" id="cb636"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb636-1" data-line-number="1"><span class="co"># Remove duplicate times in ts_b</span></a>
+<a class="sourceLine" id="cb636-2" data-line-number="2">z_dup &lt;-<span class="st"> </span><span class="kw">make.index.unique</span>(ts_b, <span class="dt">drop =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb636-3" data-line-number="3"><span class="kw">head</span>(z_dup, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##                     [,1]
+## 2015-12-31 19:00:00    1
+## 2016-01-01 19:00:00    2
+## 2016-01-02 19:00:00    3</code></pre>
+<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb638-1" data-line-number="1"><span class="co"># Round observations in ts_b to the next hour</span></a>
+<a class="sourceLine" id="cb638-2" data-line-number="2">z_round &lt;-<span class="st"> </span><span class="kw">align.time</span>(ts_b, <span class="dt">n =</span> <span class="dv">3600</span>)</a>
+<a class="sourceLine" id="cb638-3" data-line-number="3"><span class="kw">head</span>(z_round, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##                     [,1]
+## 2015-12-31 20:00:00    1
+## 2016-01-01 20:00:00    2
+## 2016-01-02 20:00:00    3</code></pre>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="demo-for-ab-testing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="feature-engineering-in-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code4stem.pdf", "code4stem.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

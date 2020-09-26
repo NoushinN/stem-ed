@@ -1,17 +1,17 @@
 # Feature engineering in R
 
-```{r load engineering libraries, message= FALSE}
+```{r load caret and others, message= FALSE}
 
-# load libraries
 library(tidyverse)
 library(caret)
 library(lubridate)
 library(tidyverse)
 library(dendextend)
+
 ```
 
 load data
-```{r load starwars, message= FALSE}
+```{r starwar data, message= FALSE}
 
 head(starwars, 5) 
 
@@ -302,14 +302,6 @@ Group the data and create a summary of the counts:
 
 ```{r feature crossing, message= FALSE}
 
-mtcars %>% 
-  group_by(mpg, gear) %>%
-  summarize(n = n()) %>%
-  Create a grouped bar graph 
-  ggplot(., aes(mpg, n, fill = gear)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
 # Create a table of the variables of interest
 mtcars %>% 
   select(mpg, gear) %>%
@@ -356,9 +348,6 @@ prop_var <- prop_var %>%
 ggplot(prop_var, aes(pca_comp, propVar_ex), group = 1) +
   geom_line() +
   geom_point()
-
-
-autoplot(mtcars_x_pca, data = mtcars_x, colour = "carb")
 
 ```
 
