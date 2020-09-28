@@ -21,7 +21,7 @@ library(mice)
 
 
 load data: Dataset is on the Effect of Vitamin C on Tooth Growth in Guinea Pigs:
-```{r load data, message= FALSE}
+```{r load toothgrowth, message= FALSE}
 data(ToothGrowth) 
 
 ToothGrowth %>%
@@ -188,7 +188,7 @@ Build a linear regression model, purpose_recode_model:
 purpose_recode_model <- lm(sales ~ city_recode, data = tx_housing)
 
 # Examine results of purpose_recode_model
-summary(purpose_recode_model)
+summary(purpose_recode_model) 
 ```
 
 
@@ -224,7 +224,7 @@ Conduct Tukey's HSD test to create tukey_output:
 tukey_output <- TukeyHSD(purpose_aov, "city_recode", conf.level = 0.95)
 
 # Tidy tukey_output to make sense of the results
-tidy(tukey_output)
+tidy(tukey_output) %>% head()
 ```
 
 
@@ -256,7 +256,8 @@ Examine sales by volume:
 ```{r examine sales, message= FALSE}
 tx_housing %>% 
   group_by(volume) %>% 
-  summarize(mean = mean(sales), var = var(sales), median = median(sales))
+  summarize(mean = mean(sales), var = var(sales), median = median(sales)) %>%
+  head()
 ```
 
 Make a boxplot of sales by volume
@@ -376,10 +377,10 @@ nhanes_stratified %>%
 ```
 
 
-Load sampling package and create nhanes_cluster with cluster(): library(sampling)
+Load sampling package and create nhanes_cluster with cluster(): 
 
-```{r  sample_n, message= FALSE}
-
+```{r  sampling data, message= FALSE}
+library(sampling)
 nhanes_cluster <- cluster(nhanes_final, c("INDHHIN2"), 6, method = "srswor")
 
 ```
@@ -435,7 +436,8 @@ Print mean weights by mcq365d and riagendr:
 
 nhanes_final %>% 
   group_by(MCQ035, RIDAGEYR) %>% 
-  summarize(mean_ind = mean(INDHHIN2, na.rm = TRUE))
+  summarize(mean_ind = mean(INDHHIN2, na.rm = TRUE)) %>%
+  head()
 ```
 
 RCBD Model Validation
@@ -523,7 +525,7 @@ Analyze like RCBD
 
 Mean, var, and median of Math score by Borough:
 
-```{r calculate mean, var, median, message= FALSE}
+```{r calculate mean-var-median, message= FALSE}
 
 sat_scores <- read.csv(url("https://data.ct.gov/api/views/kbxi-4ia7/rows.csv?accessType=DOWNLOAD"))
 
@@ -546,7 +548,7 @@ mice::md.pattern(sat_scores)
 ```
 
 
-Impute the Math score by Borough:
+Impute the SAT scores :
 ```{r impute median, message= FALSE}
 
 sat_scores_2 <- simputation::impute_median(sat_scores, Test.takers..2012 ~ District)
