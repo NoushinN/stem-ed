@@ -5,7 +5,7 @@ We live in a fast changing and complex world and we were not prepared for it. In
 
 Recognizing that learning styles are quite diverse for participants, the onus is on instructors to develop materials that cater to every learning type be it visual, auditory, abstract/mathematical, spatial, or lingual learners. Improvement of teaching and learning is a dynamic and ongoing process, just as is research in any STEM discipline. At the core of improving teaching and learning is the need to accurately determine what we have learned. My goal is to be a constructive agent for a learning journey towards success. 
 
-In applying a research approach to teaching, one strives to apply these **8 processes**: 
+In applying a research approach to teaching, one can strive to apply these **8 processes**: 
   
 **(i)** learning foundational knowledge,   
 **(ii)** creating objectives for learning,  
